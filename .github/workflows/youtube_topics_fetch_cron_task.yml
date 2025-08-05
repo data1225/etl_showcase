@@ -1,0 +1,35 @@
+name: Youtube topics fetch cron task
+
+on:
+  workflow_dispatch: # 允許手動觸發
+  schedule:
+    - cron: '0 16 27 * *' # 是UTC時間，因GitHub Action不支持動態取最後一天，所以訂28日(日子最少月份的最後一天)搜集資料
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Set PYTHONPATH
+        run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Create .env from GitHub Secrets
+        run: |
+          echo "YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }}" >> .env
+          echo "YOUTUBE_SPREADSHEET_ID=${{ secrets.YOUTUBE_SPREADSHEET_ID }}" >> .env
+          echo "GOOGLE_SHEET_JSON_B64=${{ secrets.GOOGLE_SHEET_JSON_B64 }}" >> .env
+
+      - name: Run Python script
+        run: python -X dev application/youtube_topics_fetch.py
