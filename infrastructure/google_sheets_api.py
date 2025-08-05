@@ -2,13 +2,13 @@ import base64, os
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.oauth2.service_account import Credentials
-from film_tv_animation_insights.config.google_sheets import (
+from etl_showcase.config.google_sheets import (
     GOOGLE_SHEET_SCOPES,
     GOOGLE_SHEET_SERVICE_ACCOUNT_FILE,
     GOOGLE_SHEET_JSON_B64
 )
-from film_tv_animation_insights.domain.models import BaseResponse, StatusCode
-from film_tv_animation_insights.infrastructure.time_utils import get_now_time_string
+from etl_showcase.domain.models import BaseResponse, StatusCode
+from etl_showcase.infrastructure.time_utils import get_now_time_string
 
 def write_secret_json():
     with open(GOOGLE_SHEET_SERVICE_ACCOUNT_FILE, 'wb') as f:

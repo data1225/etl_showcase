@@ -7,17 +7,17 @@
 from path_setup import setup_project_root
 root = setup_project_root()
 
-from film_tv_animation_insights.domain.models import BaseResponse, StatusCode
-from film_tv_animation_insights.domain.youtube_models import YoutubeVideo, Topic
-from film_tv_animation_insights.infrastructure.time_utils import get_previous_month_range_in_utc
-from film_tv_animation_insights.infrastructure.youtube_api import youtube_search_videos
-from film_tv_animation_insights.infrastructure.google_sheets_api import (
+from etl_showcase.domain.models import BaseResponse, StatusCode
+from etl_showcase.domain.youtube_models import YoutubeVideo, Topic
+from etl_showcase.infrastructure.time_utils import get_previous_month_range_in_utc
+from etl_showcase.infrastructure.youtube_api import youtube_search_videos
+from etl_showcase.infrastructure.google_sheets_api import (
     write_secret_json,
     delete_secret_json,
     update_full_google_sheet,
     update_log_of_google_sheet,
 )
-from film_tv_animation_insights.config.youtube import (
+from etl_showcase.config.youtube import (
     YOUTUBE_SPREADSHEET_ID,
     YOUTUBE_SEARCH_VIDEOS_FUNCTION_NAME,
     YOUTUBE_LOGS_SHEET_NAME,

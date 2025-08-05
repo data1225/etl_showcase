@@ -7,14 +7,14 @@
 from path_setup import setup_project_root
 root = setup_project_root()
 
-from film_tv_animation_insights.domain.models import StatusCode
-from film_tv_animation_insights.config.youtube import (
+from etl_showcase.domain.models import StatusCode
+from etl_showcase.config.youtube import (
     YOUTUBE_SPREADSHEET_ID,
     YOUTUBE_LOGS_SHEET_NAME,
     YOUTUBE_SEARCH_COMMENTS_FUNCTION_NAME,
 )
-from film_tv_animation_insights.infrastructure.youtube_api import youtube_search_comments
-from film_tv_animation_insights.infrastructure.google_sheets_api import (
+from etl_showcase.infrastructure.youtube_api import youtube_search_comments
+from etl_showcase.infrastructure.google_sheets_api import (
     write_secret_json,
     delete_secret_json,
     create_google_sheet,

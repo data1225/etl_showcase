@@ -2,16 +2,16 @@ import json
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from typing import List, Optional
-from film_tv_animation_insights.config.youtube import (
+from etl_showcase.config.youtube import (
     YOUTUBE_API_KEY, 
     YOUTUBE_SPREADSHEET_ID, 
 )
-from film_tv_animation_insights.domain.models import BaseResponse, StatusCode
-from film_tv_animation_insights.domain.youtube_models import (
+from etl_showcase.domain.models import BaseResponse, StatusCode
+from etl_showcase.domain.youtube_models import (
     YoutubeVideo,
     YoutubeComment,
 )
-from film_tv_animation_insights.infrastructure.time_utils import get_now_time_string
+from etl_showcase.infrastructure.time_utils import get_now_time_string
 
 def get_youtube_service():
     return build('youtube', 'v3', developerKey=YOUTUBE_API_KEY)
