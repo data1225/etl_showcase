@@ -6,6 +6,10 @@ class YoutubeVideo:
     id: str
     title: str
     description: str
+    published_at: str
+    channel_title: str
+    channel_id: str
+    thumbnail_url: Optional[str] = None
 
 @dataclass
 class YoutubeComment:

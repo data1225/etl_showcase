@@ -8,7 +8,7 @@ from etl_showcase.config.google_sheets import (
     GOOGLE_SHEET_JSON_B64
 )
 from etl_showcase.domain.models import BaseResponse, StatusCode
-from etl_showcase.infrastructure.time_utils import get_now_time_string
+from etl_showcase.infrastructure.utils.time_utils import get_now_time_string
 
 def write_secret_json():
     with open(GOOGLE_SHEET_SERVICE_ACCOUNT_FILE, 'wb') as f:
@@ -31,6 +31,27 @@ def is_sheet_exists(spreadsheet_id, sheet_name):
         if sheet.get("properties", {}).get("title") == sheet_name:
             return True
     return False
+
+def get_log_from_google_sheet(spreadsheet_id, sheet_name, search_keyword):
+    service = get_google_sheet_service()
+    sheet = service.spreadsheets().values().get(
+        spreadsheetId=spreadsheet_id,
+        range=sheet_name
+    ).execute()
+    
+    values = sheet.get('values', [])
+    if not values:
+        print('sheet not found.')
+        return None
+
+    for row in values:
+        # 確保 row 至少有兩欄，並且第一欄匹配 search_keyword
+        if len(row) > 1 and row[0] == search_keyword:
+            return row[1]  # 第二欄值
+    
+    # 如果找不到對應的關鍵字
+    print(f'Keyword "{search_keyword}" not found in sheet "{sheet_name}".')
+    return None
 
 def create_google_sheet(spreadsheet_id, sheet_name):
     service = get_google_sheet_service()
