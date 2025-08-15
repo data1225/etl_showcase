@@ -1,0 +1,41 @@
+name: Youtube videos comments fetch cron task
+# 為避免重覆執行，影片留言記錄完會在Youtube_data google sheets上的Logs>>Search_comments_current_next_page_token記錄「completed」
+# 下次要執行task前，記得要把completed改成空白，好可以重新開始讀取新的影片留言
+
+on:
+  workflow_dispatch: # 允許手動觸發
+  schedule:
+    # 每天台灣早上 8 點（UTC = Taiwan -8 小時 → 0 點）
+    - cron: '0 0 * * *'
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    if: ${{ vars.RUN_YOUTUBE_VIDEOS_COMMENTS_FETCH_CRON_TASK == 'true' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Set PYTHONPATH
+        run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Create .env from GitHub Secrets and Variables
+        run: |
+          echo "YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }}" >> .env
+          echo "YOUTUBE_SPREADSHEET_ID=${{ secrets.YOUTUBE_SPREADSHEET_ID }}" >> .env
+          echo "GOOGLE_SHEET_JSON_B64=${{ secrets.GOOGLE_SHEET_JSON_B64 }}" >> .env
+          echo "YOUTUBE_SEARCH_COMMENTS_SOURCE_VIDEO_IDS=${{ vars.YOUTUBE_SEARCH_COMMENTS_SOURCE_VIDEO_IDS }}" >> .env
+          echo "YOUTUBE_SEARCH_COMMENTS_CLUSTER_TITLE=${{ vars.YOUTUBE_SEARCH_COMMENTS_CLUSTER_TITLE }}" >> .env
+
+      - name: Run Python script
+        run: python -X dev application/youtube_videos_comments_fetch.py

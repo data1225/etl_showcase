@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 # # 即時載入最新修改
@@ -11,7 +11,8 @@
 from path_setup import setup_project_root
 root = setup_project_root()
 
-import re
+import re, os
+from dotenv import load_dotenv
 from etl_showcase.domain.models import StatusCode
 from etl_showcase.config.youtube import (
     YOUTUBE_SPREADSHEET_ID,
@@ -32,6 +33,7 @@ from etl_showcase.infrastructure.datasource.google_sheets_api import (
     get_full_google_sheet 
 )
 
+load_dotenv()
 write_secret_json()
 try:
     # 取得最後儲存的 next_page_token
@@ -47,8 +49,8 @@ try:
         raise SystemExit
     
     # variables for search comments
-    youtube_video_ids = ['_VB39Jo8mAQ']
-    screen_work_name = 'test'
+    youtube_video_ids = os.getenv("YOUTUBE_SEARCH_COMMENTS_SOURCE_VIDEO_IDS", "").split(",")
+    screen_work_name = os.getenv("YOUTUBE_SEARCH_COMMENTS_CLUSTER_TITLE", "")
     
     # search youtube comments (自動續抓模式)
     search_youtube_result = youtube_search_comments(
