@@ -32,6 +32,20 @@ def is_sheet_exists(spreadsheet_id, sheet_name):
             return True
     return False
 
+def get_full_google_sheet(spreadsheet_id, sheet_name):
+    service = get_google_sheet_service()
+    sheet = service.spreadsheets().values().get(
+        spreadsheetId=spreadsheet_id,
+        range=sheet_name
+    ).execute()
+
+    values = sheet.get('values', [])
+    if not values:
+        print(f'Sheet "{sheet_name}" is empty or not found.')
+        return None
+    
+    return values
+
 def get_log_from_google_sheet(spreadsheet_id, sheet_name, search_keyword):
     service = get_google_sheet_service()
     sheet = service.spreadsheets().values().get(
