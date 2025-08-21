@@ -1,4 +1,4 @@
-name: Youtube topics fetch cron task
+name: Fetch youtube trending by_keyword cron task
 
 on:
   workflow_dispatch: # 允許手動觸發

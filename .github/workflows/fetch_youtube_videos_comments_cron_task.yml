@@ -1,4 +1,4 @@
-name: Youtube videos comments fetch cron task
+name: Fetch youtube videos comments cron task
 # 為避免重覆執行，影片留言記錄完會在Youtube_data google sheets上的Logs>>Search_comments_current_next_page_token記錄「completed」
 # 下次要執行task前，記得要把completed改成空白，好可以重新開始讀取新的影片留言
 
