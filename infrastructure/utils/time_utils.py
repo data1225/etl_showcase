@@ -16,3 +16,8 @@ def get_now_time_string():
     timezone = pytz.timezone("Asia/Taipei")
     localized_time = datetime.now().astimezone(timezone)
     return localized_time.strftime("%Y-%m-%d %H:%M:%S%z")
+
+def get_now_time():
+    timezone = pytz.timezone("Asia/Taipei")
+    localized_time = datetime.now().astimezone(timezone)
+    return localized_time

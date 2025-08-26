@@ -1,4 +1,4 @@
-name: Fetch youtube trending by_keyword cron task
+name: Fetch YouTube trending by keyword cron task
 
 on:
   workflow_dispatch: # 允許手動觸發
@@ -32,4 +32,4 @@ jobs:
           echo "GOOGLE_SHEET_JSON_B64=${{ secrets.GOOGLE_SHEET_JSON_B64 }}" >> .env
 
       - name: Run Python script
-        run: python -X dev application/youtube_topics_fetch.py
+        run: python -X dev application/fetch_youtube_trending_by_keyword.py

@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 GOOGLE_SHEET_SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 GOOGLE_SHEET_JSON_B64 = os.getenv('GOOGLE_SHEET_JSON_B64')

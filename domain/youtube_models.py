@@ -1,5 +1,19 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
+from enum import Enum
+from datetime import datetime
+
+class VideoSearchOrder(str, Enum):
+    DATE = 'date'
+    RATING = 'rating'
+    RELEVANCE = 'relevance'
+    TITLE = 'title'
+    VIEW_COUNT = 'viewCount'
+
+class CommentSearchStatus(str, Enum):
+    Pending = 'Pending'
+    Processing = 'Processing'
+    Completed = 'Completed'
 
 @dataclass
 class YoutubeVideo:
@@ -14,10 +28,12 @@ class YoutubeVideo:
 @dataclass
 class YoutubeComment:
     id: int
+    video_id: int
     parent_id: Optional[int]
     level: int
     textDisplay: str
     likeCount: int
+    published_at: str
 
 @dataclass
 class Topic:
@@ -27,3 +43,11 @@ class Topic:
 
     def add_youtube_videos(self, youtube_videos: List[YoutubeVideo]):
         self.youtube_videos.extend(youtube_videos)
+
+@dataclass
+class CommentSearchState:
+    screenwork: str
+    status: CommentSearchStatus
+    rest_video_ids: List[str]
+    next_page_token: str
+    log_time: datetime

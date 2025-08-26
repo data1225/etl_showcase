@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[3]:
+# In[ ]:
 
 
-# # 方便修改py檔後，能即時載入py檔最新程式
-# %load_ext autoreload
-# %autoreload 2
     
 from path_setup import setup_project_root
 root = setup_project_root()
@@ -19,7 +16,7 @@ from etl_showcase.infrastructure.datasource.google_sheets_api import (
     write_secret_json,
     delete_secret_json,
     update_full_google_sheet,
-    update_log_of_google_sheet,
+    update_youtube_log_of_google_sheet,
 )
 from etl_showcase.config.youtube import (
     YOUTUBE_SPREADSHEET_ID,
@@ -35,7 +32,7 @@ search_youtube_result = BaseResponse[YoutubeVideo](
     content=None
 )    
 start_utc_datetime, end_utc_datetime = get_previous_month_range_in_utc()
-# # 縮小搜尋量供測試用，因youtube API有搜尋上限
+# 縮小搜尋量供測試用，因youtube API有搜尋上限
 # topics = [
 #     Topic('科技議題', ['AI']),
 # ]
@@ -64,15 +61,17 @@ write_secret_json()
 try:
     log_content = f'Search youtube videos result: [{search_youtube_result.status_code}] {search_youtube_result.message}'
     print(log_content)
-    update_log_of_google_sheet(
-        spreadsheet_id = YOUTUBE_SPREADSHEET_ID,
-        sheet_name = YOUTUBE_LOGS_SHEET_NAME,
-        search_keyword = YOUTUBE_SEARCH_VIDEOS_FUNCTION_NAME,
-        update_content = log_content
+    update_youtube_log_of_google_sheet(
+        function = YOUTUBE_SEARCH_VIDEOS_FUNCTION_NAME,
+        log_content = log_content
     )
     
     # transform original data to table
-    update_rows = [["主題", "搜尋關鍵字", "影片ID", "影片標題", "影片描述", "發佈時間", "頻道名稱", "頻道ID", "縮圖URL"]]
+    update_rows = [["Topic", "Search keyword",
+                    "Video ID", "Video title", "Video description",
+                    "Publish datetime", 
+                    "Channel name", "Channel ID", "Thumbnail URL"]]
+
     for topic in topics:
         keywords_string = '、'.join(topic.keywords)
         for video in topic.youtube_videos:
@@ -96,18 +95,15 @@ try:
     log_content = f'Update google sheet result: [{update_sheet_result.status_code}] {update_sheet_result.message}'
     print(log_content)
     if update_sheet_result.status_code != StatusCode.SUCCESS:
-        update_log_of_google_sheet(
-            spreadsheet_id = YOUTUBE_SPREADSHEET_ID,
-            sheet_name = YOUTUBE_LOGS_SHEET_NAME,
-            search_keyword = YOUTUBE_SEARCH_VIDEOS_FUNCTION_NAME,
-            update_content = log_content
+        update_youtube_log_of_google_sheet(
+            function = YOUTUBE_SEARCH_VIDEOS_FUNCTION_NAME,
+            log_content = log_content
         )        
 finally:
     delete_secret_json()
 
 
 # In[ ]:
-
 
 
 

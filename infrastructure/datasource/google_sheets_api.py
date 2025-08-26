@@ -2,12 +2,19 @@ import base64, os
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.oauth2.service_account import Credentials
+from datetime import datetime
+from etl_showcase.config.youtube import (
+    YOUTUBE_SPREADSHEET_ID,
+    YOUTUBE_LOGS_SHEET_NAME,
+    YOUTUBE_COMMENTS_SEARCH_STATE_SHEET_NAME,
+)
 from etl_showcase.config.google_sheets import (
     GOOGLE_SHEET_SCOPES,
     GOOGLE_SHEET_SERVICE_ACCOUNT_FILE,
     GOOGLE_SHEET_JSON_B64
 )
 from etl_showcase.domain.models import BaseResponse, StatusCode
+from etl_showcase.domain.youtube_models import CommentSearchStatus, CommentSearchState
 from etl_showcase.infrastructure.utils.time_utils import get_now_time_string
 
 def write_secret_json():
@@ -35,7 +42,7 @@ def is_sheet_exists(spreadsheet_id, sheet_name):
 def get_full_google_sheet(spreadsheet_id, sheet_name):
     service = get_google_sheet_service()
     sheet = service.spreadsheets().values().get(
-        spreadsheetId=spreadsheet_id,
+        spreadsheetId=YOUTUBE_SPREADSHEET_ID,
         range=sheet_name
     ).execute()
 
@@ -46,11 +53,11 @@ def get_full_google_sheet(spreadsheet_id, sheet_name):
     
     return values
 
-def get_log_from_google_sheet(spreadsheet_id, sheet_name, search_keyword):
+def get_youtube_comment_search_state(screenwork):
     service = get_google_sheet_service()
     sheet = service.spreadsheets().values().get(
-        spreadsheetId=spreadsheet_id,
-        range=sheet_name
+        spreadsheetId=YOUTUBE_SPREADSHEET_ID,
+        range=YOUTUBE_COMMENTS_SEARCH_STATE_SHEET_NAME
     ).execute()
     
     values = sheet.get('values', [])
@@ -59,13 +66,69 @@ def get_log_from_google_sheet(spreadsheet_id, sheet_name, search_keyword):
         return None
 
     for row in values:
-        # 確保 row 至少有兩欄，並且第一欄匹配 search_keyword
-        if len(row) > 1 and row[0] == search_keyword:
-            return row[1]  # 第二欄值
+        if len(row) > 1 and row[0] == screenwork:
+            try:
+                # Map columns to dataclass fields
+                status = CommentSearchStatus(row[1])
+                rest_video_ids = row[2].split(',') if row[2] else []
+                next_page_token = row[3] if row[3] else None
+                log_time = datetime.fromisoformat(row[4])
+
+                return CommentSearchState(
+                    screenwork=row[0],
+                    status=status,
+                    rest_video_ids=rest_video_ids,
+                    next_page_token=next_page_token,
+                    log_time=log_time
+                )
+            except (ValueError, IndexError) as e:
+                # Error parsing data for screenwork 'test': '' is not a valid CommentSearchStatus
+                print(status)
+                print(f"Error parsing data for screenwork '{screenwork}': {e}")
+                return None
     
-    # 如果找不到對應的關鍵字
-    print(f'Keyword "{search_keyword}" not found in sheet "{sheet_name}".')
+    print(f'Screenwork "{screenwork}" not found in sheet "{YOUTUBE_COMMENTS_SEARCH_STATE_SHEET_NAME}".')
     return None
+
+def update_youtube_comment_search_state(state: CommentSearchState) -> BaseResponse:
+    values = get_full_google_sheet(
+            spreadsheet_id=YOUTUBE_SPREADSHEET_ID,
+            sheet_name=YOUTUBE_COMMENTS_SEARCH_STATE_SHEET_NAME
+        )
+    header_row = values[0:1] if values else []
+    data_rows = values[1:] if values else []
+
+    # Prepare the new row data from the dataclass
+    new_row_data = [
+        state.screenwork,
+        state.status.value,
+        ",".join(state.rest_video_ids) if state.rest_video_ids else '',
+        state.next_page_token if state.next_page_token else '',
+        state.log_time.isoformat()
+    ]
+
+    updated = False
+    # Find the row to update
+    for i, row in enumerate(data_rows):
+        if len(row) > 0 and row[0] == state.screenwork:
+            data_rows[i] = new_row_data
+            updated = True
+            break
+
+    # If not found, add a new row
+    if not updated:
+        data_rows.append(new_row_data)
+
+    # Combine headers and updated data rows
+    updated_data = header_row + data_rows
+
+    # Write the entire updated list of rows back to the sheet
+    update_result = update_full_google_sheet(
+        spreadsheet_id=YOUTUBE_SPREADSHEET_ID,
+        sheet_name=YOUTUBE_COMMENTS_SEARCH_STATE_SHEET_NAME,
+        update_rows=updated_data
+    )
+    return update_result
 
 def create_google_sheet(spreadsheet_id, sheet_name):
     service = get_google_sheet_service()
@@ -114,22 +177,22 @@ def update_full_google_sheet(spreadsheet_id, sheet_name, update_rows):
             content=None
         )
 
-def update_log_of_google_sheet(spreadsheet_id, sheet_name, search_keyword, update_content):
+def update_youtube_log_of_google_sheet(function, log_content):
     service = get_google_sheet_service()
-    sheet = service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=sheet_name).execute()
+    sheet = service.spreadsheets().values().get(spreadsheetId=YOUTUBE_SPREADSHEET_ID, range=YOUTUBE_LOGS_SHEET_NAME).execute()
     values = sheet.get('values', [])
     if not values:
         print('sheet not found.')
         return
 
     for i, row in enumerate(values):
-        if len(row) > 0 and row[0] == search_keyword:
+        if len(row) > 0 and row[0] == function:
             update_body = {
-                'values': [[update_content, get_now_time_string()]]  # 分別對應 B 和 C 欄的值
+                'values': [[log_content, get_now_time_string()]]  # 分別對應 B 和 C 欄的值
             }
             service.spreadsheets().values().update(
-                spreadsheetId=spreadsheet_id,
-                range=f'{sheet_name}!B{i + 1}:C{i + 1}',  # 指定範圍 B~C 欄
+                spreadsheetId=YOUTUBE_SPREADSHEET_ID,
+                range=f'{YOUTUBE_LOGS_SHEET_NAME}!B{i + 1}:C{i + 1}',  # 指定範圍 B~C 欄
                 valueInputOption='RAW',
                 body=update_body
             ).execute()
