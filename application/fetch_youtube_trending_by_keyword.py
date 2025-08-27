@@ -9,7 +9,11 @@ from path_setup import setup_project_root
 root = setup_project_root()
 
 from etl_showcase.domain.models import BaseResponse, StatusCode
-from etl_showcase.domain.youtube_models import YoutubeVideo, Topic
+from etl_showcase.domain.youtube_models import (
+    YoutubeVideo, 
+    Topic, 
+    TopicDetail
+)
 from etl_showcase.infrastructure.utils.time_utils import get_previous_month_range_in_utc
 from etl_showcase.infrastructure.datasource.youtube_api import youtube_search_videos
 from etl_showcase.infrastructure.datasource.google_sheets_api import (
@@ -34,58 +38,59 @@ search_youtube_result = BaseResponse[YoutubeVideo](
 start_utc_datetime, end_utc_datetime = get_previous_month_range_in_utc()
 # 縮小搜尋量供測試用，因youtube API有搜尋上限
 # topics = [
-#     Topic('科技議題', ['AI']),
+#     Topic('科技議題', [TopicDetail('AI'), TopicDetail('科技')]),
 # ]
 topics = [
-    Topic('心理議題', ['心理學', '自我成長', '心情', '感情']),
-    Topic('社會弱勢議題', ['社會弱勢', '經濟弱勢', '社會不平等']),
-    Topic('社會議題', ['社會議題', '社會問題']),
-    Topic('科技議題', ['AI', '科技']),
+    Topic('心理議題', [TopicDetail('心理學'), '自我成長', TopicDetail('心情'), TopicDetail('感情')]),
+    Topic('社會弱勢議題', [TopicDetail('社會弱勢'), TopicDetail('經濟弱勢'), TopicDetail('社會不平等')]),
+    Topic('社會議題', [TopicDetail('社會議題'), TopicDetail('社會問題')]),
+    Topic('科技議題', [TopicDetail('AI'), TopicDetail('科技')]),
 ]
 
+print('searching youtube vidoes')
 for topic in topics:
-    for keyword in topic.keywords:
+    for detail in topic.details:
         search_youtube_result = youtube_search_videos(
-            query = keyword, 
+            query = detail.keyword, 
             search_count = 300,
             start_utc_datetime = start_utc_datetime, 
             end_utc_datetime = end_utc_datetime
         )
-        print(f'keyword:{keyword}, result: [{search_youtube_result.status_code}] {search_youtube_result.message}')
-        if search_youtube_result.content is None:
+        print(f'keyword:{detail.keyword}, search result: [{search_youtube_result.status_code}] {search_youtube_result.message}')
+        detail.add_youtube_videos(search_youtube_result.content)
+        if search_youtube_result.status_code != StatusCode.SUCCESS:
             break
-        topic.add_youtube_videos(search_youtube_result.content)
 
 # update log and data in google sheets
 write_secret_json()
 try:
     log_content = f'Search youtube videos result: [{search_youtube_result.status_code}] {search_youtube_result.message}'
-    print(log_content)
     update_youtube_log_of_google_sheet(
         function = YOUTUBE_SEARCH_VIDEOS_FUNCTION_NAME,
         log_content = log_content
     )
     
-    # transform original data to table
+    # transform original data to google sheet rows
+    print('transforming original data to google sheet rows')
     update_rows = [["Topic", "Search keyword",
                     "Video ID", "Video title", "Video description",
                     "Publish datetime", 
                     "Channel name", "Channel ID", "Thumbnail URL"]]
-
     for topic in topics:
-        keywords_string = '、'.join(topic.keywords)
-        for video in topic.youtube_videos:
-            update_rows.append([
-                topic.name,
-                keywords_string,
-                video.id,
-                video.title,
-                video.description,
-                video.published_at,
-                video.channel_title,
-                video.channel_id,
-                video.thumbnail_url
-            ])
+        for detail in topic.details:
+            for video in detail.youtube_videos:
+                update_rows.append([
+                    topic.name,
+                    detail.keyword,
+                    video.id,
+                    video.title,
+                    video.description,
+                    video.published_at,
+                    video.channel_title,
+                    video.channel_id,
+                    video.thumbnail_url
+                ])
+                
     # update google sheet
     update_sheet_result = update_full_google_sheet(
         spreadsheet_id = YOUTUBE_SPREADSHEET_ID,
