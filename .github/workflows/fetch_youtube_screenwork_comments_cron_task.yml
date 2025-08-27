@@ -42,7 +42,7 @@ jobs:
           echo "YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }}" >> .env
           echo "YOUTUBE_SPREADSHEET_ID=${{ secrets.YOUTUBE_SPREADSHEET_ID }}" >> .env
           echo "GOOGLE_SHEET_JSON_B64=${{ secrets.GOOGLE_SHEET_JSON_B64 }}" >> .env
-          echo "YOUTUBE_SEARCH_COMMENTS_VIDEO_IDS_FOR_SCREENWORK=${{ vars.YOUTUBE_SEARCH_COMMENTS_VIDEO_IDS_FOR_SCREENWORK }}" >> .env
+          echo "YOUTUBE_SEARCH_COMMENTS_VIDEO_IDS_FOR_SCREENWORK='${{ vars.YOUTUBE_SEARCH_COMMENTS_VIDEO_IDS_FOR_SCREENWORK }}'" >> .env
 
       - name: Run Python script
         run: python -X dev application/fetch_youtube_screenwork_comments.py
