@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[9]:
+# In[ ]:
 
 
 
 from path_setup import setup_project_root
 root = setup_project_root()
 
-import re, os, json, base64
+import re, os, json, base64, time
 from dotenv import load_dotenv
 from etl_showcase.domain.models import StatusCode
 from etl_showcase.config.youtube import (
@@ -151,6 +151,10 @@ try:
             youtube_comment_search_state.log_time = get_now_time()
             update_state_result = update_youtube_comment_search_state(youtube_comment_search_state)  
             print(f'Update state result: [{update_state_result.status_code}] {update_state_result.message}')
+
+            # After processing each video_id, pause for 30 seconds
+            print(f'Video id {video_id} Pausing for 30 seconds to respect google sheet API rate limits...')
+            time.sleep(30) 
 finally:
     delete_secret_json()
 
