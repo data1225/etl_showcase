@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 
@@ -34,12 +34,15 @@ from etl_showcase.infrastructure.utils.time_utils import get_now_time
 # variables for search comments
 load_dotenv(override=True)
 screenwork_list = ast.literal_eval(os.getenv("YOUTUBE_SEARCH_COMMENTS_VIDEO_IDS_FOR_SCREENWORK"))
+print('successfully pares github variable to json')
+print(screenwork_list)
 
 write_secret_json()
 try:
     for screenwork in screenwork_list:
         screenwork_name = screenwork["screenwork_name"]
         youtube_video_ids = screenwork["video_ids"]
+        print(f'start to process {screenwork_name}')
         
         youtube_comment_search_state = get_youtube_comment_search_state(
             screenwork=screenwork_name
