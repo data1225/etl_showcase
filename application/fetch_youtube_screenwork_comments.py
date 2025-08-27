@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[9]:
 
 
 
 from path_setup import setup_project_root
 root = setup_project_root()
 
-import re, os, ast
+import re, os, json, base64
 from dotenv import load_dotenv
 from etl_showcase.domain.models import StatusCode
 from etl_showcase.config.youtube import (
@@ -33,9 +33,9 @@ from etl_showcase.infrastructure.utils.time_utils import get_now_time
 
 # variables for search comments
 load_dotenv(override=True)
-screenwork_list = ast.literal_eval(os.getenv("YOUTUBE_SEARCH_COMMENTS_VIDEO_IDS_FOR_SCREENWORK"))
-print('successfully pares github variable to json')
-print(screenwork_list)
+raw_value  = base64.b64decode(os.getenv("YOUTUBE_SEARCH_COMMENTS_VIDEO_IDS_FOR_SCREENWORK_B64")).decode('utf-8')
+screenwork_list = json.loads(raw_value)
+print('successfully pares github variable to json object')
 
 write_secret_json()
 try:
