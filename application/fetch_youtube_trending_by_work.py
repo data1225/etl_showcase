@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[5]:
 
 
 
@@ -125,12 +125,20 @@ try:
 
     ####### 整理後影評影片ID
     # transform original data to table
-    update_rows = [["Topic", "Video IDs"]]
+    update_rows = [["Topic ", "Github action variable"]]
     for topic in topics:
         video_ids = [video.id for video in topic.youtube_videos]
+        # 建立一個 Python 字典，包含 topic.name 和 video_ids
+        github_action_variable = {
+            "screenwork_name": topic.name,
+            "video_ids": video_ids
+        }     
+        # 將字典轉換為 JSON 字串
+        github_action_json_string = json.dumps(github_action_variable, ensure_ascii=False)   
+        # 根據新的結構更新陣列
         update_rows.append([
             topic.name,
-            ', '.join(video_ids)
+            github_action_json_string
         ])
     # update google sheet
     update_sheet_result = update_full_google_sheet(

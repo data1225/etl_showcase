@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[5]:
+# In[1]:
 
 
 
@@ -62,7 +62,7 @@ try:
             youtube_video_ids = youtube_comment_search_state.rest_video_ids[:]
 
         for video_id in youtube_video_ids:
-            # search youtube comments (自動續抓全部模式)
+            # search youtube comments 
             youtube_search_comments_result = youtube_search_comments(
                 video_id=video_id,
                 max_comment_count_per_page = 100,
@@ -70,31 +70,40 @@ try:
                 current_next_page_token=youtube_comment_search_state.next_page_token,
                 mode="auto"
             )
-            youtube_comment_search_state.next_page_token = ''
-        
-            # update log and data in google sheets
-            log_content = f'video id {video_id} Search youtube comments result: [{youtube_search_comments_result.status_code}] {youtube_search_comments_result.message}'
+            log_content = f'Video id {video_id} search youtube comments result: [{youtube_search_comments_result.status_code}] {youtube_search_comments_result.message}'
             print(log_content)
             update_youtube_log_of_google_sheet(
                 function=YOUTUBE_SEARCH_COMMENTS_FUNCTION_NAME,
                 log_content=log_content
-            )
-        
+            )            
+
+            # search comments fail, break loop
+            if youtube_search_comments_result.status_code != StatusCode.SUCCESS:
+                match = re.search(r'\[final next_page_token:(.*?)\]', youtube_search_comments_result.message)
+                if match:
+                    youtube_comment_search_state.next_page_token = match.group(1)    
+
+                youtube_comment_search_state.status = CommentSearchStatus.Processing
+                youtube_comment_search_state.log_time = get_now_time()
+                update_state_result = update_youtube_comment_search_state(youtube_comment_search_state)  
+                print(f'Video id {video_id} search comments fail, break loop')
+                print(f'Update state result: [{update_state_result.status_code}] {update_state_result.message}')
+                break
+            
+            # get and record comments
+            youtube_comment_search_state.next_page_token = ''
             comments = youtube_search_comments_result.content
             if len(comments) == 0:
-                log_content = f'There is no comment for screen work:{screenwork_name} and video id:{video_id}, delete video id'
-                print(log_content)
-                youtube_video_ids.remove(video_id)
-                state.rest_video_ids = youtube_video_ids
+                print(f'There is no comment for screen work:{screenwork_name} and video id:{video_id}, delete video id')
+                youtube_comment_search_state.rest_video_ids.remove(video_id)    
             else:
-                # get old data or just give titles
+                # get old data or give initial data
                 if is_sheet_exists(spreadsheet_id=YOUTUBE_SPREADSHEET_ID, sheet_name=screenwork_name):
                     update_rows = get_full_google_sheet(
                         spreadsheet_id=YOUTUBE_SPREADSHEET_ID,
                         sheet_name=screenwork_name
                     )
                     old_last_index = int(update_rows[-1][0])
-                    print('get old data from sheet for screenwork')
                 else:
                     update_rows = [['ID', 'Video ID', 'Parent ID', 'Level', 'Text', 'Like count', 'Publish datetime']]
                     old_last_index = 0
@@ -104,7 +113,7 @@ try:
                     )
                     print('create sheet for screenwork')
 
-                print('parse data to google sheet rows')
+                print(f'parse {video_id} data to google sheet rows')
                 # update google sheet
                 for comment in comments:
                     update_rows.append([
@@ -121,24 +130,18 @@ try:
                     sheet_name=screenwork_name,
                     update_rows=update_rows
                 )
-                log_content = f'Update google sheet result: [{update_sheet_result.status_code}] {update_sheet_result.message}'
+                log_content = f'Video id {video_id} update google sheet result: [{update_sheet_result.status_code}] {update_sheet_result.message}'
                 print(log_content)
                 if update_sheet_result.status_code != StatusCode.SUCCESS:
                     update_youtube_log_of_google_sheet(
                         function=YOUTUBE_SEARCH_COMMENTS_FUNCTION_NAME,
                         log_content=log_content
                     )
-        
-                # 根據狀況更新 state
-                if youtube_search_comments_result.status_code == StatusCode.SUCCESS and update_sheet_result.status_code == StatusCode.SUCCESS:
-                    youtube_comment_search_state.rest_video_ids.remove(video_id)
-                elif youtube_search_comments_result.status_code != StatusCode.SUCCESS:
-                    match = re.search(r'\[final next_page_token:(.*?)\]', youtube_search_comments_result.message)
-                    if match:
-                        youtube_comment_search_state.next_page_token = match.group(1)        
+                if update_sheet_result.status_code == StatusCode.SUCCESS:
+                    youtube_comment_search_state.rest_video_ids.remove(video_id)     
 
-            # 更新 Comments_search_state
-            if len(youtube_comment_search_state.rest_video_ids) == 0 and update_sheet_result.status_code == StatusCode.SUCCESS:
+            # update Comments_search_state
+            if len(youtube_comment_search_state.rest_video_ids) == 0:
                 youtube_comment_search_state.status = CommentSearchStatus.Completed
             else:
                 youtube_comment_search_state.status = CommentSearchStatus.Processing
