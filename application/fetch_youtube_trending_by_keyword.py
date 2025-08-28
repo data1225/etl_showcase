@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[3]:
 
 
     
@@ -41,7 +41,7 @@ start_utc_datetime, end_utc_datetime = get_previous_month_range_in_utc()
 #     Topic('科技議題', [TopicDetail('AI'), TopicDetail('科技')]),
 # ]
 topics = [
-    Topic('心理議題', [TopicDetail('心理學'), '自我成長', TopicDetail('心情'), TopicDetail('感情')]),
+    Topic('心理議題', [TopicDetail('心理學'), TopicDetail('自我成長'), TopicDetail('心情'), TopicDetail('感情')]),
     Topic('社會弱勢議題', [TopicDetail('社會弱勢'), TopicDetail('經濟弱勢'), TopicDetail('社會不平等')]),
     Topic('社會議題', [TopicDetail('社會議題'), TopicDetail('社會問題')]),
     Topic('科技議題', [TopicDetail('AI'), TopicDetail('科技')]),
