@@ -58,7 +58,7 @@ try:
         
         if youtube_comment_search_state.status == CommentSearchStatus.Completed:
             print(f"《{screenwork_name}》已記錄指定影評的所有留言。")
-            break
+            continue
         if youtube_comment_search_state.rest_video_ids == []:
             youtube_comment_search_state.rest_video_ids = youtube_video_ids[:]
         else:
