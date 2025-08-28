@@ -36,13 +36,17 @@ class YoutubeComment:
     published_at: str
 
 @dataclass
-class Topic:
-    name: str
-    keywords: List[str]
+class TopicDetail:
+    keyword: str
     youtube_videos: List[YoutubeVideo] = field(default_factory=list)
 
     def add_youtube_videos(self, youtube_videos: List[YoutubeVideo]):
         self.youtube_videos.extend(youtube_videos)
+
+@dataclass
+class Topic:
+    name: str
+    details: List[TopicDetail]
 
 @dataclass
 class CommentSearchState:
