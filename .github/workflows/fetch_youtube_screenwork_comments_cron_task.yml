@@ -15,7 +15,7 @@ jobs:
         run: |
           if [ "${{ vars.RUN_YOUTUBE_VIDEOS_COMMENTS_FETCH_CRON_TASK }}" != "true" ]; then
             echo "❌ Skip: Github Actions variable RUN_YOUTUBE_VIDEOS_COMMENTS_FETCH_CRON_TASK is not set to 'true'."
-            exit 0
+            exit 1
           fi
 
   run-script:
