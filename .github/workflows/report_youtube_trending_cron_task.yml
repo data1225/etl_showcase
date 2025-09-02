@@ -1,0 +1,46 @@
+name: Generate youtube trending reports
+
+on:
+  workflow_dispatch: # 允許手動觸發
+  schedule:
+    - cron: '0 0 28 * *' # 是UTC時間
+
+jobs:
+  build-reports:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Generate Reports
+        run: |
+          python -X dev application/youtube_topic_modeling_pipeline.py
+
+      - name: Commit and push to reports branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # 切到 reports branch，如果沒有就建立
+          git checkout reports || git checkout -b reports
+
+          # 將生成的檔案複製到 branch 根目錄（或指定資料夾）
+          cp -r path/to/generated/html/* .
+
+          # 提交變更
+          git add .
+          git commit -m "Update reports [skip ci]" || echo "No changes to commit"
+          git push origin reports

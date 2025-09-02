@@ -9,8 +9,6 @@
 # In[ ]:
 
 
-# pip install bertopic==0.16.3 sentence-transformers jieba plotly langdetect opencc-python-reimplemented deep-translator
-# pip install deep-translator
 from path_setup import setup_project_root
 root = setup_project_root()
 
