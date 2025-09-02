@@ -25,6 +25,12 @@ jobs:
         run: |
           pip install -r requirements.txt
 
+      - name: Create .env from GitHub Secrets
+        run: |
+          echo "YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }}" >> .env
+          echo "YOUTUBE_SPREADSHEET_ID=${{ secrets.YOUTUBE_SPREADSHEET_ID }}" >> .env
+          echo "GOOGLE_SHEET_JSON_B64=${{ secrets.GOOGLE_SHEET_JSON_B64 }}" >> .env
+
       - name: Generate Reports
         run: |
           python -X dev application/youtube_topic_modeling_pipeline.py
