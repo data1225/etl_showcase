@@ -192,7 +192,7 @@ for topic_name, group_df in grouped_by_topic:
         </style>
     </head>
     <body>
-        <h3 class="title">熱門主題聲量與相似度（Bubble Chart）</h3>
+        <h3 class="title">熱門主題聲量與相似度分佈（Bubble Chart）</h3>
         <p class="subtitle">主題氣泡愈大，代表相關影片數量愈多；主題氣泡間愈近，代表相似性愈高。</p>
         <div class="container">
             <div id="bubble-chart"></div>
