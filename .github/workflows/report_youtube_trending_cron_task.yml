@@ -43,8 +43,8 @@ jobs:
           # 切到 gh-pages branch，如果沒有就建立
           git checkout gh-pages || git checkout -b gh-pages
 
-          # 將生成的檔案複製到 branch 根目錄（或指定資料夾）
-          cp -r path/to/generated/html/* .
+          # 將生成的檔案複製到 branch 指定資料夾
+          cp -r docs/* .
 
           # 提交變更
           git add .
