@@ -51,5 +51,5 @@ jobs:
 
           cp -r ../docs/* ./docs
           git add .
-          git commit -m "Update gh-pages [skip ci]" || echo "No changes to commit"
+          git commit -m "Update youtube trending reports." || echo "No changes to commit"
           git push origin gh-pages
