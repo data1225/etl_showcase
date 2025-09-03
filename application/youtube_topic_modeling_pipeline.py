@@ -6,13 +6,13 @@
 # 以中文分析為核心，使用 `shibing624/text2vec-base-chinese` 產生向量嵌入，
 # 並輸出主題結構（Hierarchy / Bubble）與 Sankey（Topic ↔ Search keyword）。
 
-# In[ ]:
+# In[46]:
 
 
 from path_setup import setup_project_root
 root = setup_project_root()
 
-import os, sys, jieba
+import os, sys, jieba, hdbscan
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 from bertopic import BERTopic
@@ -48,8 +48,11 @@ from etl_showcase.infrastructure.datasource.google_sheets_api import (
     get_full_google_sheet,
 )
 
+def data_source_text(keywords:str):
+    return f"資料來源：蒐集 YouTube 上相關關鍵字的前 300 筆影片標題與描述，並使用 BERTopic 生成熱門議題。<br />本次搜尋關鍵字為：{keywords}。"
 
-# In[ ]:
+
+# In[40]:
 
 
 youtube_videos = [[]]
@@ -66,7 +69,7 @@ print("Loaded rows:", len(df_raw))
 df_raw.head()
 
 
-# In[ ]:
+# In[5]:
 
 
 # ==== 前處理 ====
@@ -83,14 +86,14 @@ df['text_translated'] = df['text_translated'].apply(remove_all_punctuation)
 print(df.head()['text_translated'])
 
 
-# In[ ]:
+# In[52]:
 
-
-def data_source_text(keywords:str):
-    return f"資料來源：蒐集 YouTube 上相關關鍵字的前 300 筆影片標題與描述，並使用 BERTopic 生成熱門議題。本次搜尋關鍵字為：{keywords}。"
 
 embedding_model = SentenceTransformer("shibing624/text2vec-base-chinese")
 vectorizer = CountVectorizer(tokenizer=jieba_tokenizer, lowercase=False, min_df=2)   
+clusterer = hdbscan.HDBSCAN(
+    min_cluster_size=5,   # 一個群集最少需具備樣本數
+)
 
 # ==== 依 Topic 分組建模，並產生各自報表 ==== 
 grouped_by_topic = df.groupby('Category')
@@ -112,6 +115,7 @@ for category_name, group_df in grouped_by_topic:
         embedding_model=embedding_model,
         language="chinese",
         vectorizer_model=vectorizer,
+        hdbscan_model=clusterer,
         verbose=True
     )
     topics, probs = topic_model.fit_transform(docs)
@@ -262,7 +266,7 @@ for category_name, group_df in grouped_by_topic:
         title="熱門議題層級關聯（Hierarchical Clustering）",
         annotations=[dict(
             text=data_source_text(search_keywords),
-            x=0.5, y=-0.15,
+            x=0.5, y=-0.15 if len(topic_info)<30 else -0.1,
             xref="paper", yref="paper",
             showarrow=False,
             font=dict(size=12, color="gray")
