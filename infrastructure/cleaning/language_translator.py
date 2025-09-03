@@ -1,10 +1,14 @@
-from typing import List, Optional, Literal
+import socket
 import pandas as pd
 import plotly.graph_objects as go
+from typing import List, Optional, Literal
 from bertopic import BERTopic
 from langdetect import detect_langs, DetectorFactory
 from langdetect.lang_detect_exception import LangDetectException
 from tqdm.notebook import tqdm
+
+# deep-translator 會透過網路連線使用線上翻譯服務，為避免長時間等待，設定了連線 timeout。
+socket.setdefaulttimeout(30)
 
 try:
     from opencc import OpenCC
