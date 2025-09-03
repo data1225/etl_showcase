@@ -192,7 +192,7 @@ for topic_name, group_df in grouped_by_topic:
         </style>
     </head>
     <body>
-        <h3 class="title">熱門主題聲量與相似度</h3>
+        <h3 class="title">熱門主題聲量與相似度（Bubble Chart）</h3>
         <p class="subtitle">主題氣泡愈大，代表相關影片數量愈多；主題氣泡間愈近，代表相似性愈高。</p>
         <div class="container">
             <div id="bubble-chart"></div>
@@ -256,7 +256,7 @@ for topic_name, group_df in grouped_by_topic:
     # ==== Hierarchy 圖 ====
     fig_h = visualize_dendrogram_like_hierarchy(topic_model)
     fig_h.update_layout(
-        title="熱門主題層級關聯",
+        title="熱門主題層級關聯（Hierarchical Clustering）",
         annotations=[dict(
             text=data_source_text,
             x=0.5, y=-0.15,
@@ -283,7 +283,7 @@ for topic_name, group_df in grouped_by_topic:
     )
     fig_sk.update_layout(
         title=go.layout.Title(
-            text='熱門主題與搜尋關鍵字之關聯<br /><sub>左側為熱門主題，右側為搜尋關鍵字</sub>'
+            text='熱門主題與搜尋關鍵字之關聯（Sankey Diagram）<br /><sub>左側為熱門主題，右側為搜尋關鍵字</sub>'
         ),
         annotations=[dict(
             text=data_source_text,
