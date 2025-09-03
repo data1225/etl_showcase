@@ -1,0 +1,1 @@
+Create this folder for the GitHub Actions report generation.

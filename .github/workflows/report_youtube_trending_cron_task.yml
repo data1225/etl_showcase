@@ -19,14 +19,14 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      # - name: Set up Python
-      #   uses: actions/setup-python@v4
-      #   with:
-      #     python-version: 3.11
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
 
-      # - name: Install dependencies
-      #   run: |
-      #     pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
 
       - name: Create .env from GitHub Secrets
         run: |
@@ -34,13 +34,13 @@ jobs:
           echo "YOUTUBE_SPREADSHEET_ID=${{ secrets.YOUTUBE_SPREADSHEET_ID }}" >> .env
           echo "GOOGLE_SHEET_JSON_B64=${{ secrets.GOOGLE_SHEET_JSON_B64 }}" >> .env
 
-      # - name: Generate Reports
-      #   run: |
-      #     for i in 1 2 3; do
-      #       python -X dev application/youtube_topic_modeling_pipeline.py && break
-      #       echo "Retrying in 30 seconds..."
-      #       sleep 30
-      #     done
+      - name: Generate reports
+        run: |
+          for i in 1 2 3; do
+            python -X dev application/youtube_topic_modeling_pipeline.py && break
+            echo "Retrying in 30 seconds..."
+            sleep 30
+          done
 
       - name: Commit and push to gh-pages branch
         run: |
