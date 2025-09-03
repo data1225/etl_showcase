@@ -6,7 +6,7 @@
 # 以中文分析為核心，使用 `shibing624/text2vec-base-chinese` 產生向量嵌入，
 # 並輸出主題結構（Hierarchy / Bubble）與 Sankey（Topic ↔ Search keyword）。
 
-# In[3]:
+# In[ ]:
 
 
 from path_setup import setup_project_root
@@ -86,24 +86,26 @@ print(df.head()['text_translated'])
 # In[ ]:
 
 
-from hdbscan import HDBSCAN
+def data_source_text(keywords:str):
+    return f"資料來源：蒐集 YouTube 上相關關鍵字的前 300 筆影片標題與描述，並使用 BERTopic 生成熱門議題。本次搜尋關鍵字為：{keywords}。"
+
 embedding_model = SentenceTransformer("shibing624/text2vec-base-chinese")
 vectorizer = CountVectorizer(tokenizer=jieba_tokenizer, lowercase=False, min_df=2)   
-data_source_text = "資料來源：蒐集 YouTube 上相關關鍵字前 300 名影片標題與描述，使用 BERTopic 生成熱門主題。"
 
 # ==== 依 Topic 分組建模，並產生各自報表 ==== 
-grouped_by_topic = df.groupby('Topic')
-for topic_name, group_df in grouped_by_topic: 
-    print(f"--- 處理主題: {topic_name} ---")
+grouped_by_topic = df.groupby('Category')
+for category_name, group_df in grouped_by_topic: 
+    print(f"--- 處理領域: {category_name} ---")
     
     docs = group_df["text_translated"].tolist()
     if not docs:
-        print(f"主題 '{topic_name}' 沒有資料，跳過。")
+        print(f"領域 '{category_name}' 沒有資料，跳過。")
         continue
 
     # ==== 所有圖表共通變數與前置處理 ====
     # 複製df，以避免 SettingWithCopyWarning 錯誤
-    group_df = group_df[['Topic', 'Search keyword', 'merged_text', 'cleaned_text', 'text_translated']].copy()
+    group_df = group_df[['Category', 'Search keyword', 'merged_text', 'cleaned_text', 'text_translated']].copy()
+    search_keywords = '、'.join(group_df['Search keyword'].unique())
 
     # 依每圈資料訓練新模型
     topic_model = BERTopic(
@@ -114,20 +116,21 @@ for topic_name, group_df in grouped_by_topic:
     )
     topics, probs = topic_model.fit_transform(docs)
     group_df["topic_id"] = topics
-    # 移除未在任何文本出現的主題
+    # 移除未在任何文本出現的領域
     group_df = group_df[group_df['topic_id'] > -1]
 
     topic_info = topic_model.get_topic_info()    
     topic_info = topic_info[topic_info['Topic'] > -1]
 
-    docs_dir = os.path.join(os.getcwd(), '..', 'docs', topic_name)
+    docs_dir = os.path.join(os.getcwd(), '..', 'docs', category_name)
     os.makedirs(docs_dir, exist_ok=True)
     bubble_path = os.path.join(docs_dir, "topics_bubble.html")
     hier_path = os.path.join(docs_dir, "topics_hierarchy.html")
     sankey_path = os.path.join(docs_dir, "topic_keyword_sankey.html")
-    
+
+    print(len(topic_info))
     if len(topic_info) < 3:
-        print('主題數量太少，無法繪圖')
+        print('領域數量太少，無法繪圖')
 
         warning_html = """
         <!DOCTYPE html>
@@ -141,7 +144,7 @@ for topic_name, group_df in grouped_by_topic:
             </style>
         </head>
         <body>
-            <p>該議題分析出來的主題數量過少，無法視覺化。</p>
+            <p>該領域分析出來的議題數量過少，無法視覺化。</p>
         </body>
         </html>
         """
@@ -157,13 +160,13 @@ for topic_name, group_df in grouped_by_topic:
     fig_bubble.update_layout(title="")
     save_plotly_html(fig_bubble, bubble_path)
     
-    # 準備html中 主題ID vs 主題內容 對照表資料
+    # 準備html中 議題ID vs 議題內容 對照表資料
     topic_table_df = pd.DataFrame({
         'Topic': topic_info['Topic'],
         'Keywords': topic_info['Name'].apply(lambda x: ' | '.join(x.split('_')[:5]))
     })
     table_data = go.Table(
-        header=dict(values=["主題代號", "主題內容"],
+        header=dict(values=["議題代號", "議題內容"],
                     fill_color='paleturquoise',
                     align='left'),
         cells=dict(values=[topic_table_df.Topic, topic_table_df.Keywords],
@@ -187,18 +190,18 @@ for topic_name, group_df in grouped_by_topic:
             #topic-table {{ flex: 1; overflow-y: auto; box-sizing: border-box; }}
             .hover-cell {{ cursor: pointer; font-weight: bold; text-decoration: underline; }}
             h3.title {{ margin-block-end: .1em; font-weight: 320; }}
-            p.subtitle {{ margin-block-start: 0em; margin-block-end: .4em; font-size: .95rem; font-weight: 300; }}
+            p.subtitle {{ margin-block-start: 0em; margin-block-end: .4em; font-size: .9rem; font-weight: 300; }}
             p.source {{ font-size: .8rem; font-weight: 300; color: gray; }}
         </style>
     </head>
     <body>
-        <h3 class="title">熱門主題聲量與相似度分佈（Bubble Chart）</h3>
-        <p class="subtitle">主題氣泡愈大，代表相關影片數量愈多；主題氣泡間愈近，代表相似性愈高。</p>
+        <h3 class="title">熱門議題聲量與相似度分佈（Bubble Chart）</h3>
+        <p class="subtitle">議題氣泡愈大，代表相關影片數量愈多；議題氣泡間愈近，代表相似性愈高。</p>
         <div class="container">
             <div id="bubble-chart"></div>
             <div id="topic-table"></div>
         </div>
-        <div><p class="source">{data_source_text}</p></div>
+        <div><p class="source">{data_source_text(search_keywords)}</p></div>
         <script>
             document.addEventListener('DOMContentLoaded', function() {{
                 var bubbleData = {bubble_data};
@@ -256,9 +259,9 @@ for topic_name, group_df in grouped_by_topic:
     # ==== Hierarchy 圖 ====
     fig_h = visualize_hierarchical_clustering(topic_model)
     fig_h.update_layout(
-        title="熱門主題層級關聯（Hierarchical Clustering）",
+        title="熱門議題層級關聯（Hierarchical Clustering）",
         annotations=[dict(
-            text=data_source_text,
+            text=data_source_text(search_keywords),
             x=0.5, y=-0.15,
             xref="paper", yref="paper",
             showarrow=False,
@@ -268,7 +271,7 @@ for topic_name, group_df in grouped_by_topic:
     save_plotly_html(fig_h, hier_path)
     
     # ==== Sankey 圖 ====
-    # 建立圖中主題格式: "ID_關鍵字1_關鍵字2..."
+    # 建立圖中領域格式: "ID_關鍵字1_關鍵字2..."
     topic_label_map = {}
     for index, row in topic_info.iterrows():
         topic_id = row['Topic']
@@ -283,10 +286,10 @@ for topic_name, group_df in grouped_by_topic:
     )
     fig_sk.update_layout(
         title=go.layout.Title(
-            text='熱門主題與搜尋關鍵字之關聯（Sankey Diagram）<br /><sub>左側為熱門主題，右側為搜尋關鍵字</sub>'
+            text='熱門議題與搜尋關鍵字之關聯（Sankey Diagram）<br /><sub>左側為熱門議題，右側為搜尋關鍵字</sub>'
         ),
         annotations=[dict(
-            text=data_source_text,
+            text=data_source_text(search_keywords),
             x=0.5, y=-0.1,
             xref="paper", yref="paper",
             showarrow=False,

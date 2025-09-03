@@ -10,7 +10,7 @@ YOUTUBE_SEARCH_COMMENTS_FUNCTION_NAME = 'Search_comments'
 YOUTUBE_LOGS_SHEET_NAME = 'Logs'
 YOUTUBE_COMMENTS_SEARCH_STATE_SHEET_NAME = 'Comments_search_state'
 VIDEO_COLUMN_ORDER = [
-    "Topic",
+    "Category",
     "Search keyword",
     "Video ID",
     "Video title",

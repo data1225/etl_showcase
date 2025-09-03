@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[3]:
+# In[ ]:
 
 
     
@@ -23,6 +23,7 @@ from etl_showcase.infrastructure.datasource.google_sheets_api import (
     update_youtube_log_of_google_sheet,
 )
 from etl_showcase.config.youtube import (
+    VIDEO_COLUMN_ORDER,
     YOUTUBE_SPREADSHEET_ID,
     YOUTUBE_SEARCH_VIDEOS_FUNCTION_NAME,
     YOUTUBE_LOGS_SHEET_NAME,
@@ -41,10 +42,10 @@ start_utc_datetime, end_utc_datetime = get_previous_month_range_in_utc()
 #     Topic('科技議題', [TopicDetail('AI'), TopicDetail('科技')]),
 # ]
 topics = [
-    Topic('心理議題', [TopicDetail('心理學'), TopicDetail('自我成長'), TopicDetail('心情'), TopicDetail('感情')]),
-    Topic('社會弱勢議題', [TopicDetail('社會弱勢'), TopicDetail('經濟弱勢'), TopicDetail('社會不平等')]),
-    Topic('社會議題', [TopicDetail('社會議題'), TopicDetail('社會問題')]),
-    Topic('科技議題', [TopicDetail('AI'), TopicDetail('科技')]),
+    Topic('心理領域', [TopicDetail('心理學'), TopicDetail('自我成長'), TopicDetail('心情'), TopicDetail('感情')]),
+    Topic('社會弱勢領域', [TopicDetail('社會弱勢'), TopicDetail('經濟弱勢'), TopicDetail('社會不平等')]),
+    Topic('社會領域', [TopicDetail('社會議題'), TopicDetail('社會問題')]),
+    Topic('科技領域', [TopicDetail('AI'), TopicDetail('科技')]),
 ]
 
 print('searching youtube vidoes')
@@ -72,10 +73,7 @@ try:
     
     # transform original data to google sheet rows
     print('transforming original data to google sheet rows')
-    update_rows = [["Topic", "Search keyword",
-                    "Video ID", "Video title", "Video description",
-                    "Publish datetime", 
-                    "Channel name", "Channel ID", "Thumbnail URL"]]
+    update_rows = [VIDEO_COLUMN_ORDER]
     for topic in topics:
         for detail in topic.details:
             for video in detail.youtube_videos:

@@ -74,16 +74,17 @@ class LanguageTranslator:
         if not _GT:
             print("deep_translator 模組未安裝，無法執行批量翻譯。")
             return texts
-            
+
+        print(f"偵測所有文本所屬語言")
         # 偵測所有文本的語言，只呼叫一次
         detected_langs = self.batch_detect_lang(texts)
-        
+
+        print(f"分離目標語言文本和非目標語言文本")
         # 使用單次偵測結果來建立標誌列表，避免在迴圈中重複呼叫
         is_target_lang_flags = [
             (lang is not None and lang.startswith(target_language.split('-')[0])) if text else False
             for text, lang in zip(texts, detected_langs)
         ]
-
         # 分離目標語言文本和非目標語言文本
         non_target_texts = [text for i, text in enumerate(texts) if not is_target_lang_flags[i]]
         target_texts = [text for i, text in enumerate(texts) if is_target_lang_flags[i]]
