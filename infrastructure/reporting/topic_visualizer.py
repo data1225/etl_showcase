@@ -7,7 +7,7 @@ from bertopic import BERTopic
 def visualize_topics_bubble(model: BERTopic) -> go.Figure:
     return model.visualize_topics()
 
-def visualize_dendrogram_like_hierarchy(model: BERTopic) -> go.Figure:
+def visualize_hierarchical_clustering(model: BERTopic) -> go.Figure:
     return model.visualize_hierarchy()
 
 def visualize_sankey(

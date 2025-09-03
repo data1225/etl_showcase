@@ -6,7 +6,7 @@
 # 以中文分析為核心，使用 `shibing624/text2vec-base-chinese` 產生向量嵌入，
 # 並輸出主題結構（Hierarchy / Bubble）與 Sankey（Topic ↔ Search keyword）。
 
-# In[ ]:
+# In[3]:
 
 
 from path_setup import setup_project_root
@@ -33,7 +33,7 @@ from etl_showcase.infrastructure.cleaning.text_tokenizer import (
 )
 from etl_showcase.infrastructure.reporting.topic_visualizer import (
     visualize_topics_bubble, 
-    visualize_dendrogram_like_hierarchy, 
+    visualize_hierarchical_clustering, 
     visualize_sankey, 
     save_plotly_html,
 )
@@ -254,7 +254,7 @@ for topic_name, group_df in grouped_by_topic:
         f.write(html_content)
         
     # ==== Hierarchy 圖 ====
-    fig_h = visualize_dendrogram_like_hierarchy(topic_model)
+    fig_h = visualize_hierarchical_clustering(topic_model)
     fig_h.update_layout(
         title="熱門主題層級關聯（Hierarchical Clustering）",
         annotations=[dict(
