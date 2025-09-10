@@ -12,6 +12,8 @@
 from path_setup import setup_project_root
 root = setup_project_root()
 
+import dataclasses
+import json
 from etl_showcase.domain.models import (
     BaseResponse, 
     StatusCode,
@@ -29,16 +31,19 @@ from etl_showcase.infrastructure.datasource.google_sheets_api import (
     write_secret_json,
     delete_secret_json,
     update_full_google_sheet,
-    update_youtube_log_of_google_sheet,
     create_google_sheet,
     is_sheet_exists,
 )
 from etl_showcase.config.youtube import (
     YOUTUBE_SPREADSHEET_ID,
-    YOUTUBE_SEARCH_VIDEOS_FUNCTION_NAME,
-    YOUTUBE_LOGS_SHEET_NAME,
 )
 
+# 宣告一個繼承 Topic 的新 class
+@dataclasses.dataclass
+class ScreenworkTopic(Topic):
+    cultural_sphere: str = 'Default'
+    category: str = 'Default'
+    publish_year: int = 0
 
 # search youtube videos
 search_youtube_result = BaseResponse[YoutubeVideo](
@@ -47,26 +52,46 @@ search_youtube_result = BaseResponse[YoutubeVideo](
     content=None
 )    
 start_utc_datetime, end_utc_datetime = get_previous_month_range_in_utc()
+
+# 使用新宣告的 class 並填入預設值
 topics = [
-    Topic('藏海傳-zh', [TopicDetail('藏海傳 影評')]),
-    Topic('藏海傳-en', [TopicDetail('Zang Hai Zhuan review')]),
-    Topic('琅琊榜-zh', [TopicDetail('琅琊榜 影評')]),
-    Topic('琅琊榜-en', [TopicDetail('Nirvana in Fire review')]),
-    Topic('慶餘年-zh', [TopicDetail('慶餘年 影評')]),
-    Topic('慶餘年-en', [TopicDetail('Joy of Life review')]),
+    ScreenworkTopic('琅琊榜', [TopicDetail('琅琊榜 影評')], 'zh', '復仇劇', 2015),
+    ScreenworkTopic('Nirvana in Fire', [TopicDetail('Nirvana in Fire review')], 'en', '復仇劇', 2015),
+    ScreenworkTopic('慶餘年 第一季', [TopicDetail('慶餘年 影評')], 'zh', '一般權謀劇 ', 2019),
+    ScreenworkTopic('Joy of Life Season 1', [TopicDetail('Joy of Life Season 1 review')], 'en', '一般權謀劇', 2015),
+    ScreenworkTopic('贅婿', [TopicDetail('贅婿 影評')], 'zh', '一般權謀劇', 2021),
+    ScreenworkTopic('My Heroic Husband', [TopicDetail('My Heroic Husband review')], 'en', '一般權謀劇', 2021),
+    ScreenworkTopic('雪中​​悍刀行', [TopicDetail('雪中​​悍刀行 影評')], 'zh', '一般權謀劇 ', 2021),
+    ScreenworkTopic('Sword Snow Stride', [TopicDetail('Sword Snow Stride review')], 'en', '一般權謀劇', 2021),
+    ScreenworkTopic('慶餘年 第二季', [TopicDetail('慶餘年 影評')], 'zh', '一般權謀劇', 2024),
+    ScreenworkTopic('Joy of Life Season 2', [TopicDetail('Joy of Life Season 2 review')], 'en', '一般權謀劇', 2024),
+    ScreenworkTopic('藏海傳', [TopicDetail('藏海傳 影評')], 'zh', '復仇劇 ', 2025),
+    ScreenworkTopic('The Legend of Zang Hai', [TopicDetail('The Legend of Zang Hai review')], 'en', '復仇劇', 2025),
 ]
 
 for topic in topics:
     for detail in topic.details:
-        # Determine the language based on topic name
-        if 'en' in topic.name:
+        # 根據 cultural_sphere 判斷語言
+        if topic.cultural_sphere == 'en':
             relevanceLanguage = LanguageCode.English
         else:
             relevanceLanguage = LanguageCode.Chinese
 
+        start_utc_datetime = ''
+        end_utc_datetime = ''
+        # 因一二季的影評混在一起，所以用時間分開搜尋影評。
+        # 第二季首播是2024年5月16日，但可能是為了宣傳第二季或頻道自身經營流量需求，
+        # 2023年就有慶餘年第二季資料，故把區隔時間訂在+8時區2023年1月1日。
+        if topic.name == '慶餘年 第一季':
+            end_utc_datetime = '2022-12-31T15:59:59Z'
+        elif topic.name == '慶餘年 第二季':
+            start_utc_datetime = '2022-12-31T16:00:00Z'
+
         search_youtube_result = youtube_search_videos(
             query=detail.keyword,
-            search_count=50,
+            search_count=60,
+            start_utc_datetime = start_utc_datetime,
+            end_utc_datetime = end_utc_datetime,
             order=VideoSearchOrder.RELEVANCE,
             relevanceLanguage=relevanceLanguage
         )
@@ -93,24 +118,23 @@ try:
         
     ####### 影評影片資料
     # transform original data to table
-    update_rows = [["Topic", "Search keyword", 
-                    "Video ID", "Video URL", "Video title", "Video description", 
-                    "Publish datetime", "Channel name", "Channel ID", "Thumbnail URL"]]
+    update_rows = [["Screenwork", "Publish year", "Cultural sphere", "Category", "Search keyword", 
+                     "Video ID", "Video URL", "Video title", "Video description", "Video content"]]
     for topic in topics:
         for detail in topic.details:
             for video in detail.youtube_videos:
                 update_rows.append([
                     topic.name,
+                    topic.publish_year,
+                    topic.cultural_sphere,
+                    topic.category,
                     detail.keyword,
                     video.id,
                     f"https://www.youtube.com/watch?v={video.id}",
                     video.title,
                     video.description,
-                    video.published_at,
-                    video.channel_title,
-                    video.channel_id,
-                    video.thumbnail_url
-            ])
+                    "" # 該內容將另外抓取
+                ])
     # update google sheet
     update_sheet_result = update_full_google_sheet(
         spreadsheet_id = YOUTUBE_SPREADSHEET_ID,
@@ -130,9 +154,9 @@ try:
             github_action_variable = {
                 "screenwork_name": topic.name,
                 "video_ids": video_ids
-            }     
+            }      
             # 將字典轉換為 JSON 字串
-            github_action_json_string = json.dumps(github_action_variable, ensure_ascii=False)   
+            github_action_json_string = json.dumps(github_action_variable, ensure_ascii=False)    
             # 根據新的結構更新陣列
             update_rows.append([
                 topic.name,
