@@ -71,7 +71,7 @@ def get_youtube_comment_search_state(screenwork):
                 # Map columns to dataclass fields
                 status = CommentSearchStatus(row[1])
                 rest_video_ids = row[2].split(',') if row[2] else []
-                next_page_token = row[3] if row[3] else None
+                next_page_token = row[3] if row[3] else ''
                 log_time = datetime.fromisoformat(row[4])
 
                 return CommentSearchState(
