@@ -29,7 +29,7 @@ def preprocess_dataframe(
     target_variant: str = "zh-TW",
     merge_fields: Optional[List[str]] = None
 ) -> pd.DataFrame:
-    translator = LanguageTranslator(target_variant=target_variant)
+    translator = LanguageTranslator()
 
     print(f'開始合併文字欄位，共 {len(df)} 筆資料')
     # === Step 1: 合併文字欄位 ===

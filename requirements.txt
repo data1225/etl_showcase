@@ -6,9 +6,11 @@ gspread==6.2.0
 python-dotenv==0.21.0
 pytz==2024.1
 ipywidgets==8.1.5
+xlsxwriter==3.2.9
 
 # youtube topic modeling
-bertopic==0.16.3 
+bertopic==0.17.3
+hdbscan==0.8.40
 sentence-transformers==5.1.0 
 jieba==0.42.1
 plotly==5.24.1
@@ -16,3 +18,8 @@ langdetect==1.0.9
 opencc-python-reimplemented==0.1.7
 deep-translator==1.11.4
 
+# trickery drama evolution study
+sentencepiece==0.2.1
+youtube-transcript-api==1.2.2
+yt-dlp==2025.9.23
+faster-whisper==1.2.0

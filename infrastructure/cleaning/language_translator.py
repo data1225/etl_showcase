@@ -26,25 +26,66 @@ except Exception:
 DetectorFactory.seed = 42
 
 class LanguageTranslator:
-    def __init__(self, target_variant: Literal["zh-TW", "zh-CN"] = "zh-TW"):
-        self.target_variant = target_variant
+    def __init__(self):
         if OpenCC is not None:
             self.cc_to_tw = OpenCC('s2t')
             self.cc_to_cn = OpenCC('t2s')
         else:
             self.cc_to_tw = self.cc_to_cn = None
 
-    def to_target_chinese_variant(self, text: str) -> str:
+    def to_target_chinese_variant(self, text: str, target_variant: str = "zh-TW") -> str:
         """
         將中文文本轉換為指定的繁體或簡體變體。
+        如果 target_variant 不是 zh-TW/zh-CN，就直接回傳原文。
         """
         if self.cc_to_tw is None or self.cc_to_cn is None:
             return text
-        if self.target_variant == "zh-TW":
+        if target_variant == "zh-TW":
             return self.cc_to_tw.convert(text)
-        else:
+        elif target_variant == "zh-CN":
             return self.cc_to_cn.convert(text)
+        else:
+            return text
 
+    def detect_lang(self, text: str) -> Optional[str]:
+        """
+        偵測單一文本的語言，並修正OpenCC部分中文誤判問題。
+        """
+        if not text:
+            return None
+        try:
+            result = detect_langs(text)[0].lang
+            # --- 修正: 若偵測為韓文但含有大量中文字，視為中文 ---
+            if result == "ko":
+                zh_char_count = sum('\u4e00' <= ch <= '\u9fff' for ch in text)
+                if zh_char_count >= max(2, len(text) * 0.3):
+                    result = "zh"
+            return result
+        except LangDetectException as e:
+            # print(f"語言偵測錯誤: {e}, text:{text}")
+            return None
+
+    def translate(self, text: str, source_language: str="auto", target_language: str="en") -> str:
+        """
+        將單一文本翻譯為目標語言。
+        """
+        if not _GT:
+            print("deep_translator 模組未安裝，無法執行翻譯。")
+            
+            return text
+
+        # 檢查文本是否已經是目標語言
+        detect_lang = self.detect_lang(text)
+        if detect_lang is None or self.detect_lang(text).startswith(target_language.split('-')[0]):
+            return text
+        
+        try:
+            translator = _GT(source=source_language, target=target_language)
+            return translator.translate(text)
+        except Exception as e:
+            print(f"單一文本翻譯錯誤: {e}")
+            return text
+    
     def batch_detect_lang(self, texts: List[str]) -> List[Optional[str]]:
         """
         批量偵測文字語言，並修正OpenCC部分中文誤判問題。
@@ -63,11 +104,12 @@ class LanguageTranslator:
                     if zh_char_count >= max(2, len(text) * 0.3):
                         result = "zh"
                 langs.append(result)
-            except LangDetectException:
+            except LangDetectException as e:
+                print(f"語言偵測錯誤: {e}, text:{text}")
                 langs.append(None)
         return langs
     
-    def batch_translate(self, texts: List[str], target_language: str) -> List[str]:
+    def batch_translate(self, texts: List[str], source_language: str="auto", target_language: str="en") -> List[str]:
         """
         批量將非目標語言的文本翻譯為目標語言。
         """
@@ -97,7 +139,7 @@ class LanguageTranslator:
             non_target_chunks = [non_target_texts[i:i + chunk_size] for i in range(0, len(non_target_texts), chunk_size)]
             
             try:
-                translator = _GT(source='auto', target=target_language)
+                translator = _GT(source=source_language, target=target_language)
                 # 使用tqdm包裹分塊的迴圈，顯示進度
                 for chunk in tqdm(non_target_chunks, desc=f'批量翻譯非目標語言文本 (共 {len(non_target_texts)} 筆)'):
                     translated_non_target.extend(translator.translate_batch(chunk))

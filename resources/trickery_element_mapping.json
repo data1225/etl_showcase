@@ -1,0 +1,26 @@
+{
+  "zh": {
+    "政治鬥爭": ["宮廷", "政權", "朝堂", "權力", "世子／皇位爭奪", "官員爭斗", "派系鬥爭"],
+    "復仇": ["雪恨", "報復", "血仇", "冤案", "昔日仇敵", "家族冤屈"],
+    "策略博弈": ["謀略", "計謀", "布局", "權謀", "心機", "棋子", "暗算"],
+    "背叛與陰謀": ["背叛", "叛變", "合謀", "密謀", "陷害", "暗箭"],
+    "心理戰": ["人心", "心機", "操控", "離間", "疑心", "心理戰", "虛實"],
+    "盟約與利益交換": ["盟約", "聯盟", "交易", "利益交換", "互惠", "背信", "結盟分裂"],
+    "秘密與掩飾": ["隱瞞", "偽裝", "暗中調查", "秘密人物", "身分揭露", "偽裝雙重身分"],
+    "法治與制度衝突": ["律法", "制度", "禮法", "條文衝突", "律令爭議", "制衡"],
+    "忠義與家國": ["忠誠", "家國情懷", "家族責任", "忠義困境", "國家利益"],
+    "宿命與命運": ["命運", "定數", "宿命糾葛", "預言", "天命"]
+  },
+  "en": {
+    "Political Struggle": ["Court", "Power", "Politics", "Succession", "Faction", "Regime Change"],
+    "Revenge": ["Revenge", "Vendetta", "Retribution", "Blood Feud", "Wronged Past"],
+    "Strategic Gameplay": ["Strategy", "Scheme", "Plot", "Chess", "Blueprint", "Tactics"],
+    "Betrayal & Conspiracy": ["Betrayal", "Conspiracy", "Treachery", "Plotting", "Backstab", "Collusion"],
+    "Psychological Manipulation": ["Manipulation", "Mind Games", "Suspicion", "Divide and Rule", "Misdirection", "Psychological Warfare"],
+    "Alliances & Deals": ["Alliance", "Pact", "Deal", "Exchange", "Coalition", "Break Alliance"],
+    "Secrets & Disguise": ["Secrets", "Disguise", "Hidden Identity", "Undercover", "Secret Agent", "Double Life"],
+    "Law & Institutional Conflict": ["Law", "Institution", "Rule of Law", "Legal Clash", "Checks and Balances", "Systemic Conflict"],
+    "Loyalty & Duty": ["Loyalty", "Duty", "Patriotism", "Family Obligation", "Conflict of Interest"],
+    "Fate & Destiny": ["Fate", "Destiny", "Prophecy", "Predestined", "Inevitability"]
+  }
+}

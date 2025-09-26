@@ -43,9 +43,35 @@ def remove_all_punctuation(text: str) -> str:
     text = re.sub(r"\s+", " ", text).strip()    
     return text
 
+def remove_non_chinese_and_noise(text: str) -> str:
+    """
+    移除所有非中文的字元（包括英文、日文、韓文、數字、標點），僅保留中文和空格。
+    """
+    cleaned_text = re.sub(r"[^\u4e00-\u9fff\s]", " ", text)
+    return re.sub(r"\s+", " ", cleaned_text).strip()
+
+def remove_non_japanese_and_noise(text: str) -> str:
+    """
+    移除所有非日文的字元，僅保留日文假名、漢字和空格。
+    """
+    cleaned_text = re.sub(r"[^\u3040-\u30ff\u4e00-\u9fff\s]", " ", text)
+    return re.sub(r"\s+", " ", cleaned_text).strip()
+
+def remove_non_korean_and_noise(text: str) -> str:
+    """
+    移除所有非韓文的字元，僅保留韓文和空格。
+    """
+    cleaned_text = re.sub(r"[^\uac00-\ud7af\s]", " ", text)
+    return re.sub(r"\s+", " ", cleaned_text).strip()
+
+def remove_non_english_and_noise(text: str) -> str:
+    """
+    移除所有非英文的字元，僅保留英文字母和空格。
+    """
+    cleaned_text = re.sub(r"[^a-zA-Z\s]", " ", text)
+    return re.sub(r"\s+", " ", cleaned_text).strip()
+
 def clean_text(text: str) -> str:
-    if not isinstance(text, str):
-        text = str(text) if text is not None else ""
     text = normalize_unicode(text)
     text = strip_html(text)
     text = remove_urls(text)
