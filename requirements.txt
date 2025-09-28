@@ -7,6 +7,7 @@ python-dotenv==0.21.0
 pytz==2024.1
 ipywidgets==8.1.5
 xlsxwriter==3.2.9
+matplotlib==3.9.2
 
 # youtube topic modeling
 bertopic==0.17.3
