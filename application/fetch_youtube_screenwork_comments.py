@@ -84,7 +84,7 @@ try:
             if youtube_search_comments_result.status_code != StatusCode.SUCCESS:
                 match = re.search(r'\[final next_page_token:(.*?)\]', youtube_search_comments_result.message)
                 if match:
-                    youtube_comment_search_state.next_page_token = match.group(1)    
+                    youtube_comment_search_state.next_page_token = match.group(1) 
 
                 youtube_comment_search_state.status = CommentSearchStatus.Processing
                 youtube_comment_search_state.log_time = get_now_time()

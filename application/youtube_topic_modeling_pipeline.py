@@ -6,7 +6,7 @@
 # 以中文分析為核心，使用 `shibing624/text2vec-base-chinese` 產生向量嵌入，
 # 並輸出主題結構（Hierarchy / Bubble）與 Sankey（Topic ↔ Search keyword）。
 
-# In[46]:
+# In[1]:
 
 
 from path_setup import setup_project_root
@@ -31,11 +31,13 @@ from etl_showcase.infrastructure.cleaning.text_cleaner import (
 from etl_showcase.infrastructure.cleaning.text_tokenizer import (
     jieba_tokenizer
 )
+from etl_showcase.infrastructure.reporting.html_export import (
+    save_plotly_html,
+)
 from etl_showcase.infrastructure.reporting.topic_visualizer import (
     visualize_topics_bubble, 
     visualize_hierarchical_clustering, 
     visualize_sankey, 
-    save_plotly_html,
 )
 from etl_showcase.config.youtube import (
     YOUTUBE_SPREADSHEET_ID,
@@ -52,7 +54,7 @@ def data_source_text(keywords:str):
     return f"資料來源：蒐集 YouTube 上相關關鍵字的前 300 筆影片標題與描述，並使用 BERTopic 生成熱門議題。<br />本次搜尋關鍵字為：{keywords}。"
 
 
-# In[40]:
+# In[2]:
 
 
 youtube_videos = [[]]
@@ -86,7 +88,7 @@ df['text_translated'] = df['text_translated'].apply(remove_all_punctuation)
 print(df.head()['text_translated'])
 
 
-# In[52]:
+# In[9]:
 
 
 embedding_model = SentenceTransformer("shibing624/text2vec-base-chinese")
@@ -302,11 +304,11 @@ for category_name, group_df in grouped_by_topic:
     )
     save_plotly_html(fig_sk, sankey_path)
     
-    # ==== 儲存模型與標註資料 ====
-    topic_model.save(os.path.join(docs_dir, "bertopic_model"), serialization="safetensors")
-    group_df.to_csv(os.path.join(docs_dir, "docs_with_topics.csv"), index=False, encoding="utf-8-sig")
+    # # ==== 儲存模型與標註資料 ====
+    # topic_model.save(os.path.join(docs_dir, "bertopic_model"), serialization="safetensors")
+    # group_df.to_csv(os.path.join(docs_dir, "docs_with_topics.csv"), index=False, encoding="utf-8-sig")
     
-    print("Saved:", bubble_path, hier_path, sankey_path)
+    print("All reports generated successfully!")
 
 
 # In[ ]:
