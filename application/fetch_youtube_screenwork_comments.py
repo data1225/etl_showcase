@@ -106,7 +106,6 @@ try:
                         spreadsheet_id=YOUTUBE_SPREADSHEET_ID,
                         sheet_name=screenwork_name
                     )
-                    print(len(update_rows))
                     old_last_index = int(update_rows[-1][0])
                 else:
                     update_rows = [['ID', 'Video ID', 'Parent ID', 'Level', 'Text', 'Like count', 'Publish datetime']]
