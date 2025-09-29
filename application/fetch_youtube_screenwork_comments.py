@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[11]:
 
 
 
@@ -106,6 +106,7 @@ try:
                         spreadsheet_id=YOUTUBE_SPREADSHEET_ID,
                         sheet_name=screenwork_name
                     )
+                    print(len(update_rows))
                     old_last_index = int(update_rows[-1][0])
                 else:
                     update_rows = [['ID', 'Video ID', 'Parent ID', 'Level', 'Text', 'Like count', 'Publish datetime']]
@@ -122,7 +123,7 @@ try:
                     update_rows.append([
                         comment.id + old_last_index,
                         comment.video_id,
-                        comment.parent_id + old_last_index,
+                        (comment.parent_id + old_last_index) if comment.parent_id is not None else comment.parent_id,
                         comment.level,
                         comment.textDisplay,
                         comment.likeCount,
