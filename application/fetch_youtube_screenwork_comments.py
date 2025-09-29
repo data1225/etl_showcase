@@ -122,7 +122,7 @@ try:
                     update_rows.append([
                         comment.id + old_last_index,
                         comment.video_id,
-                        comment.parent_id,
+                        comment.parent_id + old_last_index,
                         comment.level,
                         comment.textDisplay,
                         comment.likeCount,

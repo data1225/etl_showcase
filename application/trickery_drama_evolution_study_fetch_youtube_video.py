@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[7]:
 
 
 
@@ -48,12 +48,10 @@ class ScreenworkTopic(Topic):
     publish_year: int = 0
 
 # 使用新宣告的 class 並填入預設值
-topics = [
+topics = [ 
     ScreenworkTopic('琅琊榜', [TopicDetail('琅琊榜 影評')], 'zh', '復仇劇', 2015),
-    ScreenworkTopic('Nirvana in Fire', [TopicDetail('Nirvana in Fire review')], 'en', '復仇劇', 2015),
-    ScreenworkTopic('慶餘年 第一季', [TopicDetail('慶餘年 影評')], 'zh', '一般權謀劇 ', 2019),
-    ScreenworkTopic('Joy of Life Season 1', [TopicDetail('Joy of Life Season 1 review')], 'en', '一般權謀劇', 2015),
-    ScreenworkTopic('贅婿', [TopicDetail('贅婿 影評')], 'zh', '一般權謀劇', 2021),
+    ScreenworkTopic('Nirvana in Fire', [TopicDetail('Nirvana in Fire review')], 'en', '復仇劇', 2015),    
+    ScreenworkTopic('Joy of Life Season 1', [TopicDetail('Joy of Life Season 1 review')], 'en', '一般權謀劇', 2015),       
     ScreenworkTopic('My Heroic Husband', [TopicDetail('My Heroic Husband review')], 'en', '一般權謀劇', 2021),
     ScreenworkTopic('雪中悍刀行', [TopicDetail('雪中悍刀行 影評')], 'zh', '一般權謀劇 ', 2021),
     ScreenworkTopic('Sword Snow Stride', [TopicDetail('Sword Snow Stride review')], 'en', '一般權謀劇', 2021),
@@ -61,6 +59,9 @@ topics = [
     ScreenworkTopic('Joy of Life Season 2', [TopicDetail('Joy of Life Season 2 review')], 'en', '一般權謀劇', 2024),
     ScreenworkTopic('藏海傳', [TopicDetail('藏海傳 影評')], 'zh', '復仇劇 ', 2025),
     ScreenworkTopic('The Legend of Zang Hai', [TopicDetail('The Legend of Zang Hai review')], 'en', '復仇劇', 2025),
+    # 慶餘年第一季、贅婿 其搜尋關鍵字如只放「劇名 影評」會撈到許多不相關影片，故把搜尋關鍵字改成「劇名 電視劇 影評」再重新撈取資料。
+    ScreenworkTopic('慶餘年 第一季', [TopicDetail('慶餘年 電視劇 影評')], 'zh', '一般權謀劇 ', 2019),
+    ScreenworkTopic('贅婿', [TopicDetail('贅婿 電視劇 影評')], 'zh', '一般權謀劇', 2021), 
 ]
 
 print('開始搜尋影片資料')
