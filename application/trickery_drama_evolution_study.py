@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[3]:
+# In[ ]:
 
+
+#################################################################
+# 男頻高流量權謀爽劇演進研究：資料清理與產出報表
+#################################################################
 
 from path_setup import setup_project_root
 root = setup_project_root()
@@ -28,10 +32,11 @@ from etl_showcase.infrastructure.cleaning.text_tokenizer import (
     jieba_tokenizer
 )
 from etl_showcase.infrastructure.cleaning.text_cleaner import (
-    clean_text,
     remove_non_chinese_and_noise,
     remove_non_english_and_noise,
+    remove_urls,
     remove_all_punctuation,
+    clean_text,
 )
 from etl_showcase.infrastructure.nlp.sentiment_analyzer import SentimentAnalyzer
 from etl_showcase.infrastructure.nlp.topic_utils import (
@@ -54,18 +59,69 @@ from etl_showcase.infrastructure.reporting.topic_visualizer import (
 )
 from etl_showcase.infrastructure.reporting.wordcloud_visualizer import generate_word_clouds_html
 
-def get_BERTopic_model(culture:str):
+zh_stopwords_custom = [
+    # 作品名
+    '琅琊榜', '琅', '琊', '榜', '慶餘年', '贅婿', '雪中悍刀行', '雪中悍', '刀行', '藏海傳', '海傳',
+
+    # 高頻雜訊
+    '電視劇', '訂閱', '劇', '電影', '晚上', '整片', '點可觀', '帶', '龍', '盡', '真', '卻', '一句',
+    
+    # 情感/程度副詞 (嚴重污染主題名稱的通用評價詞)
+    '真的', '很', '太', '非常', '好', '較', '稍', '最', 
+
+    # 核心結構詞/連接詞 (高頻助詞、介詞、連詞)
+    '的', '了', '著', '之', '地', '得', '和', '與', '或', '但', '而',
+    '但是', '而且', '所以', '因為', '雖然', '然後', '就是', '將', '其', '則',
+    '是', '不是', '為', '給', '被', '在', '也',
+
+    # 代詞/指示詞 (人稱、指示、疑問)
+    '我', '他', '她', '你', '它', '們', '這', '那', '個',
+    '哪', '哪裡', '些', '某些', '每', '全部', '那樣', '這樣', '那麼', '什麼', '還是',
+    '還有', '這個', '那個', '這部', '那部',
+
+    # 通用動詞/狀態詞/否定詞
+    '不', '沒', '沒有', '都', '對', '又', '要', '能', '來', '把', '讓',
+    '還', '有', '只', '看', '說', '追',
+
+    # 時間/方位詞
+    '從', '到', '由', '於', '以', '上', '下', '中', '前', '後', '已經',
+
+    # 數量詞/語氣詞
+    '一', '二', '三', '一部', '啊', '吧', '嗎', '呢', '嘛', '呀',
+]
+
+
+# --- 核心修正函式 ---
+def get_BERTopic_model(culture: str, min_df_safe: int = 3) -> BERTopic:
+    """
+    獲取設定優化後的 BERTopic 模型。
+    
+    Args:
+        culture (str): 'zh' 或 'en'。
+        min_df_safe (int): 預設為 3，用來過濾掉極端雜訊（單次或兩次出現的字元），避免 ValueError。
+    """
+    
+    # UMAP 模型設定
     umap_model = UMAP(
-        n_neighbors=default_n_neighbors(), 
-        n_components=2, 
-        min_dist=0.0, 
-        metric='cosine', 
+        n_neighbors=default_n_neighbors(),  
+        n_components=2,  # 建議保留 2 以便視覺化
+        min_dist=0.0,  
+        metric='cosine',  
         random_state=42
     )
     
     if culture == 'zh':
+        # 中文詞彙向量化模型設定
         embedding_model = SentenceTransformer("shibing624/text2vec-base-chinese")
-        vectorizer_model = CountVectorizer(tokenizer=jieba_tokenizer, min_df=5, max_df=0.85)   
+        
+        # 將自訂停用詞加入到 CountVectorizer 中
+        vectorizer_model = CountVectorizer(
+            tokenizer=jieba_tokenizer, 
+            min_df=min_df_safe,
+            max_df=0.75,
+            stop_words=zh_stopwords_custom
+        )
+        
         return BERTopic(
             embedding_model=embedding_model,
             language="chinese",
@@ -73,9 +129,18 @@ def get_BERTopic_model(culture:str):
             umap_model=umap_model,
             verbose=True,
         )
-    else:
+        
+    else: 
+        # 英文詞彙向量化模型設定
         embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
-        vectorizer_model = CountVectorizer(stop_words='english', min_df=5, max_df=0.85)
+        
+        # 英文 CountVectorizer 設定
+        vectorizer_model = CountVectorizer(
+            stop_words='english', 
+            min_df=min_df_safe, 
+            max_df=0.75 
+        )
+        
         return BERTopic(
             embedding_model=embedding_model,
             language="english",
@@ -84,8 +149,6 @@ def get_BERTopic_model(culture:str):
             verbose=True,
         )
 
-
-
 # 資料清理完，偶爾還是會有奇怪符號或非純中文、英文的文本，但最後主題建模出來的主題。
 # 只有極少數會出現非純中文、英文的主題，考慮每個任務的CP值，該程式暫時先優化至此。
 def clean_and_translate(translator:LanguageTranslator, text: str, target_language: str):
@@ -93,21 +156,26 @@ def clean_and_translate(translator:LanguageTranslator, text: str, target_languag
     if detect_lang is None:
         return None  
 
+    if text== "早上好，我真的很想看這些場景，所以我很高興，一如既往地謝謝您。":
+        print(detect_lang)
+
     if target_language == "zh":
         target_language = "zh-TW"
     elif target_language == "en":
         target_language = "en"
     else:
         target_language = "auto"
-        
+
     if detect_lang.startswith('zh'):
         detect_lang = "zh-TW"
         text = remove_non_chinese_and_noise(text)
     elif detect_lang.startswith('en'):
-        detect_lang = "zh-TW"
+        detect_lang = "en"
+        text = remove_urls(text)
         text = remove_non_english_and_noise(text)
     else:
         detect_lang = "auto"
+        text = clean_text(text)
         text = remove_all_punctuation(text)        
         
     if not detect_lang.startswith(target_language):
@@ -117,6 +185,12 @@ def clean_and_translate(translator:LanguageTranslator, text: str, target_languag
             text=text, 
             target_variant="zh-TW", 
         )
+        
+    # 清除翻譯完有雜訊的文本
+    if target_language.startswith('zh'):
+         text = remove_non_chinese_and_noise(text)
+    elif target_language.startswith('en'):
+         text = remove_non_english_and_noise(text)  
 
     return text
 
@@ -169,11 +243,20 @@ def load_data(file_path: str) -> (pd.DataFrame, Dict[str, pd.DataFrame]):
 def preprocess_and_merge_data(main_df: pd.DataFrame, comments_data: Dict[str, pd.DataFrame]) -> pd.DataFrame:
     """
     預處理資料並將影片內容和留言合併。
+    - 修復了在計算留言按讚數時，因 Video ID 不匹配而導致的 IndexError。
     """
     print('Start to preprocess and merge data')
     
     # 設定資料上限（每個文化領域的上限）
     MAX_RECORDS = 5000
+
+    # -------------------
+    # 類型統一：確保 Video ID 都是字串，以便於跨資料表匹配
+    # -------------------
+    main_df['Video ID'] = main_df['Video ID'].astype(str)
+    for screenwork in comments_data:
+        if not comments_data[screenwork].empty:
+            comments_data[screenwork]['Video ID'] = comments_data[screenwork]['Video ID'].astype(str)
 
     # -------------------
     # 第一步：預估每個文化領域的總資料量
@@ -190,8 +273,14 @@ def preprocess_and_merge_data(main_df: pd.DataFrame, comments_data: Dict[str, pd
         if not comments_df.empty:
             comments_df_likes = comments_df.groupby('Video ID')['Like count'].sum()
             for video_id, likes in comments_df_likes.items():
+                
+                # 篩選主資料中匹配的行
+                matching_rows = main_df[main_df['Video ID'] == video_id]
+                if matching_rows.empty:
+                    continue
+                
                 # 找到對應的影片，取得其文化領域
-                cultural_sphere = main_df[main_df['Video ID'] == video_id]['Cultural sphere'].iloc[0]
+                cultural_sphere = matching_rows['Cultural sphere'].iloc[0]
                 total_likes_by_culture[cultural_sphere] = total_likes_by_culture.get(cultural_sphere, 0) + likes
 
     print(f"預估每個文化領域的總資料量 (按讚數總和): {total_likes_by_culture}")
@@ -254,33 +343,42 @@ def preprocess_and_merge_data(main_df: pd.DataFrame, comments_data: Dict[str, pd
         if comments_df.empty:
             continue
         
-        for _, comment_row in tqdm(comments_df.iterrows(), total=len(comments_df), leave=False, desc=f"處理 {screenwork} 留言"):
-            if comment_row['Video ID'] == video_id:
-                comment_text = str(comment_row['Text']) if not pd.isna(str(comment_row['Text'])) else ''
-                comment_text = clean_and_translate(
-                    translator=translator,
-                    text=comment_text,
-                    target_language=cultural_sphere
-                )
-                if comment_text is not None and comment_text != '':
-                    comment_doc = doc.copy()
-                    comment_doc['text'] = comment_text
+        # 由於 Video ID 已經保證在 main_df 中（因為我們在迭代 main_df），
+        # 這裡只需要篩選留言中匹配的 Video ID 即可。
+        video_comments = comments_df[comments_df['Video ID'] == video_id]
+        
+        for _, comment_row in tqdm(video_comments.iterrows(), total=len(video_comments), leave=False, desc=f"處理 {screenwork} 留言"):
+            comment_text = str(comment_row['Text']) if not pd.isna(str(comment_row['Text'])) else ''
+            comment_text = clean_and_translate(
+                translator=translator,
+                text=comment_text,
+                target_language=cultural_sphere
+            )
+            if comment_text is not None and comment_text != '':
+                comment_doc = doc.copy()
+                comment_doc['text'] = comment_text
 
-                    # 使用四捨五入計算重複次數
-                    reps = round(comment_row['Like count'] * scaling_factor)
-                    merged_data.extend([comment_doc] * reps)
+                # 使用四捨五入計算重複次數
+                reps = round(comment_row['Like count'] * scaling_factor)
+                merged_data.extend([comment_doc] * reps)
 
     print(f"最終資料集大小: {len(merged_data)} 筆")
     return pd.DataFrame(merged_data)
 
 
-# In[4]:
+# In[ ]:
 
 
-# 撈取或宣告所需資料
-# 影評影片內容及留言
-data_file_path = "./data/raw/trickery_drama_evolution_study_data.xls"
-data_file_path_preprocessed = './data/processed/trickery_drama_evolution_study_data.xlsx'
+## 預處理資料
+# 確保資料夾存在
+data_dirs_raw = os.path.join(os.getcwd(), 'data/raw')
+data_dirs_preprocessed = os.path.join(os.getcwd(), 'data/processed')
+os.makedirs(data_dirs_raw, exist_ok=True)
+os.makedirs(data_dirs_preprocessed, exist_ok=True)
+
+# 撈取所需資料，宣告共用變數
+data_file_path = os.path.join(os.getcwd(), data_dirs_raw, 'trickery_drama_evolution_study_data.xls')
+data_file_path_preprocessed = os.path.join(os.getcwd(), data_dirs_preprocessed, 'trickery_drama_evolution_study_data.xlsx')
 if not os.path.exists(data_file_path):
     print(f"Error: Data file not found at {data_file_path}")
     sys.exit()        
@@ -303,14 +401,35 @@ if os.path.exists(data_file_path_preprocessed):
 else:
     # 將所有影片資料和留言資料合併並進行預處理
     all_data_df = preprocess_and_merge_data(main_df, comments_data)
-    # 將資料寫入csv 避免一直重複預處理大量文本
+    # 將資料寫入地端檔案，避免一直重複預處理大量文本
     save_large_dataframe_to_excel(all_data_df, data_file_path_preprocessed)
 
-print(f'zh資料 {len(all_data_df[all_data_df['Cultural sphere'] == 'zh'])} 筆')
-print(f'en資料 {len(all_data_df[all_data_df['Cultural sphere'] == 'en'])} 筆')
+
+# In[ ]:
 
 
-# In[31]:
+## 檢查預處理完之資料
+# Cultural sphere 分組
+counts_by_culture = all_data_df.groupby('Cultural sphere').size().reset_index(name='count')
+print("\n=== 各文化圈筆數 ===")
+print(counts_by_culture)
+
+# Cultural sphere + Publish year 分組
+counts_by_culture_year = (
+    all_data_df.groupby(['Cultural sphere', 'Publish year'])
+    .size()
+    .reset_index(name='count')
+)
+print("\n=== 各文化圈 + 年份筆數 ===")
+print(counts_by_culture_year)
+
+# Screenwork 分組
+counts_by_screenwork = all_data_df.groupby('Screenwork').size().reset_index(name='count')
+print("\n=== 各劇作筆數 ===")
+print(counts_by_screenwork)
+
+
+# In[ ]:
 
 
 def generate_surface_keywords_report(docs_dir, data, cultures, time_periods):
@@ -319,19 +438,6 @@ def generate_surface_keywords_report(docs_dir, data, cultures, time_periods):
     """
     print("Generating surface keywords report...")
     word_cloud_data = defaultdict(dict)
-
-    # 定義常用的中文停用詞，把作品名也加進去，以避免噪音，
-    chinese_stop_words = [
-        "琅琊榜","琅","琊","榜","慶餘年","贅婿","雪中悍刀行","藏海傳","海傳",
-        "的","了","著","之","地","得","和","與","或","但是","而且","所以",
-        "是","在","我","他","她","你","它","們","這","那","個","不","也","都","對","而","但",
-        "因為","雖然","然後","從","到","由","於","為","以","上","下","中","前","後",
-        "哪","哪裡","一","二","三","些","某些","每","全部",
-        "啊","真的","很","非常","較","稍","只","還","有","沒有",
-        "吧","呢","嘛","呀","看","就是","就","這個","來","把","讓","被","給","將","其","則",
-        "那樣","這樣","那麼","什麼","還是","已經","能","又","要","嗎","還有","說","沒",
-        "說","是","不是","這是","為","追","一部"
-    ]
 
     # 確保 'text' 欄位沒有 NaN 值
     data['text'] = data['text'].fillna('')
@@ -351,14 +457,14 @@ def generate_surface_keywords_report(docs_dir, data, cultures, time_periods):
                     vectorizer = TfidfVectorizer(
                         max_features=100,
                         tokenizer=jieba_tokenizer,
-                        stop_words=chinese_stop_words,
-                        max_df=0.95
+                        stop_words=zh_stopwords_custom,
+                        max_df=0.75
                     )
                 else:
                     vectorizer = TfidfVectorizer(
                         max_features=100,
                         stop_words='english',
-                        max_df=0.95
+                        max_df=0.75
                     )
                 
                 try:
@@ -384,7 +490,7 @@ def generate_surface_keywords_report(docs_dir, data, cultures, time_periods):
 generate_surface_keywords_report(docs_dir, all_data_df, cultures, time_periods)
 
 
-# In[37]:
+# In[ ]:
 
 
 def generate_deep_topics_report(docs_dir, data, topic_mapping_list, cultures, time_periods):
@@ -404,7 +510,7 @@ def generate_deep_topics_report(docs_dir, data, topic_mapping_list, cultures, ti
             ].copy()
             filtered_dataframes[(culture, period_name)] = df_filtered_copy
             
-    for culture in cultures:
+    for culture in cultures:          
         print(f"Processing BERTopic for {culture}...")
         
         # 將每個時段的資料合併後再建模
@@ -448,21 +554,25 @@ def generate_deep_topics_report(docs_dir, data, topic_mapping_list, cultures, ti
             for topic_id, count in topic_counts.items():
                 if topic_id == -1:
                     continue
-                topic_name = refined_topics.get(topic_id, f"Topic {topic_id}")
-                keywords = [str(item[0]) for item in topic_model.get_topic(topic_id)] 
-                x_coord, y_coord = topic_coords.get(topic_id, (None, None))
-    
-                period_data.append({
-                    'id': topic_id,
-                    'name': topic_name,
-                    'count': count,
-                    'keywords': ', '.join(keywords) ,
-                    'x': x_coord, 
-                    'y': y_coord,
-                })
+                topic_name = refined_topics.get(topic_id)
+                if topic_name is not None:
+                    keywords = [str(item[0]) for item in topic_model.get_topic(topic_id)] 
+                    x_coord, y_coord = topic_coords.get(topic_id, (None, None))
+        
+                    period_data.append({
+                        'id': topic_id,
+                        'name': topic_name,
+                        'count': count,
+                        'keywords': ', '.join(keywords) ,
+                        'x': x_coord, 
+                        'y': y_coord,
+                    })
             bubble_chart_data[period_name] = period_data
 
-        html_content = generate_bubble_chart_html(bubble_chart_data)
+        html_content = generate_bubble_chart_html(
+            data = bubble_chart_data, 
+            display_language = 'zh',
+        )
         output_path = os.path.join(docs_dir, f"timing_comparison/topics_bubble/{culture}/all_generation.html")
         save_html(html_content, output_path)
         print(f"Deep topics report is saved.")
@@ -470,7 +580,7 @@ def generate_deep_topics_report(docs_dir, data, topic_mapping_list, cultures, ti
 generate_deep_topics_report(docs_dir, all_data_df, topic_mapping_list, cultures, time_periods)
 
 
-# In[39]:
+# In[ ]:
 
 
 def generate_sentiment_reports(docs_dir, data, topic_mapping, cultures, time_periods):
@@ -540,7 +650,7 @@ def generate_sentiment_reports(docs_dir, data, topic_mapping, cultures, time_per
 generate_sentiment_reports(docs_dir, all_data_df, topic_mapping_list, cultures, time_periods)
 
 
-# In[41]:
+# In[ ]:
 
 
 def generate_drama_category_reports(docs_dir, data, topic_mapping_list, cultures, time_periods):
@@ -581,7 +691,8 @@ def generate_drama_category_reports(docs_dir, data, topic_mapping_list, cultures
                     continue       
                     
                 # BERTopic for Heatmap
-                topic_model = get_BERTopic_model(culture=culture)
+                # 因這份報告會遇 max_df corresponds to < documents than min_df 的問題，故調低 min_df 設定。
+                topic_model = get_BERTopic_model(culture=culture,min_df_safe=1)
                 topics, _ = topic_model.fit_transform(texts_in_period)
 
                 # 精鍊主題清單
@@ -601,8 +712,9 @@ def generate_drama_category_reports(docs_dir, data, topic_mapping_list, cultures
                     drama_topic_weights = {}
                     for topic_id, count in topic_counts.items():
                         if topic_id == -1: continue
-                        topic_name = refined_topics.get(topic_id, f"Topic {topic_id}")
-                        drama_topic_weights[topic_name] = count / total_count
+                        topic_name = refined_topics.get(topic_id)
+                        if topic_name is not None:
+                            drama_topic_weights[topic_name] = count / total_count
                     
                     heatmap_data[drama_name].update(drama_topic_weights)
                     
@@ -616,7 +728,7 @@ def generate_drama_category_reports(docs_dir, data, topic_mapping_list, cultures
         if heatmap_data: 
             topic_mapping = topic_mapping_list.get(culture)
             fig_heatmap = visualize_heatmap(heatmap_data, trickery_elements)
-            fig_heatmap.update_layout(title_text='權謀元素熱力圖', xaxis_title='權謀元素名稱', yaxis_title='作品名稱')
+            fig_heatmap.update_layout(title_text='議題熱力圖', xaxis_title='議題', yaxis_title='作品名稱')
             output_path = os.path.join(docs_dir, f"drama_category_comparison/topic_heatmap/{culture}/all_generation.html")
             save_plotly_html(fig_heatmap,output_path)
             print(f"Topic heatmap report is saved.")
@@ -636,7 +748,7 @@ def generate_drama_category_reports(docs_dir, data, topic_mapping_list, cultures
 generate_drama_category_reports(docs_dir, all_data_df, topic_mapping_list, cultures, time_periods)
 
 
-# In[7]:
+# In[ ]:
 
 
 def generate_per_drama_reports(docs_dir, data, topic_mapping_list, cultures):
@@ -670,7 +782,7 @@ def generate_per_drama_reports(docs_dir, data, topic_mapping_list, cultures):
             if df_filtered.empty:
                 continue
 
-            drama_texts = df_filtered['text'].tolist()
+            drama_texts = df_filtered['text'].tolist()           
             drama_topics, _ = topic_model.transform(drama_texts)
 
             # 根據文本數排序，選擇前10個主題，再計算選出來的主題的總文本數 
@@ -681,12 +793,13 @@ def generate_per_drama_reports(docs_dir, data, topic_mapping_list, cultures):
 
             topic_proportions = defaultdict(float)
             for topic_id, count in top_topics.items():
-                refined_name = refined_topics.get(topic_id, f"Topic {topic_id}")
-                topic_proportions[refined_name] += count / total_count
+                refined_name = refined_topics.get(topic_id)
+                if refined_name is not None:
+                    topic_proportions[refined_name] += count / total_count
 
             fig_radar = visualize_radar_chart(topic_proportions)
             fig_radar.update_layout(
-                title=f'{drama_name} Top {top_num} 權謀元素'
+                title=f'{drama_name} Top {top_num} 熱門議題'
             )          
             safe_drama_name = drama_name.replace(' ', '_').replace('?', '').replace(':', '_')
             output_path = os.path.join(docs_dir, f"drama_analysis/radar_chart/{culture}/{safe_drama_name}.html")

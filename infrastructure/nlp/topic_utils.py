@@ -57,6 +57,7 @@ def transform_to_refined_topics_by_culture(topic_info: pd.DataFrame, topic_mappi
 def transform_to_refined_topics(topic_info: pd.DataFrame, topic_mapping: Dict[str, str]):
     """
     精煉主題清單，如果主題包含特定關鍵字，則用預定義的精煉主題取代。
+    並過濾掉關鍵字均為空值的異常資料。
 
     Args:
         topic_info (pd.DataFrame): 包含 'Name' 列的 DataFrame。'Name' 的內容是由關鍵字組成的字串，例如 '政治_權力_鬥爭'。
@@ -67,20 +68,49 @@ def transform_to_refined_topics(topic_info: pd.DataFrame, topic_mapping: Dict[st
     """
 
     refined_topics = {}
-    for row in tqdm(topic_info.itertuples(), total=len(topic_info), leave=False, desc=f"精煉主題清單"):
+    
+    # 移除 ID = -1 的主題 (通常是 Outlier)
+    topic_data = topic_info[topic_info['Topic'] != -1]
+    
+    for row in tqdm(topic_data.itertuples(), total=len(topic_data), leave=False, desc=f"精煉主題清單"):
         topic_id = row.Topic
-        topic_keywords = row.Name
+        topic_keywords = row.Name # e.g., '19_，_zhan_他_可以' or '復仇_權謀_犧牲'
 
-        if topic_id == -1:
+        # 1. 關鍵檢查：將關鍵詞字串拆分成列表
+        # 由於BERTopic的主題名稱格式通常是 "ID_keyword1_keyword2..."
+        # 這裡假設 Name 欄位已經包含了關鍵詞，並以 '_' 分隔。
+        # 注意：BERTopic的 Name 格式通常是 "ID_keyword1_keyword2"，所以我們需要處理ID。
+        
+        # 假設 Name 欄位格式是 "TopicID_Keyword1_Keyword2..."，我們先移除 TopicID
+        try:
+            keywords_str = topic_keywords.split('_', 1)[1] if '_' in topic_keywords else topic_keywords
+        except IndexError:
+            # 如果主題名稱只有ID，這是一個極端情況，我們視為空
+            keywords_str = ""
+
+        # 2. 徹底清理關鍵詞列表：將關鍵詞字串拆分成列表，並移除所有空字串
+        keywords = [k.strip() for k in keywords_str.split('_') if k.strip()]
+        
+        # 3. 檢查關鍵詞列表是否為空
+        # 如果經過清理和分隔後，keywords 列表是空的，則跳過此主題。
+        if not keywords:
+            # print(f"跳過主題 {topic_id}: 關鍵詞已被完全移除或為空。")
             continue
 
-        keywords = topic_keywords.split('_')
-        refined_name = topic_keywords
+        refined_name = topic_keywords # 預設名稱為原始名稱
 
+        # 4. 進行主題映射精煉
         for key, values in topic_mapping.items():
+            # 確保 values 是可迭代的列表或集合
+            if isinstance(values, str):
+                values = [values]
+            
+            # 檢查任一關鍵詞是否存在於映射值中
             if any(k in keywords for k in values):
                 refined_name = key
                 break
 
+        # 5. 加入精煉後的主題
         refined_topics[topic_id] = refined_name
+        
     return refined_topics

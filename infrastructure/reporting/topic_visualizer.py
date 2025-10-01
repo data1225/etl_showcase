@@ -69,35 +69,45 @@ def visualize_sankey(
     
     return fig
 
-def generate_bubble_chart_html(data):
+def generate_bubble_chart_html(data, display_language: str = "en"):
     """
     生成氣泡圖，並將其嵌入 HTML 檔案。
+
+    Args:
+        data (dict): 各時期的主題資料
+        culture (str): 語言設定 ("zh"=中文, "en"=英文)
     """
+
     html_content = ""
+
+    if display_language == "zh":
+        xaxis_title = "議題相似度維度 1"
+        yaxis_title = "議題相似度維度 2"
+    else:
+        xaxis_title = "Topic similarity dimension 1"
+        yaxis_title = "Topic similarity dimension 2"
+
     for period, topics in data.items():
         if topics:
             df = pd.DataFrame(topics)
-            # 過濾掉沒有座標的主題，並根據 'count' 降冪排序
-            # df = df.dropna(subset=['x', 'y']).sort_values(by='count', ascending=False)
-            # 用來確認精練後的主題清單是正確的，之後再改回來
             df = df.dropna(subset=['x', 'y'])
 
             fig = px.scatter(
-                df, 
+                df,
                 x="x",
                 y="y",
-                size="count", 
-                hover_name="name", 
+                size="count",
+                hover_name="name",
                 hover_data={"keywords": True, "count": True},
                 title=f"BERTopic Bubbles for {period}",
                 height=500,
             )
             fig.update_traces(text=df['name'], textposition='top center')
-            fig.update_layout(xaxis_title="主題相似度維度 1", yaxis_title="主題相似度維度 2")
-            
+            fig.update_layout(xaxis_title=xaxis_title, yaxis_title=yaxis_title)
+
             # 創建主題內容比對表
             table_html = df[['id', 'name', 'keywords', 'count', 'x', 'y']].to_html(index=False)
-            
+
             html_content += f"""
             <div>
                 <h2>{period}</h2>
@@ -107,7 +117,7 @@ def generate_bubble_chart_html(data):
                 </div>
             </div>
             """
-    
+
     full_html = f"<html><body>{html_content}</body></html>"
     return full_html
 
@@ -122,10 +132,10 @@ def generate_topic_sentiment_html(sentiment_data: Dict[str, Dict[str, float]], d
     }
 
     labels = {
-        'topic': {'zh': '主題', 'en': 'Topic'},
+        'topic': {'zh': '議題', 'en': 'Topic'},
         'sentiment': {'zh': '情感種類', 'en': 'Sentiment Types'},
         'ratio': {'zh': '比例', 'en': 'Proportion'},
-        'report_title': {'zh': '主題情感報告', 'en': 'Topic Sentiment Report'},
+        'report_title': {'zh': '議題情感報告', 'en': 'Topic Sentiment Report'},
         'chart_title': {'zh': '{topic}', 'en': '{topic}'}
     }
 
