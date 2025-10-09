@@ -69,21 +69,23 @@ def visualize_sankey(
     
     return fig
 
-def generate_bubble_chart_html(data, display_language: str = "en"):
+def generate_bubble_chart_html(data, display_language: str = "en", source_description: str = ""):
     """
     生成氣泡圖，並將其嵌入 HTML 檔案。
 
     Args:
         data (dict): 各時期的主題資料
-        culture (str): 語言設定 ("zh"=中文, "en"=英文)
+        display_language (str): 語言設定 ("zh"=中文, "en"=英文)
     """
 
     html_content = ""
 
     if display_language == "zh":
+        report_name = "議題氣泡圖"
         xaxis_title = "議題相似度維度 1"
         yaxis_title = "議題相似度維度 2"
     else:
+        report_name = "Topic Bubble Chart"
         xaxis_title = "Topic similarity dimension 1"
         yaxis_title = "Topic similarity dimension 2"
 
@@ -99,7 +101,7 @@ def generate_bubble_chart_html(data, display_language: str = "en"):
                 size="count",
                 hover_name="name",
                 hover_data={"keywords": True, "count": True},
-                title=f"BERTopic Bubbles for {period}",
+                title=f"{period} {report_name}",
                 height=500,
             )
             fig.update_traces(text=df['name'], textposition='top center')
@@ -118,10 +120,20 @@ def generate_bubble_chart_html(data, display_language: str = "en"):
             </div>
             """
 
-    full_html = f"<html><body>{html_content}</body></html>"
+    full_html = f"""
+    <html>
+        <head>
+            <title>{report_name}</title>
+        </head>    
+        <body>
+            {html_content}
+            <br />
+            <div>{source_description}</div>
+        </body>
+    </html>"""
     return full_html
 
-def generate_topic_sentiment_html(sentiment_data: Dict[str, Dict[str, float]], display_language: str = "en") -> str:
+def generate_topic_sentiment_html(sentiment_data: Dict[str, Dict[str, float]], display_language: str = "en", source_description: str = "") -> str:
     chart_html_snippets = []
 
     # 多語對照表
@@ -204,6 +216,9 @@ def generate_topic_sentiment_html(sentiment_data: Dict[str, Dict[str, float]], d
         <h1 class="text-4xl font-bold text-center mb-8">{labels['report_title'][lang]}</h1>
         <div class="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {''.join([f'<div class="bg-white rounded-xl shadow p-6"><img src="data:image/png;base64,{img_str}" alt="chart"></div>' for img_str in chart_html_snippets])}
+        </div>
+        <div class="container mx-auto grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 pt-5">
+            {source_description}
         </div>
     </body>
     </html>

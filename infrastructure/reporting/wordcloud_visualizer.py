@@ -1,7 +1,7 @@
 import io, base64 
 from wordcloud import WordCloud
 
-def generate_word_clouds_html(data, cultures, period_names):
+def generate_word_clouds_html(data, cultures, period_names, source_description: str = ""):
     """
     生成六格文字雲，並將其嵌入單一 HTML 檔案。
     """
@@ -30,15 +30,18 @@ def generate_word_clouds_html(data, cultures, period_names):
     
     full_html = f"""
     <html>
-    <head>
-        <title>Surface Keywords Word Clouds</title>
-    </head>
-    <body>
-        <h1>表層關鍵字文字雲</h1>
-        <div>
-            {''.join(html_parts)}
-        </div>
-    </body>
+        <head>
+            <title>表層關鍵字文字雲</title>
+        </head>
+        <body>
+            <h1>表層關鍵字文字雲</h1>
+            <div>
+                {''.join(html_parts)}
+            </div>
+            <div  style="float: left; width: 100%; padding-top: 1rem;">
+                {source_description}
+            </div>
+        </body>
     </html>
     """
     return full_html
