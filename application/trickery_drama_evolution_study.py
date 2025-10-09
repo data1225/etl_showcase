@@ -482,7 +482,12 @@ def generate_surface_keywords_report(docs_dir, data, cultures, time_periods):
                     continue
 
     # 生成文字雲並儲存為 HTML
-    html_content = generate_word_clouds_html(word_cloud_data, cultures, time_periods.keys())
+    html_content = generate_word_clouds_html(
+        data = word_cloud_data, 
+        cultures = cultures, 
+        period_names = time_periods.keys(),
+        source_description = '資料來源： 本圖表的關鍵字是透過蒐集 YouTube 影評影片資料及其留言文本，經過按讚數權重加乘處理，並利用 TF-IDF 模型過濾停用詞與高頻通用詞後，按文化和時間區間分組提取而得。'
+    )
     output_path = os.path.join(docs_dir, "timing_comparison/surface_keywords/all_generation_cultural.html")
     save_html(html_content, output_path)
     print(f"Surface keywords report is saved.")
@@ -572,6 +577,7 @@ def generate_deep_topics_report(docs_dir, data, topic_mapping_list, cultures, ti
         html_content = generate_bubble_chart_html(
             data = bubble_chart_data, 
             display_language = 'zh',
+            source_description = '資料來源： 本圖表中的議題是透過蒐集 YouTube 影評影片及留言文本，經按讚數加權處理後，依文化與年份分組，並以 BERTopic 模型進行語意聚類、主題精煉與二維降維分析所得。'
         )
         output_path = os.path.join(docs_dir, f"timing_comparison/topics_bubble/{culture}/all_generation.html")
         save_html(html_content, output_path)
@@ -642,6 +648,7 @@ def generate_sentiment_reports(docs_dir, data, topic_mapping, cultures, time_per
             html_content = generate_topic_sentiment_html(
                 sentiment_data=period_sentiment_data,
                 display_language='zh',
+                source_description='資料來源： 本圖表數據是透過蒐集 YouTube 影評影片及留言文本，經按讚數權重加乘處理，依文化與年份分組後，並以 BERTopic 模型進行語意聚類與主題萃取，再透過情緒分析模型統計各主題之情緒分佈所得。',
             )
             output_path = os.path.join(docs_dir, f"timing_comparison/topic_sentiment/{culture}/{period_name.replace('–', '-')}.html")
             save_html(html_content, output_path)
@@ -671,7 +678,7 @@ def generate_drama_category_reports(docs_dir, data, topic_mapping_list, cultures
         # 小提琴圖資料
         violin_plot_data = defaultdict(dict)
 
-        for period_name, (start, end) in time_periods.items():
+        for period_name, (start, end) in time_periods.items(): 
             for category in ['復仇劇', '一般權謀劇']:
                 df_filtered = data[
                     (data['Cultural sphere'] == culture) &
@@ -715,8 +722,12 @@ def generate_drama_category_reports(docs_dir, data, topic_mapping_list, cultures
                         topic_name = refined_topics.get(topic_id)
                         if topic_name is not None:
                             drama_topic_weights[topic_name] = count / total_count
-                    
-                    heatmap_data[drama_name].update(drama_topic_weights)
+
+                    if category == '復仇劇':
+                        display_drama_name = f'{drama_name}(復仇劇)'
+                    else:
+                        display_drama_name = drama_name
+                    heatmap_data[display_drama_name].update(drama_topic_weights)
                     
                 # Sentiment analysis for Violin Plot
                 sentiment_results = analyzer.analyze_sentiment(texts_in_period)
@@ -728,9 +739,24 @@ def generate_drama_category_reports(docs_dir, data, topic_mapping_list, cultures
         if heatmap_data: 
             topic_mapping = topic_mapping_list.get(culture)
             fig_heatmap = visualize_heatmap(heatmap_data, trickery_elements)
-            fig_heatmap.update_layout(title_text='議題熱力圖', xaxis_title='議題', yaxis_title='作品名稱')
+            fig_heatmap.update_layout(
+                title_text='議題熱力圖', 
+                xaxis_title='議題', 
+                yaxis_title='作品名稱',
+            )
+            html_content = f"""
+            <html>
+                <head>
+                    <title>議題熱力圖</title>
+                </head>    
+                <body>
+                    {fig_heatmap.to_html(full_html=False, include_plotlyjs='cdn')}
+                    <br />
+                    <div>資料來源： 本圖表數據是透過蒐集 YouTube 影評影片及留言文本，經過按讚數權重加乘處理，再依文化圈、年份區間與劇作類型分組，並以 BERTopic 模型進行語意聚類與主題精煉後，計算各劇作中不同議題的比重所得。</div>
+                </body>
+            </html>"""
             output_path = os.path.join(docs_dir, f"drama_category_comparison/topic_heatmap/{culture}/all_generation.html")
-            save_plotly_html(fig_heatmap,output_path)
+            save_html(html_content, output_path)
             print(f"Topic heatmap report is saved.")
 
         # 生成小提琴圖
@@ -739,10 +765,21 @@ def generate_drama_category_reports(docs_dir, data, topic_mapping_list, cultures
             fig_violin_plot.update_layout(
                 title_text='復仇劇與一般權謀劇情緒波動',
                 yaxis_title='情緒分數',
-                violinmode='group'
+                violinmode='group',
             )
+            html_content = f"""
+            <html>
+                <head>
+                    <title>復仇劇與一般權謀劇情緒波動</title>
+                </head>    
+                <body>
+                    {fig_violin_plot.to_html(full_html=False, include_plotlyjs='cdn')}
+                    <br />
+                    <div>資料來源： 本圖表數據是透過蒐集 YouTube 影評影片及留言文本，經過按讚數權重加乘處理，再依文化圈、年份與劇作類型分組，並以 BERTopic 模型進行主題聚類與情緒分析後所得。</div>
+                </body>
+            </html>"""
             output_path = os.path.join(docs_dir, f"drama_category_comparison/violin_plot/{culture}/all_generation.html")
-            save_plotly_html(fig_violin_plot,output_path)
+            save_html(html_content, output_path)
             print(f"Violin plot report is saved.")
 
 generate_drama_category_reports(docs_dir, all_data_df, topic_mapping_list, cultures, time_periods)
@@ -772,7 +809,7 @@ def generate_per_drama_reports(docs_dir, data, topic_mapping_list, cultures):
         topic_info = topic_model.get_topic_info()
         refined_topics = transform_to_refined_topics_by_culture(topic_info, topic_mapping_list, culture)
         
-        for drama_name in dramas:
+        for drama_name in dramas:          
             print(f"Processing radar chart for {drama_name}...")
             df_filtered = data[
                 (data['Cultural sphere'] == culture) &
@@ -798,12 +835,24 @@ def generate_per_drama_reports(docs_dir, data, topic_mapping_list, cultures):
                     topic_proportions[refined_name] += count / total_count
 
             fig_radar = visualize_radar_chart(topic_proportions)
+            title = f'{drama_name} Top {top_num} 熱門議題'
             fig_radar.update_layout(
-                title=f'{drama_name} Top {top_num} 熱門議題'
+                title= title,
             )          
+            html_content = f"""
+            <html>
+                <head>
+                    <title>{title}</title>
+                </head>    
+                <body>
+                    {fig_radar.to_html(full_html=False, include_plotlyjs='cdn')}
+                    <br />
+                    <div>資料來源： 本圖表數據是透過蒐集 YouTube 影評影片及留言文本，經過按讚數權重加乘處理，再依文化圈分組，並以 BERTopic 模型進行語意聚類與主題精煉，提取各劇作主要議題比例後所得。</div>
+                </body>
+            </html>"""
             safe_drama_name = drama_name.replace(' ', '_').replace('?', '').replace(':', '_')
             output_path = os.path.join(docs_dir, f"drama_analysis/radar_chart/{culture}/{safe_drama_name}.html")
-            save_plotly_html(fig_radar,output_path)
+            save_html(html_content, output_path)        
             print(f"Radar chart for {drama_name} is saved.")
 generate_per_drama_reports(docs_dir, all_data_df, topic_mapping_list, cultures)
 
