@@ -51,7 +51,7 @@ from etl_showcase.infrastructure.datasource.google_sheets_api import (
 )
 
 def data_source_text(keywords:str):
-    return f"資料來源：蒐集 YouTube 上相關關鍵字的前 300 筆影片標題與描述，並使用 BERTopic 生成熱門議題。<br />本次搜尋關鍵字為：{keywords}。"
+    return f"資料來源：每月月底從 YouTube 蒐集當月與關鍵字相關的前 300 筆影片標題與描述，並使用 BERTopic 進行主題分析，生成熱門議題。<br />本次搜尋關鍵字為：{keywords}。"
 
 
 # In[2]:
