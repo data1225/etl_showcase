@@ -147,7 +147,7 @@ def generate_topic_sentiment_html(sentiment_data: Dict[str, Dict[str, float]], d
         'topic': {'zh': '議題', 'en': 'Topic'},
         'sentiment': {'zh': '情感種類', 'en': 'Sentiment Types'},
         'ratio': {'zh': '比例', 'en': 'Proportion'},
-        'report_title': {'zh': '議題情感報告', 'en': 'Topic Sentiment Report'},
+        'report_title': {'zh': '議題情感分析', 'en': 'Topic Sentiment Analysis'},
         'chart_title': {'zh': '{topic}', 'en': '{topic}'}
     }
 
