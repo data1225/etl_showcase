@@ -19,8 +19,8 @@ from collections import defaultdict
 from typing import Dict
 from bertopic import BERTopic
 from sentence_transformers import SentenceTransformer
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer,CountVectorizer
+from sklearn.feature_extraction import text
 
 # Local modules
 from etl_showcase.infrastructure.utils.file_utils import (
@@ -91,6 +91,19 @@ zh_stopwords_custom = [
 ]
 
 
+en_default_stopwords = text.ENGLISH_STOP_WORDS
+en_custom_stop_words = {
+    'Nirvana in Fire', 'nirvana',
+    'Joy of Life', 'joy', 'life', 
+    'My Heroic Husband','heroic','husband',
+    'Sword Snow Stride','sword','snow','stride',
+    'The Legend of Zang Hai', 'legendofzanghai', 'legend', 'zang', 'hai', 
+    'channel', 'joining', 'members', 'english', 'review', 'youku', 'shorts',
+    'dramas', 'drama', 'film', 'movies', 'movie', 'movie', 'kumaha', 'kabarna', 'damang', 'aku',
+}
+en_all_stopwords = set(en_default_stopwords).union(en_custom_stop_words)
+en_all_stopwords = list(en_all_stopwords)
+
 # --- 核心修正函式 ---
 def get_BERTopic_model(culture: str, min_df_safe: int = 3) -> BERTopic:
     """
@@ -136,7 +149,7 @@ def get_BERTopic_model(culture: str, min_df_safe: int = 3) -> BERTopic:
         
         # 英文 CountVectorizer 設定
         vectorizer_model = CountVectorizer(
-            stop_words='english', 
+            stop_words=en_all_stopwords, 
             min_df=min_df_safe, 
             max_df=0.75 
         )
@@ -463,7 +476,7 @@ def generate_surface_keywords_report(docs_dir, data, cultures, time_periods):
                 else:
                     vectorizer = TfidfVectorizer(
                         max_features=100,
-                        stop_words='english',
+                        stop_words=en_all_stopwords,
                         max_df=0.75
                     )
                 
