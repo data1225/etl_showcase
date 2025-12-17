@@ -1,6 +1,17 @@
+import os
 import pandas as pd
 import numpy as np
 from typing import List
+
+def dataframe_to_excel(df: pd.DataFrame, file_path: str):
+    if not os.path.exists(file_path):
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        
+    try:
+        df.to_excel(file_path, index=False)
+        print(f"\n✅ 成功匯出結果至： {file_path}")
+    except Exception as e:
+        print(f"❌ 匯出 Excel 失敗： {e}")
 
 def save_large_dataframe_to_excel(df: pd.DataFrame, file_path: str):
     """
