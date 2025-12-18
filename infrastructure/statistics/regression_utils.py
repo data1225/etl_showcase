@@ -53,6 +53,7 @@ def display_regression_coefficients(results: RegressionResultsWrapper):
     print("\n解讀：coef 表示該變數每增加一個單位，Y (房屋價值中位數) 預期增加或減少的數量。")
     print("pvalues 用於判斷係數的統計顯著性，P值越小越顯著。")
     print("R平方 用於衡量模型中的自變數（X）能解釋應變數（Y）變異的百分比，如R平方 = 0.75，代表模型針對Y這個現象具75%的解釋力。")
+    print("const一列的coef代表截距項（Intercept），即當所有自變數 (X) 都等於 0 時，應變數 (Y) 的預期數值，const一列的pvalues代表截距項在統計上是否顯著，P值越小越顯著。")
 
 def get_regression_coefficients(results: RegressionResultsWrapper)-> pd.DataFrame:
     """
