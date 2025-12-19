@@ -48,7 +48,7 @@ def display_regression_coefficients(results: RegressionResultsWrapper):
     print(coef_df.to_markdown())
 
     adj_r2_val = getattr(results, 'rsquared_adj', 0.0)
-    print(f"調整後 R 平方: {adj_r2_val:.4f}")
+    print(f"校正後 R 平方: {adj_r2_val:.4f}")
 
     print("\n解讀：coef 表示該變數每增加一個單位，Y (房屋價值中位數) 預期增加或減少的數量。")
     print("pvalues 用於判斷係數的統計顯著性，P值越小越顯著。")
