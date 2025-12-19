@@ -63,20 +63,21 @@ def get_regression_coefficients(results: RegressionResultsWrapper)-> pd.DataFram
     data_dict = {
         'coef': results.params,
         'pvalues': results.pvalues,
+        '是否顯著(<0.05)': results.pvalues < 0.05
     }
     
     # 建立基礎 DataFrame
     coef_df = pd.DataFrame(data_dict)
 
     # 2. 建立 MultiIndex (多重索引) 以實現 Excel 中的合併欄位效果
-    # 確保 adj_r2_label 在 multi_cols 定義前已生成
     adj_r2_val = getattr(results, 'rsquared_adj', 0.0)
-    adj_r2_label = f"調整後 R 平方: {adj_r2_val:.4f}"
+    header = f"校正後 R 平方: {adj_r2_val:.4f} \r\n 註：p 值小於 0.05 為進入許多期刊的門票"
     
-    # 正確定義 multi_cols
+    # 正確定義 multi_cols，涵蓋所有四個欄位
     multi_cols = pd.MultiIndex.from_tuples([
-        (adj_r2_label, 'coef'),
-        (adj_r2_label, 'pvalues')
+        (header, 'coef'),
+        (header, 'pvalues'),
+        (header, '是否顯著(<0.05)')
     ])
     
     # 套用多重索引到 DataFrame 欄位
