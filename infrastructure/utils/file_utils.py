@@ -13,6 +13,18 @@ def dataframe_to_excel(df: pd.DataFrame, file_path: str, keep_index: bool = Fals
     except Exception as e:
         print(f"❌ 匯出 Excel 失敗： {e}")
 
+def read_excel_sheets(file_path: str, target_sheet: str):
+    # 檢查檔案是否存在，避免程式報錯
+    if os.path.exists(file_path):
+        # 讀取 Excel 檔案到 dataset 變數中
+        dataset = pd.read_excel(file_path, sheet_name=target_sheet)
+        print(f"成功讀取資料，共 {len(dataset)} 筆紀錄。")
+        return dataset
+    else:
+        # 建立一個範例 dataset 或拋出錯誤提示
+        raise FileNotFoundError(f"找不到檔案：{file_path}，請確認檔案路徑是否正確。")
+        return null
+
 def save_large_dataframe_to_excel(df: pd.DataFrame, file_path: str):
     """
     將過大的 DataFrame 分割成多個工作表，並儲存到一個 Excel 檔案中。
