@@ -38,7 +38,7 @@
           <li><a href="#section4">附錄</a>
             <ul>
               <li><a href="#section4-1">分析架構</a></li>
-              <li><a href="#section4-2">資料集原始連結</a></li>
+              <li><a href="#section4-2">資料預處理相關檔案</a></li>
               <li><a href="#section4-3">圖表Tableau連結</a></li>
             </ul>
           </li>
@@ -129,6 +129,7 @@
                 </tr>                                
               </tbody>
             </table>
+            <p>資料集來源：<a target="_blank" href="https://www.kaggle.com/datasets/camnugent/california-housing-prices">Kaggle - California Housing Prices</a></p>
           </section>
 
           <!-- Section 2-2 -->
@@ -448,8 +449,18 @@
           </section>
 
           <section id="section4-2" class="section">  
-            <h4>資料集原始連結</h4>
-            <p><a target="_blank" href="https://www.kaggle.com/datasets/camnugent/california-housing-prices">Kaggle - California Housing Prices</a></p>
+            <h4>資料預處理相關檔案</h4>
+            <p>
+              本專案涉及多檔匯入與整併，故以壓縮檔提供。由於 Power Query 採絕對路徑設定，下載解壓後請依下列步驟調整資料來源：<br />
+              <strong>1. 操作路徑：</strong>開啟 Excel 內的 Power Query 編輯器，進入「查詢設定 > 套用的步驟 > 來源」。<br />
+              <strong>2. 路徑更新：</strong>將 <code>C:\xxx\房價預測\</code> 替換為您電腦中檔案存放的實際目錄位置，即可正常讀取。<br />
+              <strong>檔案下載：</strong><a href="../assets/downloads/california_housing_analysis_1990/資料預處理相關檔案.zip" download>資料預處理相關檔案.zip</a>
+            </p>
+
+            <p>
+              考量 Tableau 於進階迴歸分析的限制，本專案先透過 Python 程式完成運算，並將分析結果整併回原始資料後，再匯入 Tableau 進行視覺化呈現。相關程式源碼請參閱：<br />
+              <a target="_blank" href="https://github.com/data1225/etl_showcase/blob/main/application/regression_analysis.ipynb">regression_analysis.ipynb</a>
+            </p>
           </section>
 
           <section id="section4-3" class="section">  
@@ -466,7 +477,7 @@
 
     <!-- Footer -->
     <footer>
-      © 2025 data1225.github.io. 內容僅供參考與研究用途，未經授權不得轉載或用於商業用途。
+      © 2026 data1225.github.io. 內容僅供參考與研究用途，未經授權不得轉載或用於商業用途。
     </footer>
 
   </div>
