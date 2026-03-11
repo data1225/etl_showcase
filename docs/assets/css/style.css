@@ -5,6 +5,7 @@ html, body {
   font-family: "Microsoft JhengHei", sans-serif;
   background-color: #fff;
   color: #444;
+  overflow-wrap: break-word;
 }
 
 .wrapper {
@@ -167,18 +168,35 @@ footer {
 }
 
 .section h4 {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   color: #666;
   margin-top: 0.625rem;
   margin-bottom: 0.625rem;
 }  
 
 .section h5 {
-  font-size: 1.01rem;
+  font-size: 1.1rem;
   color: #333333;
   text-decoration: underline;
   margin-top: 0.625rem;
   margin-bottom: 0.625rem;
+  font-weight:bolder;
+}  
+
+.section h6 {
+  font-size: 1.05rem;
+  color: #333333;
+  margin-top: 0.625rem;
+  margin-bottom: 0.625rem;
+  font-weight:bold;
+}  
+
+.section .h7 {
+  font-size: 1.05rem;
+  color: #686868;
+  margin-top: 0.625rem;
+  margin-bottom: 0.625rem;
+  font-weight:bold;
 }  
 
 .section p {
@@ -193,7 +211,7 @@ footer {
   margin-top: 0;
 }
 
-.section .section p:last-child {
+.section p:last-child {
   margin-bottom: 0;
 }
 
@@ -219,6 +237,7 @@ th, td {
   border: 1px solid #aaa;
   color: #444;
   text-align: left;
+  vertical-align: top;
 }
 
 th {
@@ -230,10 +249,34 @@ th {
     text-align: center;
 }
 
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
 table.center-table {
     margin-left: auto;
     margin-right: auto;
     border-collapse: collapse;
+}
+
+.fraction {
+    display: inline-flex;
+    flex-direction: column;
+    vertical-align: middle;
+    text-align: center;
+    font-weight: bold;
+}
+
+.fraction > span {
+    padding: 0 10px;
+}
+
+.numerator {
+    border-bottom: 2px solid black;
 }
 
 /*** RWD ***/
@@ -255,6 +298,7 @@ table.center-table {
 
 .w-auto {
   width: auto;
+  max-width: 100%;
 }
 
 .container {

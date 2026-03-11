@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>黑色星期五顧客分群</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body>
+  <div class="wrapper">
+    <!-- Header -->
+    <header>
+      <h1>黑色星期五顧客分群</h1>
+      <p>
+        為呈現最佳的數據視覺化效果與閱讀比例，建議使用電腦或平板裝置瀏覽。
+      </p>
+    </header>
+
+    <!-- Main content -->
+    <main class="container">
+      <!-- Table of Contents -->
+      <nav id="toc">
+        <h2>目錄</h2>
+        <ul>
+          <li>
+            <a href="#section1">緣起</a>
+          </li>
+          <li>
+            <a href="#section2">資料獲取與準備</a>
+            <ul>
+              <li><a href="#section2-1">資料來源</a></li>
+              <li>
+                <a href="#section2-2">資料預處理</a>
+                <ul>
+                  <li><a href="#section2-2-1">基本預處理</a></li>
+                  <li><a href="#section2-2-2">因應圖表需求的預處理</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#section3">圖表與分析結果</a>
+            <ul>
+              <li>
+                <a href="#section3-1">K-prototypes分析</a>
+                <ul>
+                  <li><a href="#section3-1-1">分群結果</a></li>
+                  <li><a href="#section3-1-2">使用者輪廓分析</a></li>
+                  <li><a href="#section3-1-3">分群品類偏好</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>          
+          <li><a href="#section4">附錄</a>
+            <ul>
+              <li><a href="#section4-1">分析架構</a></li>
+              <li><a href="#section4-2">資料預處理的Excel檔案</a></li>
+              <li><a href="#section4-3">繪圖的Power BI檔案</a></li>  
+            </ul>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Section 1 -->
+      <section id="section1" class="section">
+        <h3>緣起</h3>
+        <div class="section-wrapper">
+          <p>
+            在《商業周刊》對精誠資訊的分析報導中，資深協理李健龍指出，<br />
+            企業主如今期待 IT 部門不僅提升效率，也能協助開拓市場，甚至間接創造營收；既然涉及成本投入，便需評估 ROI（投資報酬率）。<br />
+            因此，本專案聚焦於「提升營收」，以提高行銷策略精準度為目標，模擬實務情境，建立並整理數據分析模板。
+          </p>
+          <p>
+            模擬商業需求情境：<br />
+            本分析以某零售公司的黑色星期五活動為應用場景，透過辨識不同客群特性，優化行銷策略，進而提升今年黑色星期五活動銷售額。
+          </p>
+        </div>
+      </section>      
+
+      <!-- Section 2 -->
+      <section id="section2" class="section">
+        <h3>資料獲取與準備</h3>
+        <div class="section-wrapper">
+
+          <!-- Section 2-1 -->
+          <section id="section2-1" class="section">
+            <h4>資料來源</h4>
+            <p>
+              本資料集下載自 Kaggle，來源為零售公司 ABC Private Limited。<br />
+              內容為 2022 年黑色星期五期間，高銷量產品的顧客購買彙總數據。<br />
+              該公司蒐集此資料，旨在分析顧客對不同產品類別的購買行為（特別是購買金額），<br />
+              並建立模型預測消費金額，以利提供個人化優惠。
+            </p>
+            <p>
+              資料集中的每筆資料包含以下屬性：
+            </p>
+            <table class="w-100">
+              <thead>
+                <tr>
+                  <th>屬性名稱</th>
+                  <th>說明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>User_ID</td>
+                  <td>使用者 ID。</td>
+                </tr>
+                <tr>
+                  <td>Product_ID</td>
+                  <td>購買商品之商品 ID。</td>
+                </tr>
+                <tr>
+                  <td>Gender</td>
+                  <td>使用者性別。</td>
+                </tr>
+                <tr>
+                  <td>Age</td>
+                  <td>使用者年齡，已預先分成0-17、18-25、26-35、36-45、46-50、51-55、55+這七個區間。</td>
+                </tr>
+                <tr>
+                  <td>Occupation</td>
+                  <td>使用者職業，未顯示職業名稱，已把職業名稱轉換成職業代碼。</td>
+                </tr>
+                <tr>
+                  <td>City_Category</td>
+                  <td>居住城市類別，有分成A、B、C三個類別。</td>
+                </tr>
+                <tr>
+                  <td>Stay_In_Current_City_Years</td>
+                  <td>在目前城市居住的年數，連續數字。</td>
+                </tr>
+                <tr>
+                  <td>Marital_Status</td>
+                  <td>婚姻狀況，0代表未婚，1代表己婚。</td>
+                </tr>
+                <tr>
+                  <td>Product_Category_1</td>
+                  <td>購買之商品品類，未顯示原始商品品類，已把原始內容轉換成代碼。</td>
+                </tr>
+                <tr>
+                  <td>Product_Category_2</td>
+                  <td>商品也可能從屬的其他品類，未顯示品類名稱，已把原始內容轉換成代碼。</td>
+                </tr>   
+                <tr>
+                  <td>Product_Category_3</td>
+                  <td>商品也可能從屬的其他品類，未顯示品類名稱，已把原始內容轉換成代碼。</td>
+                </tr>
+                <tr>
+                  <td>Purchase_Amount</td>
+                  <td>單筆購買金額。</td>
+                </tr>                          
+              </tbody>
+            </table>
+            <p>資料集來源：<a target="_blank" href="https://www.kaggle.com/datasets/rajeshrampure/black-friday-sale">Kaggle - Black Friday Sale</a> </p>
+          </section>
+
+          <!-- Section 2-2 -->
+          <section id="section2-2"  class="section">
+            <h4>資料預處理</h4>
+            <section id="section2-2-1">
+              <h5>基本預處理</h5>
+              <table class="w-100">
+                <thead>
+                  <tr>
+                    <th>簡稱</th>
+                    <th>操作說明</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>資料型態處理</td>
+                    <td>將屬於類型屬性但匯入資料時資料型態轉換為數值的屬性，型態均轉換為文字。</td>
+                  </tr>
+                  <tr>
+                    <td>缺失值處理</td>
+                    <td>把「產品也可能從屬的其他類別」的缺失值替代為「類別不明」。</td>
+                  </tr>
+                  <tr>
+                    <td>數值尺度標準化</td>
+                    <td>為避免分群結果被平均數值過大的數值屬性主導，將數值屬性統一尺度，轉換成Z分數。</td>
+                  </tr>                        
+                </tbody>
+              </table>
+            </section>
+            <section id="section2-2-2">
+              <h5>因應圖表需求的預處理</h5>
+              <table class="center-table w-100">
+                <thead>
+                  <tr>
+                    <th>圖表或分析</th>
+                    <th>操作說明</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>K-prototypes分群</td>
+                    <td>
+                      <ul>
+                        <li>
+                          把Product_Category_1轉換成下列這樣的資料：<br />
+                          <ul>
+                            <li>Product_Category_1_Count: 1</li>
+                            <li>Product_Category_3_Count: 1</li>
+                            <li>Product_Category_12_Count: 2</li>
+                          </ul>
+                          處理過程只取Product_Category_1來處理，因為Product_Category_1是主要標籤，
+                          Product_Category_2、Product_Category_3是次要標籤，
+                          如都要考量，後續計算類別比例會需要加權計算，但權重要怎麼配易有爭議，
+                          且只選身為主要標籤的Product_Category_1會讓分析結果利於溝通，
+                          如：比起說明「該分群偏好分類A、分類B加權後結果，加權計算為某公式」，說明「該分群偏好分類A」更有利於和各部門溝通。<br /><br />
+                        </li>
+                        <li>
+                          因K-prototypes 是用來對「人」分群，再加上原始資料是以User_ID+ Product_ID為唯一識別碼，
+                          這會導致一位使用者有多筆資料，無法進行分群，
+                          故先以User_ID為唯一識別碼，把資料整合在一起，
+                          一位使用者的Age、Gender、Occupation、City_Category、Marital_Status會一樣，所以直接合併即可；
+                          Purchase_Amount進行加總；Product_Category_1部份，把各Product_Category_X_Count加總在一起。<br /><br />
+                        </li>
+                        <li>
+                          Purchase_Amount加總後的欄位轉換成Z分數。<br /><br />
+                        </li>
+                        <li>
+                          因Age屬於有序類別，會有0-17與18-25較「相近」、46-50與50+較相近這種可在光譜上進行排序的關係，
+                          故還是數值化，把Age轉換成0、1、2…的數值型態再轉換成Z分數。
+                        </li>
+                      </ul>
+                    </td>
+                  </tr>                        
+                </tbody>
+              </table>
+            </section>
+          </section>
+
+        </div>
+      </section>      
+
+      <!-- Section 3 -->
+      <section id="section3" class="section">
+        <h3>圖表與分析結果</h3>
+        <div class="section-wrapper">
+
+          <section id="section3-1" class="section">
+            <h4>K-prototypes分析</h4>
+            <p>
+              為落實分眾行銷，以 K-prototypes 對資料進行分群。<br />
+              分析聚焦於消費者特質(性別、年齡、職業、居住城市類別、城市居住年資、婚姻狀況)及代表消費力等級的消費總金額，數值特質均有轉換成 Z分數。<br />
+              需注意的是，各產品類別的購買數量等行為屬性並未計入分群基準。
+            </p>
+            <br />
+
+            <section id="section3-1-1">
+              <h5>分群結果</h5>
+              <p class="text-center">
+                <img class="w-auto" src="../assets/images/black_friday_customer_segmentation/圖一、分群散點圖矩陣.png"><br />
+                圖一、分群散點圖矩陣
+              </p>
+              <p>
+                從圖一、分群散點圖矩陣中，可歸納出以下趨勢：<br />
+                <ul>
+                  <li>消費分界點： 以 200 萬為界，可明顯區分高消費族群與一般消費族群。</li>
+                  <li>核心貢獻區： 高消費族群集中於 26-45 歲，且多分布於職業編號 0-7、14-17 與 20； A類與B類城市 則展現出更高的消費天花板。</li>
+                  <li>居住年資洞察： 居住於城市約 1 年的居民消費密度最高，顯示該群體正處於「購置期」或「生活重組期」，消費動能強勁。</li>
+                </ul>
+                註.由於散點圖存在標籤覆蓋問題（如分群 0 的分布可能被他群遮蔽），若要精準理解各分群特徵，請參閱後續的雷達圖分析。
+              </p>
+              <br />
+            </section>
+
+            <section id="section3-1-2">
+              <h5>使用者輪廓分析</h5>
+
+              <h6>雷達圖說明</h6>
+              <p class="h7">資料處理</p>
+              <p>
+                雷達圖各屬性值係採 K-prototypes 分群後之代表值。<br />
+                為統一尺度（0-1），數值屬性經中位數標準化處理，公式如下：<br />
+                <div class="demo-section">
+                    <div class="fraction">
+                        <span class="numerator">中位數 － 最小值</span>
+                        <span class="denominator">最大值 － 最小值</span>
+                    </div>
+                </div>
+                類別屬性則以該群組內之占比表示。
+              </p>
+              <p class="h7">分析邏輯</p>
+              <p>
+                雖然原始中位數較直觀，但為了跨群比較市場覆蓋率（如：圖形互補代表市場開發全面；圖形相似則代表尚有未開發空間），<br />
+                雷達圖仍統一採用標準化數值。在標示分群特徵時，會再標示出原始中位數，以兼顧易讀性與比較性。
+              </p>
+              <br />
+
+              <h6>分群特徵摘要</h6>
+              <p>以下彙整各分群雷達圖之核心特徵與詳細數據：</p>
+              <!--分群1特徵-->
+              <div>
+                <p class="h7">分群1：穩健小資族群</p>
+                <p class="text-center">
+                  <img class="w-auto" src="../assets/images/black_friday_customer_segmentation/圖二、雷達圖-分群1.png"><br />
+                  圖二、雷達圖-分群1
+                </p>
+                <p>
+                  核心描述：消費波動最窄，表現最為穩定且平均。<br />
+                  消費力： 總額中位數 437,092（區間：49,288 – 1,848,731）<br />
+                  客群畫像： 男性為主，年齡介於 26-35 歲，多為未婚。<br />
+                  地域分佈： 集中於C類城市，城市居住年資中位數為 2 年。<br />
+                  職業背景： 以職業 4 佔比最高，職業 0 次之
+                </p>
+                <p>
+                  年齡層佔比：
+                </p>
+                <table class="w-50">
+                  <thead>
+                    <tr>
+                      <th>0-17歲</th>
+                      <th>18-25歲</th>
+                      <th>26-35歲</th>
+                      <th>36-45歲</th>
+                      <th>46-50歲</th>
+                      <th>51-55歲</th>
+                      <th>55歲以上</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>5.75%</td>
+                      <td>25.91%</td>
+                      <td>46.42%</td>
+                      <td>21.92%</td>
+                      <td>0.00%</td>
+                      <td>0.00%</td>
+                      <td>0.00%</td>
+                    </tr>                        
+                  </tbody>
+                </table>
+                <p>
+                  性別佔比：
+                </p>
+                <table class="w-25">
+                  <thead>
+                    <tr>
+                      <th>男性</th>
+                      <th>女性</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>70.67%</td>
+                      <td>29.33%</td>
+                    </tr>                        
+                  </tbody>
+                </table>
+                <p>
+                  婚姻狀況佔比：
+                </p>
+                <table class="w-25">
+                  <thead>
+                    <tr>
+                      <th>未婚</th>
+                      <th>已婚</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>70.08%</td>
+                      <td>29.92%</td>
+                    </tr>                        
+                  </tbody>
+                </table>
+                <p>
+                  居住城市類型佔比：
+                </p>
+                <table class="w-50">
+                  <thead>
+                    <tr>
+                      <th>A類城市</th>
+                      <th>B類城市</th>
+                      <th>C類城市</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>17.12%</td>
+                      <td>24.61%</td>
+                      <td>58.27%</td>
+                    </tr>                        
+                  </tbody>
+                </table>
+                <p>
+                  職業佔比：
+                </p>
+                <table class="w-75">
+                  <thead>
+                    <tr>
+                      <th>職業0</th>
+                      <th>職業1</th>
+                      <th>職業2</th>
+                      <th>職業3</th>
+                      <th>職業4</th>
+                      <th>職業5</th>
+                      <th>職業6</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>11.76%</td>
+                      <td>6.93%</td>
+                      <td>4.18%</td>
+                      <td>2.58%</td>
+                      <td>17.65%</td>
+                      <td>1.88%</td>
+                      <td>2.95%</td>
+                    </tr>
+                  </tbody>
+                  <thead>
+                    <tr>
+                      <th>職業7</th>
+                      <th>職業8</th>
+                      <th>職業9</th>
+                      <th>職業10</th>
+                      <th>職業11</th>
+                      <th>職業12</th>
+                      <th>職業13</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>9.54%</td>
+                      <td>0.31%</td>
+                      <td>1.57%</td>
+                      <td>5.08%</td>
+                      <td>1.91%</td>
+                      <td>7.72%</td>
+                      <td>0.11%</td>
+                    </tr>
+                  </tbody>
+                  <thead>
+                    <tr>
+                      <th>職業14</th>
+                      <th>職業15</th>
+                      <th>職業16</th>
+                      <th>職業17</th>
+                      <th>職業18</th>
+                      <th>職業19</th>
+                      <th>職業20</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>5.02%</td>
+                      <td>2.27%</td>
+                      <td>2.50%</td>
+                      <td>8.90%</td>
+                      <td>1.09%</td>
+                      <td>1.43%</td>
+                      <td>4.60%</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <br />
+              </div>
+              <!--分群2特徵-->
+              <div>
+                <p class="h7">分群2：高消費大戶族群</p>
+                <p class="text-center">
+                  <img class="w-auto" src="../assets/images/black_friday_customer_segmentation/圖三、雷達圖-分群2.png"><br />
+                  圖三、雷達圖-分群2
+                </p>
+                <p>
+                  核心描述：消費力極高，且存在千萬級距的超級大戶。<br />
+                  消費力： 總額中位數 2,422,692（區間：1,438,113- 10,536,909）<br />
+                  客群畫像： 男性為主，年齡介於 26-35 歲，多為未婚。<br />
+                  地域分佈： 集中於城市 B，城市居住年資中位數為 2 年。<br />
+                  職業背景： 以職業 0佔比最高，職業 4 次之。
+                </p>
+                <p>
+                  年齡層佔比：
+                </p>
+                <table class="w-50">
+                  <thead>
+                    <tr>
+                      <th>0-17歲</th>
+                      <th>18-25歲</th>
+                      <th>26-35歲</th>
+                      <th>36-45歲</th>
+                      <th>46-50歲</th>
+                      <th>51-55歲</th>
+                      <th>55歲以上</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1.56%</td>
+                      <td>17.55%</td>
+                      <td>47.96%</td>
+                      <td>22.12%</td>
+                      <td>6.25%</td>
+                      <td>3.85%</td>
+                      <td>0.72%</td>
+                    </tr>                        
+                  </tbody>
+                </table>
+                <p>
+                  性別佔比：
+                </p>
+                <table class="w-25">
+                  <thead>
+                    <tr>
+                      <th>男性</th>
+                      <th>女性</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>80.17%</td>
+                      <td>19.83%</td>
+                    </tr>                        
+                  </tbody>
+                </table>
+                <p>
+                  婚姻狀況佔比：
+                </p>
+                <table class="w-25">
+                  <thead>
+                    <tr>
+                      <th>未婚</th>
+                      <th>已婚</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>62.74%</td>
+                      <td>37.26%</td>
+                    </tr>                        
+                  </tbody>
+                </table>
+                <p>
+                  居住城市類型佔比：
+                </p>
+                <table class="w-50">
+                  <thead>
+                    <tr>
+                      <th>A類城市</th>
+                      <th>B類城市</th>
+                      <th>C類城市</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>31.61%</td>
+                      <td>62.50%</td>
+                      <td>5.89%</td>
+                    </tr>                        
+                  </tbody>
+                </table>
+                <p>
+                  職業佔比：
+                </p>
+                <table class="w-75">
+                  <thead>
+                    <tr>
+                      <th>職業0</th>
+                      <th>職業1</th>
+                      <th>職業2</th>
+                      <th>職業3</th>
+                      <th>職業4</th>
+                      <th>職業5</th>
+                      <th>職業6</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>14.42%</td>
+                      <td>7.81%</td>
+                      <td>6.01%</td>
+                      <td>3.49%</td>
+                      <td>12.38%</td>
+                      <td>3.00%</td>
+                      <td>3.85%</td>
+                    </tr>
+                  </tbody>
+                  <thead>
+                    <tr>
+                      <th>職業7</th>
+                      <th>職業8</th>
+                      <th>職業9</th>
+                      <th>職業10</th>
+                      <th>職業11</th>
+                      <th>職業12</th>
+                      <th>職業13</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>11.18%</td>
+                      <td>0.24%</td>
+                      <td>0.84%</td>
+                      <td>1.08%</td>
+                      <td>2.04%</td>
+                      <td>4.57%</td>
+                      <td>0.36%</td>
+                    </tr>
+                  </tbody>
+                  <thead>
+                    <tr>
+                      <th>職業14</th>
+                      <th>職業15</th>
+                      <th>職業16</th>
+                      <th>職業17</th>
+                      <th>職業18</th>
+                      <th>職業19</th>
+                      <th>職業20</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>5.65%</td>
+                      <td>2.64%</td>
+                      <td>5.05%</td>
+                      <td>6.49%</td>
+                      <td>0.84%</td>
+                      <td>1.68%</td>
+                      <td>6.37%</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <br />
+              </div>
+              <!--分群3特徵-->
+              <div>
+                <p class="h7">分群3：高潛力族群</p>
+                <p class="text-center">
+                  <img class="w-auto" src="../assets/images/black_friday_customer_segmentation/圖四、雷達圖-分群2.png"><br />
+                  圖四、雷達圖-分群2
+                </p>
+                <p>
+                  核心描述：中位數雖低，但上限高，隱藏許多高消費潛力客。<br />
+                  消費力： 總額中位數 387,760（區間：46,681- 2,404,672）<br />
+                  客群畫像： 男性為主，年齡介於 46-50歲或51-55 歲，多為已婚。<br />
+                  地域分佈： 集中於C類城市，城市居住年資中位數為 1年。
+                </p>
+                <p>
+                  年齡層佔比：
+                </p>
+                <table class="w-50">
+                  <thead>
+                    <tr>
+                      <th>0-17歲</th>
+                      <th>18-25歲</th>
+                      <th>26-35歲</th>
+                      <th>36-45歲</th>
+                      <th>46-50歲</th>
+                      <th>51-55歲</th>
+                      <th>55歲以上</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>0.00%</td>
+                      <td>0.00%</td>
+                      <td>0.00%</td>
+                      <td>13.50%</td>
+                      <td>32.02%</td>
+                      <td>30.01%</td>
+                      <td>24.47%</td>
+                    </tr>                        
+                  </tbody>
+                </table>
+                <p>
+                  性別佔比：
+                </p>
+                <table class="w-25">
+                  <thead>
+                    <tr>
+                      <th>男性</th>
+                      <th>女性</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>69.52%</td>
+                      <td>30.48%</td>
+                    </tr>                        
+                  </tbody>
+                </table>
+                <p>
+                  婚姻狀況佔比：
+                </p>
+                <table class="w-25">
+                  <thead>
+                    <tr>
+                      <th>未婚</th>
+                      <th>已婚</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>26.60%</td>
+                      <td>73.40%</td>
+                    </tr>                        
+                  </tbody>
+                </table>
+                <p>
+                  居住城市類型佔比：
+                </p>
+                <table class="w-50">
+                  <thead>
+                    <tr>
+                      <th>A類城市</th>
+                      <th>B類城市</th>
+                      <th>C類城市</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>11.50%</td>
+                      <td>20.72%</td>
+                      <td>67.78%</td>
+                    </tr>                        
+                  </tbody>
+                </table>
+                <p>
+                  職業佔比：
+                </p>
+                <table class="w-75">
+                  <thead>
+                    <tr>
+                      <th>職業0</th>
+                      <th>職業1</th>
+                      <th>職業2</th>
+                      <th>職業3</th>
+                      <th>職業4</th>
+                      <th>職業5</th>
+                      <th>職業6</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>9.96%</td>
+                      <td>13.70%</td>
+                      <td>3.81%</td>
+                      <td>3.28%</td>
+                      <td>0.53%</td>
+                      <td>1.27%</td>
+                      <td>6.08%</td>
+                    </tr>
+                  </tbody>
+                  <thead>
+                    <tr>
+                      <th>職業7</th>
+                      <th>職業8</th>
+                      <th>職業9</th>
+                      <th>職業10</th>
+                      <th>職業11</th>
+                      <th>職業12</th>
+                      <th>職業13</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>15.78%</td>
+                      <td>0.27%</td>
+                      <td>1.67%</td>
+                      <td>0.13%</td>
+                      <td>2.87%</td>
+                      <td>4.21%</td>
+                      <td>8.89%</td>
+                    </tr>
+                  </tbody>
+                  <thead>
+                    <tr>
+                      <th>職業14</th>
+                      <th>職業15</th>
+                      <th>職業16</th>
+                      <th>職業17</th>
+                      <th>職業18</th>
+                      <th>職業19</th>
+                      <th>職業20</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>4.55%</td>
+                      <td>2.47%</td>
+                      <td>6.95%</td>
+                      <td>8.02%</td>
+                      <td>1.40%</td>
+                      <td>0.40%</td>
+                      <td>3.74%</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <br />
+              </div>
+
+              <h6>分群綜合分析</h6>
+              <p class="h7">1.市場覆蓋率分析</p>
+              <p>
+                透過各分群特徵觀察，整體市場呈現以下動態：<br />
+                年齡與婚姻： 分群 1、2 鎖定 26-35 歲未婚族群；分群 3 則成功覆蓋 46-55 歲的高齡已婚市場。兩者在人生階段上形成良好的互補。<br />
+                性別： 三個分群皆顯著偏重男性，女性佔比普遍偏低。<br /><br />
+                地域： 分群 1、3 以 C 類城市為重心，分群 2 則成功滲透 B 類城市。<br />
+                職業： 分群 1、2 分佈相似，分群 3 較為獨特；整體職業分佈破碎，無顯著集中的單一職業。<br />
+                【市場缺口】 目前 0-17 歲、女性、職業 (8-13, 18-19) 及 A 類城市 尚未被有效覆蓋。
+              </p>
+              <p class="h7">2.未開發市場策略建議</p>
+              <p>
+                針對上述缺口，建議採取以下行動：<br />
+                藍海市場（0-17 歲、女性）： 目前客戶數較少，可能與商品吸引力有關，建議先進行產品適配性調查，從長計議。<br />
+                職業行銷（8-13, 18-19）： 為避免資源分散，不建議針對單一職業投放，應尋找這些職業的共同行為特徵進行效率化開發。<br />
+                A 類城市（頂級市場）： A 類城市雖消費天花板最高，但在高消費群（分群 2）中佔比反倒不高。這顯示該市場已趨於成熟且分層明確，建議針對該區採「高端會員維護」與「精準定向經營」，而非大規模擴張。
+              </p>
+              <p class="h7">3.消費行為與客群背景洞察</p>
+              <p>
+                核心客群：分群 1 & 2（主力獲利來源）<br />
+                族群畫像： 高度重疊，核心為 26-35 歲、未婚、居住約 2 年之男性。<br />
+                行為特徵： 具備穩定消費習慣，對「黑色星期五」促銷敏感度高，尤其是分群 2 貢獻最為顯著，可以重點促銷。<br />
+                滲透建議： 雖然職業 0 與職業 4 佔比最高，但兩者加總僅約 27-29%，未過半數。建議酌情投入資源提升滲透率，不宜過度孤注一擲。<br />
+              </p>
+              <p>
+                潛力客群：分群 3（隱藏高貢獻者）<br />
+                族群畫像： 集中於 46-55 歲、已婚、居住約 1 年之族群。<br />
+                消費動能： 雖然中位數較低，但最大消費值遠超分群 1，隱藏許多高潛力客戶。<br />
+                動機推測： 消費衝動可能來自新家購置或生活重組（新居民）。<br />
+                行動建議： 應針對其「成家/遷移」的消費誘因投放資源，挖掘並轉化潛在的高消費客群。
+              </p>
+              <br />
+            </section>
+
+            <section id="section3-1-3">
+              <h5>分群品類偏好</h5>
+
+              <h6>圖表說明</h6>
+              <p>
+                圖五、品類佔比堆疊圖呈現各分群於「主要產品類別（Product_Category_1）」的購買數量分佈。計算公式如下：
+                <div class="demo-section">
+                    <div class="fraction">
+                        <span class="numerator">該分群特定類別購買量</span>
+                        <span class="denominator">該分群總購買量</span>
+                    </div>
+                </div>
+                此法可確保分析結果具備直觀的溝通性與決策參考價值（詳見 K-prototypes 資料預處理說明(再連上該章節錨點)）。
+              </p>
+              <br />
+
+              <h6>分析結果</h6>
+              <p class="text-center">
+                <img class="w-auto" src="../assets/images/black_friday_customer_segmentation/圖五、品類佔比堆疊圖.png"><br />
+                圖五、品類佔比堆疊圖
+              </p>
+              <br />
+              <table class="center-table w-75">
+                <thead>
+                  <tr>
+                    <th>分群</th>
+                    <th>消費總額</th>
+                    <th>購買商品總數</th>
+                    <th>件單價</th>
+                    <th>消費者數量</th>
+                    <th>客單價</th>
+                    <th>消費總額中位數</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>分群1</td>
+                    <td class="text-right">2,001,831,117</td>
+                    <td class="text-right">211,063</td>
+                    <td class="text-right">9,484.52</td>
+                    <td class="text-right">3,563</td>
+                    <td class="text-right">561,838.65</td>
+                    <td class="text-right">437,092</td>
+                  </tr> 
+                  <tr>
+                    <td>分群2</td>
+                    <td class="text-right">2,281,073,910</td>
+                    <td class="text-right">253,115</td>
+                    <td class="text-right">9,012.01</td>
+                    <td class="text-right">832</td>
+                    <td class="text-right">2,741,675.37</td>
+                    <td class="text-right">2,422,692</td>
+                  </tr> 
+                  <tr>
+                    <td>分群3</td>
+                    <td class="text-right">812,907,715</td>
+                    <td class="text-right">85,890</td>
+                    <td class="text-right">9,464.52</td>
+                    <td class="text-right">1,496</td>
+                    <td class="text-right">543,387.51</td>
+                    <td class="text-right">387,760</td>
+                  </tr>                   
+                </tbody>
+              </table>
+              <p class="text-center">表一、各分群購買資訊(單位USD)</p>
+              <br />
+              <p>透過圖五、品類佔比堆疊圖，可發現三個分群前七名品類排序如下：</p>
+              <table class="center-table w-75">
+                <thead>
+                  <tr>
+                    <th>分群</th>
+                    <th>第一名</th>
+                    <th>第二名</th>
+                    <th>第三名</th>
+                    <th>第四名</th>
+                    <th>第五名</th>
+                    <th>第六名</th>
+                    <th>第七名</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>分群1</td>
+                    <td>品類5</td>
+                    <td>品類1</td>
+                    <td>品類8</td>
+                    <td>品類3</td>
+                    <td>品類11</td>
+                    <td>品類2</td>
+                    <td>品類6</td>
+                  </tr> 
+                  <tr>
+                    <td>分群2</td>
+                    <td>品類5</td>
+                    <td>品類1</td>
+                    <td>品類8</td>
+                    <td>品類11</td>
+                    <td>品類2</td>
+                    <td>品類6</td>
+                    <td>品類3</td>
+                  </tr> 
+                  <tr>
+                    <td>分群3</td>
+                    <td>品類5</td>
+                    <td>品類8</td>
+                    <td>品類1</td>
+                    <td>品類2</td>
+                    <td>品類6</td>
+                    <td>品類11</td>
+                    <td>品類3</td>
+                  </tr>                   
+                </tbody>
+              </table>
+              <p class="text-center">表二、各分群品類佔比前七名</p>
+              <br />
+              <p>
+                綜合表一、各分群購買資訊和表二、各分群品類佔比前七名內容，可得出下列洞察：
+              </p>
+              <p class="h7">1. 品類偏好高度一致</p>
+              <p>由表二可見，儘管排序略有不同，但三個分群的高佔比品類高度相似，顯示其核心需求基本一致。</p>
+              <p class="h7">2. 高消費主因在於「量」而非「價」</p>
+              <p>觀察表一發現，三群的件單價差異極小；值得注意的是，高消費群（分群 2）的件單價甚至低於分群 1 與 3。然而，分群 2 的客單價與消費總額中位數卻遠超其他族群。這說明分群 2 成為高消費主力的關鍵在於購買數量較多，而非購買高單價商品。</p>
+              <p class="h7">3. 消費心理分析</p>
+              <p>數據反映出該族群具備「精打細算」的特徵，即便選購高價品也傾向尋求更划算的入手方式，導致平均件單價偏低。</p>
+              <br />
+              <p class="h7">行銷策略建議</p>
+              <p>
+                針對分群 2，行銷重點不應直接推銷高單價商品，建議採取以下策略以穩固並擴大購買動能：<br />
+                組合商品（Bundling）： 提供跨品類組合包。<br />
+                批量折扣（Bulk Discount）： 採取多件優惠策略。<br />
+                透過滿足其精打細算的心理，在維持現有購買量的基礎上，提升整體營收效益。
+              </p>
+              <p></p>
+            </section>
+
+          </section>
+        </div>
+      </section>
+
+      <!-- Section 4 -->
+      <section id="section4" class="section">
+        <h3>附錄</h3>
+        <div class="section-wrapper">
+
+          <section id="section4-1" class="section">
+            <h4>分析架構</h4>
+            <p class="text-center">
+              <img class="w-100" src="../assets/images/black_friday_customer_segmentation/圖六、分析架構圖.png">
+              圖六、分析架構圖
+            </p>
+            <p>
+              原計畫開發「交叉銷售分析」模版，惟 Kaggle 資料集多針對單一分析場景設計，鮮少同時包含完整的訂單與客戶主體資料。<br />
+              常見情況是：訂單資料（如時間、地點、出貨類型）缺乏詳盡的客戶屬性；或客戶資料（如年齡、婚姻狀況）欠缺訂單關聯。<br />
+              受限於資料結構，本專案最終針對交叉銷售分析開發了一套輔助工具，程式收錄於 etl_showcase 儲存庫中：
+              <a target="_blank" href="https://github.com/data1225/etl_showcase/blob/main/application/market_basket_analysis.ipynb">market_basket_analysis.ipynb</a>
+            </p>
+
+          </section>
+
+          <section id="section4-2" class="section">  
+            <h4>資料預處理的Excel檔案</h4>
+            <p>
+              為方便瀏覽，本專案已將原始資料與 Power Query 預處理步驟 整合於同一 Excel 檔中。<br />
+              各項查詢均直接讀取檔內資料來源，您只需下載單一檔案，即可透過 Power Query 查看完整的資料清洗流程。
+            </p>
+            <p>
+              <a href="../assets/downloads/black_friday_customer_segmentation/黑色星期五資料預處理.xlsx" download>黑色星期五資料預處理.xlsx</a>
+            </p>
+
+          </section>   
+
+          <section id="section4-3" class="section">  
+            <h4>繪圖的Power BI檔案</h4>
+            <p>
+              本 pbix 檔案需讀取「黑色星期五資料預處理.xlsx」作為資料源。<br />
+              由於 Power BI 預設採絕對路徑，專案已預先建立參數化路徑以模擬相對路徑效果。<br />
+              下載兩個檔案後，請進入 Power Query 將 Folder_Path 參數更改為 Excel 檔所在的資料夾路徑，即可正常載入所有圖表。
+            </p>
+            <p>
+              <a href="../assets/downloads/black_friday_customer_segmentation/黑色星期五顧客分群.pbix" download>黑色星期五顧客分群.pbix</a>
+            </p>
+          </section>       
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      © 2026 data1225.github.io. 內容僅供參考與研究用途，未經授權不得轉載或用於商業用途。
+    </footer>
+
+  </div>
+
+  <button id="back-to-top" onclick="scrollToToc()">↑ 目錄</button>
+  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-G59ZHSV9GD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-G59ZHSV9GD');
+  </script>
+  <script src="../assets/js/script.js" defer></script>
+</body>
+</html>
