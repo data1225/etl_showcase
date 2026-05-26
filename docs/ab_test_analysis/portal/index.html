@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>廣告 AB 測試</title>
+<!--
+  ═══════════════════════════════════════════════════════════════
+  Third-Party Notices
+  本檔使用以下第三方開源元件，詳細版權與授權條款請見 ../NOTICE.md
+  與 ./licenses/ 下各授權全文：
+    · Chart.js       — MIT License            — https://www.chartjs.org
+  ═══════════════════════════════════════════════════════════════
+-->
+
+<script src="../shared/assets/js/tailwind.js"></script>
+<link rel="stylesheet" href="./assets/css/styles.css">
+
+</head>
+<body>
+
+<!-- 右側懸浮錨點選單 -->
+<nav class="nav-floating" aria-label="頁面導覽">
+  <a href="#section-1" data-target="section-1" data-label="市場調查分析報告" aria-label="市場調查分析報告">
+    <!-- 放大鏡 icon：市場調查 -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+  </a>
+  <a href="#section-2" data-target="section-2" data-label="AB測試首輪廣告" aria-label="AB測試首輪廣告">
+    <!-- film icon：首輪廣告影片 -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
+  </a>
+  <a href="#section-3" data-target="section-3" data-label="廣告 AB 測試分析報告" aria-label="廣告 AB 測試分析報告">
+    <!-- bar chart icon：分析報告 -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+  </a>
+  <a href="#section-4" data-target="section-4" data-label="AB測試第二輪廣告" aria-label="AB測試第二輪廣告">
+    <!-- star icon：第二輪主推 -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
+  </a>
+</nav>
+
+<main class="max-w-6xl mx-auto px-6 py-12 md:py-16 space-y-16">
+
+  <header class="text-center space-y-2">
+    <h1 class="text-3xl md:text-4xl font-bold tracking-tight">廣告 AB 測試</h1>
+    <p class="text-sm text-stone-500">行銷優化示例</p>
+  </header>
+
+  <!-- 第一行：市場調查分析報告 -->
+  <section id="section-1" class="space-y-6">
+    <h2 class="section-title">市場調查分析報告</h2>
+    <div class="flex justify-center">
+      <div class="card card-link w-full md:w-[calc(50%-0.75rem)]">
+        <a href="../1_market_research/report/index.html"
+           aria-label="開啟市場調查分析報告"
+           title="開啟市場調查分析報告">
+          <svg class="report-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <path d="M8 17l3-3 2 2 3-4"/>
+          </svg>
+          <span class="link-hint">點此開啟完整報告</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第二行：AB測試首輪廣告 -->
+  <section id="section-2" class="space-y-6">
+    <h2 class="section-title">AB測試首輪廣告</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="card">
+        <video controls preload="metadata">
+          <source src="../2_advertisement_stage_1/廣告-家長心意/4-廣告成品-家長心意.mp4" type="video/mp4" />
+          您的瀏覽器不支援播放此影片。
+        </video>
+        <div class="card-header">
+          <h3 class="card-title">客群一：學齡兒童父母</h3>
+        </div>
+      </div>
+      <div class="card">
+        <video controls preload="metadata">
+          <source src="../2_advertisement_stage_1/廣告-上班族(WFH)/4-廣告成品-上班族(WFH).mp4" type="video/mp4" />
+          您的瀏覽器不支援播放此影片。
+        </video>
+        <div class="card-header">
+          <h3 class="card-title">客群二：上班族(WFH)</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第三行：廣告 AB 測試分析報告 -->
+  <section id="section-3" class="space-y-6">
+    <h2 class="section-title">廣告 AB 測試分析報告</h2>
+    <div class="flex justify-center">
+      <div class="card card-link w-full md:w-[calc(50%-0.75rem)]">
+        <a href="../3_ab_test_analysis/report/index.html"
+           aria-label="開啟廣告 AB 測試分析報告"
+           title="開啟廣告 AB 測試分析報告">
+          <svg class="report-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <path d="M9 17v-4"/>
+            <path d="M13 17v-2"/>
+            <path d="M17 17v-5"/>
+          </svg>
+          <span class="link-hint">點此開啟完整報告</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第四行：AB測試第二輪廣告（共 4 個方向，僅主推方向有完整成品） -->
+  <section id="section-4" class="space-y-6">
+    <h2 class="section-title">AB測試第二輪廣告</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- 方向三：主推（唯一有完整影片） -->
+      <div class="card">
+        <video controls preload="metadata">
+          <source src="../4_advertisement_stage_2/廣告-生活質感派/4-廣告-生活質感派(30秒版).mp4" type="video/mp4" />
+          您的瀏覽器不支援播放此影片。
+        </video>
+        <div class="card-header">
+          <h3 class="card-title">方向三｜生活質感派30秒版 · ★主推 (建議行銷佔比43%)</h3>
+        </div>
+      </div>
+
+      <div class="card">
+        <video controls preload="metadata">
+          <source src="../4_advertisement_stage_2/廣告-生活質感派/4-廣告-生活質感派(15秒版).mp4" type="video/mp4" />
+          您的瀏覽器不支援播放此影片。
+        </video>
+        <div class="card-header">
+          <h3 class="card-title">方向三｜生活質感派15秒版· 短版測試（與 30 秒版共同驗證成效）</h3>
+        </div>
+      </div>      
+
+      <!-- 方向一 -->
+      <div class="card">
+        <div class="card-placeholder">
+          <svg class="placeholder-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m22 8-6 4 6 4V8Z"/>
+            <rect width="14" height="12" x="2" y="6" rx="2" ry="2"/>
+          </svg>
+          <p class="placeholder-text">本方向示意影片暫未產出</p>
+        </div>
+        <div class="card-header">
+          <h3 class="card-title">方向一｜專業挑剔型 · 信任放大器 (建議行銷佔比25%)</h3>
+        </div>
+      </div>
+
+      <!-- 方向四 -->
+      <div class="card">
+        <div class="card-placeholder">
+          <svg class="placeholder-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m22 8-6 4 6 4V8Z"/>
+            <rect width="14" height="12" x="2" y="6" rx="2" ry="2"/>
+          </svg>
+          <p class="placeholder-text">本方向示意影片暫未產出</p>
+        </div>
+        <div class="card-header">
+          <h3 class="card-title">方向四｜送禮訴求 · 客單價拓展 (建議行銷佔比21%)</h3>
+        </div>
+      </div>
+
+      <!-- 方向二 -->
+      <div class="card">
+        <div class="card-placeholder">
+          <svg class="placeholder-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m22 8-6 4 6 4V8Z"/>
+            <rect width="14" height="12" x="2" y="6" rx="2" ry="2"/>
+          </svg>
+          <p class="placeholder-text">本方向示意影片暫未產出</p>
+        </div>
+        <div class="card-header">
+          <h3 class="card-title">方向二｜預算導向 · 測試新客群 (建議行銷佔比7%)</h3>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 備註 -->
+  <p class="note">
+    受限於專案時間，本 side project 第二輪測試廣告，先以主推版本作為行銷優化示例。
+  </p>
+
+</main>
+
+<script src="./assets/js/app.js" defer></script>
+
+</body>
+</html>

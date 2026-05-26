@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>喜光護眼燈｜廣告 AB 測試分析報告</title>
+
+<!--
+  ═══════════════════════════════════════════════════════════════
+  Third-Party Notices
+  本檔使用以下第三方開源元件，詳細版權與授權條款請見 ../../NOTICE.md
+  與 ./licenses/ 下各授權全文：
+    · Chart.js       — MIT License            — https://www.chartjs.org
+  ═══════════════════════════════════════════════════════════════
+-->
+
+<link rel="stylesheet" href="assets/css/styles.css">
+
+</head>
+<body>
+
+<nav class="topnav" id="topnav">
+  <div class="topnav-inner">
+    <a class="topnav-brand" href="#top">喜光｜廣告 AB 測試分析</a>
+    <ul class="topnav-links">
+      <li><a href="#s1">第一輪總覽</a></li>
+      <li><a href="#s2">跨平台比較</a></li>
+      <li><a href="#s3">顯著性分析</a></li>
+      <li><a href="#s4">勝出客群</a></li>
+      <li><a href="#s5">第二輪策略</a></li>
+      <li><a href="#s6">執行建議</a></li>
+    </ul>
+    <button class="topnav-toggle" aria-label="展開選單" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="container" id="top">
+
+<header class="hero">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap">
+    <div>
+      <h1>喜光全光譜護眼燈｜廣告 AB 測試分析報告</h1>
+      <div class="subtitle">14 天投放模擬數據 · 2 客群 × 4 平台 · 統計顯著性分析 · 第二輪策略建議 (模擬數據產生依據詳見頁尾說明)</div>
+    </div>
+    <div>
+      <span class="badge info">第一輪 AB 測試</span>
+      <span class="badge warn">現實主義版模擬</span>
+      <span class="badge muted">總預算 NT$14,000</span>
+      <span class="badge muted">CPM 競價</span>
+    </div>
+  </div>
+  <div class="hero-row" id="heroRow"></div>
+</header>
+
+<section class="block" id="s1">
+  <h2 class="section"><span class="num">1</span>第一輪投放總覽</h2>
+  <p class="desc">14 天、2 客群 × 4 平台共 <b>112 筆</b> 觀測。每客群每平台每日 NT$125 預算 (合計 NT$500/天/客群)。下圖為「每客群每日合計 CPA」走勢，含學習期、週末、後期疲乏與意外日。</p>
+
+  <div class="grid-4">
+    <div class="card lose">
+      <h3>客群一 · 學齡兒童父母</h3>
+      <div class="big" id="a1Spend">—</div>
+      <div class="small">14 天累積花費 · 轉換 <span id="a1Conv">—</span></div>
+      <div style="margin-top:10px"><span class="badge lose">CPA NT$<span id="a1Cpa">—</span></span></div>
+    </div>
+    <div class="card win">
+      <h3>客群二 · WFH 專業工作者</h3>
+      <div class="big" id="a2Spend">—</div>
+      <div class="small">14 天累積花費 · 轉換 <span id="a2Conv">—</span></div>
+      <div style="margin-top:10px"><span class="badge win">CPA NT$<span id="a2Cpa">—</span></span></div>
+    </div>
+    <div class="card">
+      <h3>累積差異</h3>
+      <div class="big" id="diffPct">—</div>
+      <div class="small">客群二 CPA 較客群一低</div>
+    </div>
+    <div class="card">
+      <h3>勝出 ROAS</h3>
+      <div class="big" id="winRoas">—</div>
+      <div class="small">客群二平均 ROAS</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <strong style="font-size:14px">CPA 每日趨勢 (兩客群)</strong>
+      <div style="font-size:12px;color:var(--muted)">
+        <span class="legend-dot lA1"></span>客群一 學齡兒童父母　
+        <span class="legend-dot lA2"></span>客群二 WFH 專業工作者
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="cpaTrend"></canvas></div>
+    <div class="small" id="trendCaption" style="margin-top:8px;color:var(--muted)"></div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="tab-bar" id="tabBarAud">
+      <button class="active" data-aud="A1_學齡兒童父母">客群一</button>
+      <button data-aud="A2_WFH專業工作者">客群二</button>
+    </div>
+    <div class="tab-bar" id="tabBarPlat">
+      <button class="active" data-plat="Facebook">Facebook</button>
+      <button data-plat="Instagram">Instagram</button>
+      <button data-plat="YouTube">YouTube</button>
+      <button data-plat="X">X</button>
+    </div>
+    <div class="table-scroll">
+      <table class="kpi-table" id="dailyTable"><thead><tr>
+        <th>日期</th><th>客群</th><th>平台</th><th>曝光</th><th>點擊</th><th>CTR</th><th>轉換數</th><th>CVR</th><th>花費</th><th>CPC</th><th>CPM</th><th>CPA</th><th>ROAS</th>
+      </tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="s2">
+  <h2 class="section"><span class="num">2</span>跨平台效益比較</h2>
+  <p class="desc">各客群在四平台累積數據的 CTR、CPA、ROAS 比較。Facebook 為兩客群的最佳平台；X 的 CTR 偏低且 CPA 偏高。</p>
+  <div class="grid-3">
+    <div class="card"><h3>CTR 比較</h3><div class="chart-wrap short"><canvas id="ctrChart"></canvas></div></div>
+    <div class="card"><h3>CPA 比較 (越低越好)</h3><div class="chart-wrap short"><canvas id="cpaChart"></canvas></div></div>
+    <div class="card"><h3>ROAS 比較 (越高越好)</h3><div class="chart-wrap short"><canvas id="roasChart"></canvas></div></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <strong style="font-size:14px">客群 × 平台 14 天彙總</strong>
+    <div class="table-scroll" style="margin-top:10px">
+      <table class="kpi-table" id="aggTable"><thead><tr>
+        <th>客群</th><th>平台</th><th>曝光</th><th>點擊</th><th>CTR%</th><th>轉換數</th><th>CVR%</th><th>花費</th><th>CPA</th><th>ROAS</th>
+      </tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="s3">
+  <h2 class="section"><span class="num">3</span>統計顯著性分析</h2>
+  <p class="desc">以「客群×平台×日」為觀測單位 (n=56 per group)，先做 Jarque-Bera 常態性檢定(簡稱JB 常態性)，再選擇 Welch's t-test 或 Mann-Whitney U test。</p>
+  <div class="grid-3">
+    <div class="card">
+      <h3>選用檢定方法</h3>
+      <div style="font-size:18px;font-weight:600" id="statMethod">—</div>
+      <div class="small" id="statReason">—</div>
+    </div>
+    <div class="card win">
+      <h3>p-value</h3>
+      <div class="big" id="pValue">—</div>
+      <div class="small" id="pInterp">—</div>
+    </div>
+    <div class="card">
+      <h3>效果量 Cohen's d</h3>
+      <div class="big" id="cohensD">—</div>
+      <div class="small" id="cohensDesc">—</div>
+    </div>
+  </div>
+  <div class="grid-2" style="margin-top:16px">
+    <div class="card">
+      <h3>檢定結果統整</h3>
+      <table class="kpi-table" style="margin-top:8px"><tbody>
+        <tr><td>樣本數 (A1/A2)</td><td id="cellN">—</td></tr>
+        <tr><td>CPA 均值 (A1/A2)</td><td id="cellMean">—</td></tr>
+        <tr><td>CPA 中位數 (A1/A2)</td><td id="cellMedian">—</td></tr>
+        <tr><td>CPA 標準差 (A1/A2)</td><td id="cellSd">—</td></tr>
+        <tr><td>JB 常態性 p值 (A1/A2)</td><td id="cellNorm">—</td></tr>
+        <tr><td>Welch's t值</td><td id="cellT">—</td></tr>
+        <tr><td>自由度 df</td><td id="cellDf">—</td></tr>
+        <tr><td>Welch's p值</td><td id="cellWP">—</td></tr>
+        <tr><td>Mann-Whitney U值 / z值 / p值</td><td id="cellMWU">—</td></tr>
+        <tr><td>Bootstrap 95% CI (差異)</td><td id="cellBCI">—</td></tr>
+      </tbody></table>
+    </div>
+    <div class="card">
+      <h3>CPA 分布直方圖</h3>
+      <div class="chart-wrap short"><canvas id="distChart"></canvas></div>
+      <div class="callout" style="margin-top:12px" id="conclusion">—</div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="s4">
+  <h2 class="section"><span class="num">4</span>勝出客群分析</h2>
+  <p class="desc">客群二 (WFH 專業工作者) 在 CPA、CVR、ROAS、CTR 全面勝出，是第二輪投放的核心錨點。</p>
+  <div class="persona-grid">
+    <div class="persona-card">
+      <div class="role">Winner Persona</div>
+      <h3>WFH／工程師／設計師／剪輯師 (25-40 歲)</h3>
+      <ul>
+        <li><b>生活樣態：</b>居家工作 6-10 小時，下班後仍有副業或創作，視覺勞動是日常。</li>
+        <li><b>心理動機：</b>追求「下班後屬於自己的時間」感受，把工作工具升維成生活陪伴。</li>
+        <li><b>消費特性：</b>對「規格」與「設計感」並重，看到 RA97、5 段色溫、50 分鐘提醒會有共鳴。</li>
+        <li><b>決策路徑：</b>IG 看到廣告 → FB 查口碑 → 蝦皮/官網下單；單次客單可達 NT$3,000+ 不眨眼。</li>
+      </ul>
+      <div class="quote">「它不催你。不評判你。只是在那裡，陪你把那件事做出來。」</div>
+    </div>
+    <div>
+      <div class="card win"><h3>最有效平台 #1</h3><div class="big">Facebook</div><div class="small">CPA NT$<span id="winFbCpa">—</span> · ROAS <span id="winFbRoas">—</span> · CTR <span id="winFbCtr">—</span>%</div></div>
+      <div class="card" style="margin-top:12px"><h3>次有效平台 #2</h3><div class="big">Instagram</div><div class="small">CPA NT$<span id="winIgCpa">—</span> · ROAS <span id="winIgRoas">—</span> · CTR <span id="winIgCtr">—</span>%</div></div>
+      <div class="card" style="margin-top:12px">
+        <h3>主要痛點對位</h3>
+        <div class="note">
+          • 下班後想做副業，但容易疲倦 → <b>RA97 高演色 + 5 色溫</b><br>
+          • 螢幕看 8 小時眼睛酸 → <b>50 分鐘休息提醒</b><br>
+          • 桌面美學重要 → <b>鈦珈白 + 鋁合金</b><br>
+          • 預算彈性高、價格敏感度低 → 主打「陪伴 + 創造力」而非「便宜」
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="s5">
+  <h2 class="section"><span class="num">5</span>第二輪廣告策略</h2>
+  <p class="desc">以客群二勝出邏輯為錨點，向四個市調訴求各自延展。建議：方向三為主推、方向一為信任放大器、方向四為高客單價拓展、方向二為測試新客群。</p>
+  <div class="strategy-grid">
+    <div class="strategy s1">
+      <div class="tag">方向一｜專業挑剔型 · 信任放大器</div>
+      <h3>「3 成叫護眼燈的，根本不護眼。」</h3>
+      <div class="slogan">能被實驗數據證明的護眼，才叫護眼。</div>
+      <dl>
+        <dt>核心訴求</dt><dd>用消基會調查 + RA97 + 實驗報告，把「假護眼燈」當對手打。</dd>
+        <dt>目標受眾</dt><dd>30-50 歲 3C 重度比價型、已有一盞想升級者</dd>
+        <dt>建議平台</dt><dd>Facebook (主) + YouTube (15s 短測評貼片)</dd>
+        <dt>素材格式</dt><dd>長文圖卡 + 30s 數據動畫影片 + 認證標章橫幅</dd>
+        <dt>預估效果</dt><dd>CTR +20-30%；CVR 與本輪相近，<b>客單拉升</b></dd>
+      </dl>
+      <div class="copy"><b>文案範例：</b>「消基會抽驗：30% 自稱護眼燈商品 RA 連 80 都不到。我們把 RA97 寫進規格、寫進保固。」</div>
+    </div>
+    <div class="strategy s3">
+      <div class="tag">方向三｜生活質感派 · ★主推</div>
+      <h3>「工作桌的小升級，下班後也捨不得關。」</h3>
+      <div class="slogan">每晚都想回到的書桌，從這盞燈開始。</div>
+      <dl>
+        <dt>核心訴求</dt><dd>把護眼燈定位為「生活風格 + 自我陪伴」，銜接勝出廣告精神。</dd>
+        <dt>目標受眾</dt><dd>25-35 歲都會工作族群 / 自由接案 / Dcard 桌面 setup 重度搜尋者</dd>
+        <dt>建議平台</dt><dd><b>Instagram (主)</b> + Facebook + Threads</dd>
+        <dt>素材格式</dt><dd>Reels/Story 15-30s</dd>
+        <dt>預估效果</dt><dd>CTR +15-25%；CPA 預估再降 <b>15-25%</b>；ROAS 上看 6.0+</dd>
+        <dt>主推原因</dt><dd>因為此方向跟第一輪勝出廣告的情緒定位最連貫，目標受眾非部份重疊而是完全重疊（WFH 專業者），複製成功經驗的機率最高、風險最低。</dd>
+      </dl>
+      <div class="copy"><b>文案範例：</b>「不是檯燈，是我把工作桌變回自己房間的那個 switch。」</div>
+    </div>
+    <div class="strategy s4">
+      <div class="tag">方向四｜送禮訴求 · 客單價拓展</div>
+      <h3>「爸媽看報紙不再瞇眼。」</h3>
+      <div class="slogan">RA97 還原真實色彩，看清每一個字的孝心。</div>
+      <dl>
+        <dt>核心訴求</dt><dd>切「子女送禮」場景，用全光譜=看得清每一個字，破除護眼燈只給學生用。</dd>
+        <dt>目標受眾</dt><dd>下單者 30-45 歲子女、節慶送禮族</dd>
+        <dt>建議平台</dt><dd>Facebook + YouTube 短片 + LINE Ads 季節檔</dd>
+        <dt>素材格式</dt><dd>30s 情境劇 + 開箱代際反應</dd>
+        <dt>預估效果</dt><dd>CTR 與本輪客群一相近 (情感型)；<b>客單上升 ROAS</b></dd>
+      </dl>
+      <div class="copy"><b>文案範例：</b>「上次回家，發現爸看報紙又瞇眼了。送他一盞顏色不會騙人的燈。」</div>
+    </div>
+    <div class="strategy s2">
+      <div class="tag">方向二｜預算導向 · 測試新客群</div>
+      <h3>「預算有限，但眼睛不能將就。」</h3>
+      <div class="slogan">熬夜不毀眼，這盞燈陪你到放榜。</div>
+      <dl>
+        <dt>核心訴求</dt><dd>學生宿舍夜讀場景；強化保固 2 年/燈珠 3 年。</dd>
+        <dt>目標受眾</dt><dd>15-24 高中生/大學生/重考生</dd>
+        <dt>建議平台</dt><dd>Instagram + TikTok + YouTube Shorts</dd>
+        <dt>素材格式</dt><dd>Vlog 手寫字卡 · 夜讀情境 · 學生 KOC</dd>
+        <dt>預估效果</dt><dd>CTR 高但 <b>CPA 偏高</b>；建議小預算試水 7 天</dd>
+      </dl>
+      <div class="copy"><b>文案範例：</b>「室友的桌燈半年就壞了。這盞燈，撐到我看到放榜。」</div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="s6">
+  <h2 class="section"><span class="num">6</span>執行建議</h2>
+  <p class="desc">預算配置、節奏與注意事項。</p>
+  <div class="exec-grid">
+    <div class="card">
+      <h3>建議第二輪預算分配 (兩週 NT$14,000)</h3>
+      <div class="chart-wrap short"><canvas id="budgetChart"></canvas></div>
+      <table class="kpi-table" style="margin-top:8px"><thead><tr><th>項目</th><th>金額</th><th>占比</th><th>用途</th></tr></thead><tbody>
+        <tr><td style="text-align:left">方向三 生活質感 (主推)</td><td>6,000</td><td>43%</td><td style="text-align:left">IG + FB · 勝出客群延伸</td></tr>
+        <tr><td style="text-align:left">方向一 專業挑剔型</td><td>3,500</td><td>25%</td><td style="text-align:left">FB + YT · 信任放大</td></tr>
+        <tr><td style="text-align:left">方向四 送禮訴求</td><td>3,000</td><td>21%</td><td style="text-align:left">FB · 拓客單</td></tr>
+        <tr><td style="text-align:left">方向二 預算導向</td><td>1,000</td><td>7%</td><td style="text-align:left">IG/Shorts · 小預算試水</td></tr>
+        <tr><td style="text-align:left">機動預算</td><td>500</td><td>4%</td><td style="text-align:left">爆款再加碼</td></tr>
+      </tbody></table>
+    </div>
+    <div class="card">
+      <h3>時程規劃 (14 天)</h3>
+      <div class="timeline">
+        <div class="timeline-item"><h4>Day 1-2｜素材上架 + 學習期</h4><p>四方向同步上架；CPM 偏高屬正常。</p></div>
+        <div class="timeline-item"><h4>Day 3-5｜首輪檢視</h4><p>方向二若 CPA &gt; NT$1,500 即關停。</p></div>
+        <div class="timeline-item"><h4>Day 6-9｜放大爆款</h4><p>ROAS 前 30% 素材預算 +30%；冷素材停掉。</p></div>
+        <div class="timeline-item"><h4>Day 10-12｜疲乏對策</h4><p>更新 1-2 版次素材。</p></div>
+        <div class="timeline-item"><h4>Day 13-14｜收尾</h4><p>跑 retargeting 與棄單再行銷。</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>關鍵注意事項</h3>
+    <ul>
+      <li><b>樣本量提醒：</b>本輪含 2 個意外日 + 歸因衰減，d=0.75 為大效果但非極端；對單一平台仍偏小，建議第二輪拉長到 21 天或加倍預算以提高單平台統計力。</li>
+      <li><b>X 平台處置：</b>CPA 最高且 CVR 不穩，建議第二輪暫停 X，把預算移到 IG/FB。</li>
+      <li><b>創意疲乏：</b>同一支素材曝光超過 3-5 次後 CTR 會衰退，建議每 7 天輪換。</li>
+      <li><b>歸因視窗：</b>本輪已模擬 30% 延遲歸因；實際應啟用 7 天點擊 / 1 天曝光跨平台歸因。</li>
+      <li><b>意外日應變：</b>本輪意外日影響 CPM 翻倍、CTR 砍半；建議監控素材審核狀態並有備用素材。</li>
+      <li><b>學習期保護：</b>第二輪建議前 3 天不調整素材、預算，讓平台演算法穩定收斂。</li>
+    </ul>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>模擬數據產生依據</h3>
+    <ul>
+      <li>CPM 參考來源<br />
+        <ul>
+          <li>台灣 Facebook／Instagram 廣告 CPM 參考Meta Ads Manager 台灣市場公開數據區間（2023–2024），家電／3C 周邊品類平均 CPM 約 NT$150–220。</li>
+          <li>YouTube CPM 參考 Google Ads 台灣市場健康家電類別平均區間 NT$120–160。</li>
+          <li>X（Twitter）台灣廣告市場規模較小，CPM 取保守值NT$100–130。</li>
+        </ul>
+      </li>
+      <li>CTR 參考來源<br />
+        <ul>
+          <li>Meta 官方 Benchmark Report（2024）顯示，台灣消費性電子品類平均 CTR 約 1.0–2.0%。</li>
+          <li>客群二（WFH／工程師／設計師）因長期主動關注桌面裝備升級， 看到相關廣告的點擊意願顯著高於一般消費者 ，CTR 取區間上緣。</li>
+          <li>客群一（學齡兒童家長）看到廣告前未必有明確購買意圖，需經由廣告內容建立問題意識後才產生點擊行為， 初次接觸的點擊率因此低於已有明確需求的客群二，CTR 取區間中段。</li>
+        </ul>
+      </li>
+      <li>轉換率參考來源<br />
+        <ul>
+          <li>台灣電商平均轉換率約 1.0–3.0%（資料來源：91APP 台灣電商報告 2023、ECFIT 電商數據報告）。</li>
+          <li>護眼燈屬中高考慮型商品（售價 NT$3,000），客群二因自主消費能力強、決策週期短，轉換率設定為 2.2%。</li>
+          <li>客群一因需家庭共識，設定為 1.8%。</li>
+        </ul>
+      </li>
+      <li>數據局限性說明<br />
+        <ul>
+          <li>本模擬未納入實際廣告帳號歷史數據、季節性波動（如開學季需求高峰）等變數，但有在14日中隨機加入1-2日意外日(可能原因為素材被審核下架、競品大促、平台演算法臨時調整等)。</li>
+          <li>YouTube 及 X 平台數據因台灣品類公開資料較少，採保守估算，實際投放結果可能有所差異。</li>
+          <li>核心統計結論以 Facebook 及 Instagram 數據為主要依據。</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<div class="footer">
+  © 2026 廣告 AB 測試分析報告 · 基於模擬資料分析於2026年5月14日產出
+</div>
+
+</div>
+
+<script src="../../shared/assets/js/chart.umd.min.js"></script>
+<script src="assets/js/app.js" defer></script>
+
+</body>
+</html>

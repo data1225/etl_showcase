@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>護眼燈市場調查 — 廣告AB測試洞察報告</title>
+
+<!--
+  ═══════════════════════════════════════════════════════════════
+  Third-Party Notices
+  本檔使用以下第三方開源元件，詳細版權與授權條款請見 ../../NOTICE.md
+  與 ./licenses/ 下各授權全文：
+    · Tailwind CSS   — MIT License            — https://tailwindcss.com
+    · Chart.js       — MIT License            — https://www.chartjs.org
+    · Noto Sans TC   — SIL Open Font License 1.1
+    · Inter          — SIL Open Font License 1.1
+  ═══════════════════════════════════════════════════════════════
+-->
+
+<link rel="stylesheet" href="../../shared/assets/css/fonts.css">
+<link rel="stylesheet" href="./assets/css/styles.css">
+
+</head>
+<body>
+
+<!-- Top Bar -->
+<header class="sticky top-0 z-40 backdrop-blur bg-stone-50/80 border-b border-stone-200 no-print">
+  <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-stone-900 flex items-center justify-center">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" class="w-4 h-4"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="4"/></svg>
+      </div>
+      <div>
+        <div class="text-sm font-semibold text-stone-900 leading-tight">護眼燈市場調查</div>
+        <div class="text-xs text-stone-500 leading-tight">廣告AB測試洞察報告</div>
+      </div>
+    </div>
+    <nav class="hidden md:flex items-center gap-1 text-sm">
+      <a href="#summary" class="nav-pill">調查摘要</a>
+      <a href="#sources" class="nav-pill">各來源分析</a>
+      <a href="#top10" class="nav-pill">Top 10 痛點</a>
+      <a href="#angles" class="nav-pill">AB訴求切角</a>
+      <a href="#keywords" class="nav-pill">關鍵字清單</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="max-w-6xl mx-auto px-6 pt-10 pb-6">
+  <div class="flex flex-wrap gap-2 mb-4">
+    <span class="chip chip-stone">Market Research</span>
+    <span class="chip chip-stone">Creative Brief</span>
+    <span class="chip chip-stone">N = 1,526 則原始素材</span>
+  </div>
+  <h1 class="h-title text-4xl md:text-5xl leading-[1.1] text-stone-900">消費者為什麼買／不買一盞<br/>護眼燈？</h1>
+  <p class="mt-4 text-stone-600 text-lg max-w-3xl leading-relaxed">本報告彙整 PTT／Dcard／Google（51 則）、YouTube 開箱留言（744 則）與蝦皮／momo 商品評論（383 則）共 <b>1,178 則有效樣本</b>，萃取購買決策因素、商品／服務痛點、正面評價與 6 個可直接投放的 AB 測試（A/B Test，對照組成效測試）廣告訴求切角，作為創意發想與素材優化的依據。</p>
+  <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div class="card p-4"><div class="text-xs text-stone-500 mb-1">PTT／Dcard／Google</div><div class="kpi">51</div><div class="text-xs text-stone-400 mt-1">討論串 / 評比文</div></div>
+    <div class="card p-4"><div class="text-xs text-stone-500 mb-1">YouTube 留言</div><div class="kpi">744</div><div class="text-xs text-stone-400 mt-1">跨 2021–2025 年</div></div>
+    <div class="card p-4"><div class="text-xs text-stone-500 mb-1">蝦皮／momo 評論</div><div class="kpi">383</div><div class="text-xs text-stone-400 mt-1">10 個暢銷品 · 低星刻意加重採樣</div></div>
+    <div class="card p-4"><div class="text-xs text-stone-500 mb-1">提煉 AB 廣告切角</div><div class="kpi">6</div><div class="text-xs text-stone-400 mt-1">受眾 × 痛點 × 情境</div></div>
+  </div>
+</section>
+
+<div class="max-w-6xl mx-auto px-6"><div class="divider my-4"></div></div>
+
+<!-- 一、調查摘要 -->
+<section id="summary" class="max-w-6xl mx-auto px-6 py-10">
+  <div class="flex items-center gap-3 mb-6">
+    <span class="section-num">一</span>
+    <h2 class="h-title text-2xl md:text-3xl text-stone-900">調查摘要</h2>
+  </div>
+
+  <!-- 各來源分析概述 -->
+  <div class="mb-3 flex items-end justify-between">
+    <h3 class="h-title text-xl text-stone-900">各來源分析概述</h3>
+  </div>
+  <div class="grid md:grid-cols-3 gap-4 mb-8">
+    <div class="card p-5">
+      <div class="flex items-center justify-between mb-2">
+        <span class="chip chip-sky">PTT · Dcard · Google</span>
+        <span class="text-xs text-stone-400 num">51 則</span>
+      </div>
+      <div class="text-stone-900 font-semibold mb-2">懂規格的高決策門檻族群</div>
+      <p class="text-sm text-stone-600 leading-relaxed">以「挑選／選購」為主要語境，消費者主動比較 <b>BenQ / 飛利浦 / 3M / 愛迪生 T5 / 喜光 / 小米 / MAGIC</b> 等品牌，反覆討論<b>無頻閃、Ra 值、AA 級照度、色溫可調</b>等硬規格；消基會「3 成護眼燈光照不足、7 成功率不實」是普遍的焦慮來源。</p>
+    </div>
+    <div class="card p-5">
+      <div class="flex items-center justify-between mb-2">
+        <span class="chip chip-rose">YouTube 開箱留言</span>
+        <span class="text-xs text-stone-400 num">744 則</span>
+      </div>
+      <div class="text-stone-900 font-semibold mb-2">2021 → 2025 持續未解的老問題</div>
+      <p class="text-sm text-stone-600 leading-relaxed"><b>螢幕掛燈（掛燈／省桌面）</b>從 2021 年就是最高觸擊的討論關鍵字（舊 74 次 vs 新 24 次 vs 掛燈化趨勢）；<b>反光到螢幕、價格貴／智商稅、故障壽命、藍光疑慮</b>四大痛點 <b>跨五年持續出現</b>，是廣告素材中不能迴避的反方論點。</p>
+    </div>
+    <div class="card p-5">
+      <div class="flex items-center justify-between mb-2">
+        <span class="chip chip-amber">蝦皮 · momo</span>
+        <span class="text-xs text-stone-400 num">383 則（低星加重）</span>
+      </div>
+      <div class="text-stone-900 font-semibold mb-2">暢銷品仍存在的系統性痛點</div>
+      <p class="text-sm text-stone-600 leading-relaxed">10 款皆為平台<b>銷售前段、評論數充足</b>的暢銷品，真實分布以 5 星為主；本次為痛點挖掘而刻意多抓 1–3 星。在這樣的放大鏡下仍一致浮現：平價蝦皮款集中抱怨「<b>亮度不足、充電／觸控失靈、續航灌水、商品與描述不符</b>」，momo 中高價款則得到「<b>質感、護眼、CP 值（Cost-Performance ratio，性價比）</b>」的真心好評；服務面「<b>退貨困難 + 客服封鎖</b>」是落地頁必須主動破解的信任缺口。</p>
+    </div>
+  </div>
+
+  <!-- 最關鍵的 3 個消費者洞察 -->
+  <div class="mb-3 flex items-end justify-between">
+    <h3 class="h-title text-xl text-stone-900">最關鍵的 3 個消費者洞察</h3>
+    <span class="text-xs text-stone-500">Insight · 用於廣告主張提煉</span>
+  </div>
+  <div class="grid md:grid-cols-3 gap-4">
+    <div class="card p-6">
+      <div class="flex items-center gap-2 mb-3"><span class="chip chip-rose">INSIGHT 01</span><span class="text-xs text-stone-400">信任焦慮</span></div>
+      <div class="text-stone-900 font-bold text-lg mb-2 leading-snug">「護眼燈」不等於真護眼 — 消費者怕再次被騙</div>
+      <p class="text-sm text-stone-600 leading-relaxed">消基會公開「3 成光照不足、7 成功率不實」後，搜尋前比規格成為常態。PTT／Google 反覆出現「<b>先過濾 AA 級照度 + 無可視頻閃認證</b>」的選購公式。→ 廣告素材需快速展示<b>可驗證規格</b>（Ra &gt; 95、RG0 無藍光、DC 直流無頻閃、德國萊茵 / BSMI 認證）。</p>
+    </div>
+    <div class="card p-6">
+      <div class="flex items-center gap-2 mb-3"><span class="chip chip-amber">INSIGHT 02</span><span class="text-xs text-stone-400">場域轉移</span></div>
+      <div class="text-stone-900 font-bold text-lg mb-2 leading-snug">戰場已從「桌燈」延伸到「螢幕掛燈」，但曲面螢幕、反光、夾具壓傷是新痛點</div>
+      <p class="text-sm text-stone-600 leading-relaxed">YouTube 討論 2021 掛燈字頻 74 次 → 2025 仍最熱門；但出現<b>曲面螢幕反光、燈架鬆動、控制器佔桌面</b>等二階痛點。→ 素材可直接對比「<b>一般檯燈 vs 掛燈 vs 我們的燈</b>」的桌面俯視圖，回應「省桌面、不反光、不晃動」。</p>
+    </div>
+    <div class="card p-6">
+      <div class="flex items-center gap-2 mb-3"><span class="chip chip-sky">INSIGHT 03</span><span class="text-xs text-stone-400">族群分化</span></div>
+      <div class="text-stone-900 font-bold text-lg mb-2 leading-snug">三個族群走三條路：家長要「自動」、上班族要「不痠」、學生要「便宜不壞」</div>
+      <p class="text-sm text-stone-600 leading-relaxed">家長高頻關鍵字為<b>入座自動開燈／離座自動關燈／眼科醫師背書</b>；上班族最在意<b>長時間不乾澀／螢幕不反光</b>；學生 / 小資集中在<b>CP 值、充電式、宿舍可用、不會很快壞</b>。→ AB 測試應以<b>一族群一版本</b>投放，主張與情境全面貼合。</p>
+    </div>
+  </div>
+</section>
+
+<div class="max-w-6xl mx-auto px-6"><div class="divider my-4"></div></div>
+
+<!-- 二、各來源分析 -->
+<section id="sources" class="max-w-6xl mx-auto px-6 py-10">
+  <div class="flex items-center gap-3 mb-6">
+    <span class="section-num">二</span>
+    <h2 class="h-title text-2xl md:text-3xl text-stone-900">各來源分析</h2>
+  </div>
+
+  <!-- Tabs（切換邏輯定義於 assets/js/app.js） -->
+  <div id="src-tabs" class="flex gap-2 flex-wrap mb-6">
+    <button type="button" id="srcTab_ptt" onclick="switchSourceTab('ptt')" class="tab-btn is-active">PTT · Dcard · Google</button>
+    <button type="button" id="srcTab_yt"  onclick="switchSourceTab('yt')"  class="tab-btn">YouTube 開箱留言</button>
+    <button type="button" id="srcTab_ec"  onclick="switchSourceTab('ec')"  class="tab-btn">蝦皮 · momo</button>
+  </div>
+
+  <!-- PTT PANEL -->
+  <div id="srcPanel_ptt" data-panel="ptt" class="space-y-6" style="display:block">
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="card p-5 md:col-span-2">
+        <h4 class="font-semibold text-stone-900 mb-3">1. 購買決策因素（討論頻度）</h4>
+        <div class="space-y-3">
+          <div>
+            <div class="flex justify-between text-sm mb-1"><span>無頻閃 · 高演色性（Ra ≥ 95）· AA 級照度</span><span class="freq-high num">高</span></div>
+            <div class="progress rose"><span style="width:92%"></span></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1"><span>自動調光 / 環境光感應（BenQ ScreenBar、MindDuo）</span><span class="freq-high num">高</span></div>
+            <div class="progress rose"><span style="width:78%"></span></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1"><span>螢幕掛燈 · 非對稱光學設計 · 省桌面</span><span class="freq-high num">高</span></div>
+            <div class="progress rose"><span style="width:75%"></span></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1"><span>全光譜 / 眼科醫師背書（喜光、MAGIC、TIONE）</span><span class="freq-mid num">中</span></div>
+            <div class="progress amber"><span style="width:55%"></span></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1"><span>照射範圍（寬幅 90cm＋、可同時照雙螢幕）</span><span class="freq-mid num">中</span></div>
+            <div class="progress amber"><span style="width:50%"></span></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1"><span>色溫／亮度可調・觸控操作</span><span class="freq-mid num">中</span></div>
+            <div class="progress amber"><span style="width:45%"></span></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1"><span>預算區間（3K 以下學生 / 3–5K 主力 / 5K＋高階）</span><span class="freq-mid num">中</span></div>
+            <div class="progress amber"><span style="width:42%"></span></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1"><span>品牌信任（BenQ &gt; 飛利浦 &gt; 3M &gt; MAGIC / 喜光）</span><span class="freq-low num">低–中</span></div>
+            <div class="progress"><span style="width:30%"></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card p-5">
+        <h4 class="font-semibold text-stone-900 mb-3">3. 正面評價關鍵詞</h4>
+        <div class="flex flex-wrap">
+          <span class="tag-kw tier-1">不刺眼</span>
+          <span class="tag-kw tier-1">光線柔和</span>
+          <span class="tag-kw tier-1">眼睛不累</span>
+          <span class="tag-kw tier-1">自動調光</span>
+          <span class="tag-kw tier-1">省桌面</span>
+          <span class="tag-kw tier-2">顏色真實自然</span>
+          <span class="tag-kw tier-2">Ra 值高</span>
+          <span class="tag-kw tier-2">無頻閃</span>
+          <span class="tag-kw tier-2">照明範圍廣</span>
+          <span class="tag-kw tier-2">親子共讀</span>
+          <span class="tag-kw tier-2">耐用（9 年還在用）</span>
+          <span class="tag-kw tier-3">CP 值高</span>
+          <span class="tag-kw tier-3">簡約好看</span>
+          <span class="tag-kw tier-3">可調色溫</span>
+          <span class="tag-kw tier-3">德國萊茵認證</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="card p-5">
+        <h4 class="font-semibold text-stone-900 mb-3">2A. 商品本身痛點</h4>
+        <ul class="space-y-2 text-sm text-stone-700">
+          <li class="flex"><span class="dot" style="background:#be123c"></span><div><b>3 成光照不足、7 成功率不實</b>（消基會，跨平台反覆引用，<span class="freq-high">高</span>）</div></li>
+          <li class="flex"><span class="dot" style="background:#c2410c"></span><div><b>價格偏高 / 智商稅</b>質疑 — BenQ、Dyson、喜光常被點名（<span class="freq-high">高</span>）</div></li>
+          <li class="flex"><span class="dot" style="background:#b45309"></span><div><b>燈頭晃動、做工不如預期</b>（BenQ 抱怨推文）（<span class="freq-mid">中</span>）</div></li>
+          <li class="flex"><span class="dot" style="background:#ca8a04"></span><div><b>無法調色溫</b>（愛迪生 T5 最常被提）（<span class="freq-mid">中</span>）</div></li>
+          <li class="flex"><span class="dot" style="background:#65a30d"></span><div><b>燈罩／機身過熱</b>、<b>塑膠味殘留</b>（3M 博視燈）（<span class="freq-low">低</span>）</div></li>
+          <li class="flex"><span class="dot" style="background:#0369a1"></span><div>「<b>不能直接預防近視</b>」— 專業文章提醒（<span class="freq-low">低</span> 但對素材的「治癒」式承諾有打臉風險）</div></li>
+        </ul>
+      </div>
+      <div class="card p-5">
+        <h4 class="font-semibold text-stone-900 mb-3">2B. 商家服務痛點</h4>
+        <ul class="space-y-2 text-sm text-stone-700">
+          <li class="flex"><span class="dot" style="background:#be123c"></span><div><b>客服不積極／回覆慢</b>（BenQ 使用者抱怨）（<span class="freq-mid">中</span>）</div></li>
+          <li class="flex"><span class="dot" style="background:#b45309"></span><div><b>廣告宣稱與實際規格落差</b>（消基會檢驗結果成為品牌信任風險）（<span class="freq-high">高</span>）</div></li>
+          <li class="flex"><span class="dot" style="background:#57534e"></span><div>此來源<b>討論焦點在產品本身</b>，商家服務痛點比例相對低</div></li>
+        </ul>
+        <div class="mt-4 p-3 rounded-lg bg-stone-50 border border-stone-200 text-xs text-stone-600 leading-relaxed">
+          <b class="text-stone-800">操盤啟示：</b>PTT/Dcard 族群最買單「<b>規格表式</b>」的理性訴求 — 對比圖、認證標章、實測數據。情緒訴求在此族群轉換率較低。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- YT PANEL -->
+  <div id="srcPanel_yt" data-panel="yt" class="space-y-6" style="display:none">
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="card p-5 md:col-span-2">
+        <h4 class="font-semibold text-stone-900 mb-3">1. 購買決策因素（留言提及頻度 · 2023–2025）</h4>
+        <div class="space-y-3">
+          <div><div class="flex justify-between text-sm mb-1"><span>螢幕掛燈 · 省桌面 · 不占空間</span><span class="freq-high num">高（24）</span></div><div class="progress rose"><span style="width:100%"></span></div></div>
+          <div><div class="flex justify-between text-sm mb-1"><span>外觀 / 設計 / 質感</span><span class="freq-high num">高（12）</span></div><div class="progress rose"><span style="width:70%"></span></div></div>
+          <div><div class="flex justify-between text-sm mb-1"><span>高演色性 Ra 值</span><span class="freq-high num">高（11）</span></div><div class="progress rose"><span style="width:66%"></span></div></div>
+          <div><div class="flex justify-between text-sm mb-1"><span>充電式 / 無線</span><span class="freq-mid num">中（9）</span></div><div class="progress amber"><span style="width:55%"></span></div></div>
+          <div><div class="flex justify-between text-sm mb-1"><span>自動調光 / 智慧感應</span><span class="freq-mid num">中（4）</span></div><div class="progress amber"><span style="width:28%"></span></div></div>
+          <div><div class="flex justify-between text-sm mb-1"><span>色溫可調</span><span class="freq-mid num">中（12）</span></div><div class="progress amber"><span style="width:55%"></span></div></div>
+        </div>
+      </div>
+      <div class="card p-5">
+        <h4 class="font-semibold text-stone-900 mb-3">📈 跨年持續出現的痛點</h4>
+        <p class="text-xs text-stone-500 mb-3">比對 2021–2022 v.s 2023–2025 留言</p>
+        <div class="space-y-3">
+          <div><div class="flex justify-between text-sm"><span>反光到螢幕</span><span class="text-xs text-stone-500 num">14 → 4 次</span></div><div class="text-xs text-stone-500">曲面螢幕場景下更嚴重</div></div>
+          <div class="divider"></div>
+          <div><div class="flex justify-between text-sm"><span>價格貴 / 智商稅</span><span class="text-xs text-stone-500 num">10 → 6 次</span></div><div class="text-xs text-stone-500">4,000 元門檻成心理阻力</div></div>
+          <div class="divider"></div>
+          <div><div class="flex justify-between text-sm"><span>故障 / 壽命</span><span class="text-xs text-stone-500 num">11 → 4 次</span></div><div class="text-xs text-stone-500">燈泡不可換、支臂老化</div></div>
+          <div class="divider"></div>
+          <div><div class="flex justify-between text-sm"><span>藍光危害疑慮</span><span class="text-xs text-stone-500 num">3 → 3 次</span></div><div class="text-xs text-stone-500">LED 本質疑慮未散</div></div>
+          <div class="divider"></div>
+          <div><div class="flex justify-between text-sm"><span>刺眼 / 眩光</span><span class="text-xs text-stone-500 num">3 → 5 次</span></div><div class="text-xs text-stone-500">LED 比傳統 T5 更明顯</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="card p-5">
+        <h4 class="font-semibold text-stone-900 mb-3">2A. 商品本身痛點</h4>
+        <ul class="space-y-2 text-sm text-stone-700">
+          <li class="flex"><span class="dot" style="background:#be123c"></span><div><b>反光到螢幕 / 鍵盤反射</b>（含曲面螢幕場景）<span class="chip chip-rose ml-1">跨年持續</span></div></li>
+          <li class="flex"><span class="dot" style="background:#c2410c"></span><div><b>價格太貴</b>（「4,000 車頭燈」「虧爆」「我媽不允許我買」）<span class="chip chip-rose ml-1">跨年持續</span></div></li>
+          <li class="flex"><span class="dot" style="background:#b45309"></span><div><b>壞掉 / 壽命 / 燈泡不可換</b><span class="chip chip-rose ml-1">跨年持續</span></div></li>
+          <li class="flex"><span class="dot" style="background:#ca8a04"></span><div><b>眩光 / 刺眼</b>（LED 比 T5 更明顯）<span class="chip chip-rose ml-1">跨年持續</span></div></li>
+          <li class="flex"><span class="dot" style="background:#65a30d"></span><div><b>藍光危害 / 420–460nm 波段</b>無法完全過濾的疑慮</div></li>
+          <li class="flex"><span class="dot" style="background:#0284c7"></span><div><b>智慧功能不穩定</b>：控制器佔桌面、感應不準、曲面螢幕支援不佳</div></li>
+          <li class="flex"><span class="dot" style="background:#6d28d9"></span><div><b>支臂鬆動 / 旋鈕要扭超緊</b>（TIMAX 使用者抱怨）</div></li>
+        </ul>
+      </div>
+      <div class="card p-5">
+        <h4 class="font-semibold text-stone-900 mb-3">2B. 商家服務痛點</h4>
+        <ul class="space-y-2 text-sm text-stone-700">
+          <li class="flex"><span class="dot" style="background:#be123c"></span><div><b>業配疑慮 / 評測公信力</b>質疑（「唯一希望能有很多業配」嘲諷）</div></li>
+          <li class="flex"><span class="dot" style="background:#b45309"></span><div><b>曲面螢幕相容性沒講清楚</b>（半價售出使用者的痛點）</div></li>
+          <li class="flex"><span class="dot" style="background:#0369a1"></span><div><b>功能多但設置太複雜</b>（App 設定學習成本高）</div></li>
+        </ul>
+        <div class="mt-4 p-3 rounded-lg bg-stone-50 border border-stone-200">
+          <h5 class="font-semibold text-stone-800 text-sm mb-2">3. 正面評價關鍵詞</h5>
+          <div class="flex flex-wrap">
+            <span class="tag-kw tier-1">非對稱光學</span>
+            <span class="tag-kw tier-1">不佔桌面</span>
+            <span class="tag-kw tier-1">眼睛不易疲累</span>
+            <span class="tag-kw tier-1">有感升級</span>
+            <span class="tag-kw tier-2">真的不是智商稅</span>
+            <span class="tag-kw tier-2">不對稱設計</span>
+            <span class="tag-kw tier-2">後補光</span>
+            <span class="tag-kw tier-2">後悔沒早買</span>
+            <span class="tag-kw tier-2">入席自動偵測</span>
+            <span class="tag-kw tier-3">金屬質感</span>
+            <span class="tag-kw tier-3">無線遙控</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card p-5">
+      <h4 class="font-semibold text-stone-900 mb-3">📺 影片來源對照（2023–2025 主力）</h4>
+      <div class="overflow-x-auto">
+        <table class="clean text-sm">
+          <thead><tr><th>影片標題（縮）</th><th>頻道</th><th>發布</th><th class="text-right">觀看</th><th class="text-right">留言</th></tr></thead>
+          <tbody>
+            <tr><td>BenQ ScreenBar Pro 真實使用心得，貴得有道理嗎？</td><td>簡單測試 YeeZTest</td><td>2025/11</td><td class="text-right num">53K</td><td class="text-right num">56</td></tr>
+            <tr><td>BenQ ScreenBar Halo 2 螢幕掛燈開箱</td><td>Post76影音玩樂網</td><td>2025/09</td><td class="text-right num">17K</td><td class="text-right num">31</td></tr>
+            <tr><td>喜光護眼檯燈｜高敏敏營養師</td><td>營養師高敏敏</td><td>2025/06</td><td class="text-right num">21K</td><td class="text-right num">16</td></tr>
+            <tr><td>喜光 Ti Max Pro 護眼螢幕檯燈</td><td>James+瑋</td><td>2025/06</td><td class="text-right num">4.7K</td><td class="text-right num">44</td></tr>
+            <tr><td>軒笛智能螢幕掛燈</td><td>APPLEFANS 蘋果迷</td><td>2025/01</td><td class="text-right num">24K</td><td class="text-right num">9</td></tr>
+            <tr><td>一年心得：絕對不是智商稅！BenQ Halo 2</td><td>杰客森林</td><td>2025/01</td><td class="text-right num">26K</td><td class="text-right num">83</td></tr>
+            <tr><td>ScreenBar Pro 開箱實測（拿儀器測照度/Ra）</td><td>胡少 HuShao</td><td>2024/07</td><td class="text-right num">27K</td><td class="text-right num">53</td></tr>
+            <tr><td>戴森檯燈 Dyson Solarcycle Morph</td><td>科技狗 3C Dog</td><td>2024/04</td><td class="text-right num">27K</td><td class="text-right num">12</td></tr>
+            <tr><td>實測三款護眼檯燈，關鍵在燈架！</td><td>阿駿日常</td><td>2023/06</td><td class="text-right num">38K</td><td class="text-right num">59</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- EC PANEL -->
+  <div id="srcPanel_ec" data-panel="ec" class="space-y-6" style="display:none">
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="card p-5 md:col-span-2">
+        <div class="flex items-start justify-between gap-3 mb-3">
+          <h4 class="font-semibold text-stone-900">本次採樣星等分布（非市場實際比例）</h4>
+          <span class="chip chip-amber">採樣加重</span>
+        </div>
+        <div class="h-64"><canvas id="chartStars"></canvas></div>
+        <p class="text-xs text-stone-500 mt-2">本次採樣：5 星 102 / 4 星 70 / 3 星 93 / 2 星 29 / 1 星 89（共 383 則）。</p>
+        <div class="mt-3 p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-900 leading-relaxed">
+          <b>🔍 重要說明：</b>10 款商品皆為蝦皮／momo 各品類<b>銷售前段且評論充足</b>的暢銷品，平台實際評價以 <b>5 星壓倒性多數</b>。本次為了萃取真實痛點，<b>刻意加重 1–3 星評論</b>的採集比例；因此本分布<b>不代表市場情緒比例</b>，應僅作為「痛點訊號」閱讀。下方商品／服務痛點表亦屬「加重採樣」後的絕對計數，同類商品之間的<b>相對頻度排序仍有效</b>（可告訴我們哪些痛點被抱怨得最多），但絕對占比不宜外推到全平台。</div>
+      </div>
+      <div class="card p-5">
+        <h4 class="font-semibold text-stone-900 mb-3">1. 購買決策因素</h4>
+        <div class="space-y-3">
+          <div><div class="flex justify-between text-sm mb-1"><span>外觀 / 質感 / 可愛配色</span><span class="freq-high num">高（94）</span></div><div class="progress rose"><span style="width:100%"></span></div></div>
+          <div><div class="flex justify-between text-sm mb-1"><span>實用 / 多功能（充電 + 三段調光）</span><span class="freq-high num">高（77）</span></div><div class="progress rose"><span style="width:82%"></span></div></div>
+          <div><div class="flex justify-between text-sm mb-1"><span>CP 值 / 便宜</span><span class="freq-high num">高（44）</span></div><div class="progress rose"><span style="width:47%"></span></div></div>
+          <div><div class="flex justify-between text-sm mb-1"><span>充電式 / 無線 / 可攜</span><span class="freq-mid num">中（18）</span></div><div class="progress amber"><span style="width:30%"></span></div></div>
+          <div><div class="flex justify-between text-sm mb-1"><span>宿舍 / 床頭場景</span><span class="freq-mid num">中（10）</span></div><div class="progress amber"><span style="width:18%"></span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="card p-5">
+        <h4 class="font-semibold text-stone-900 mb-3">2A. 商品本身痛點</h4>
+        <table class="clean text-sm">
+          <thead><tr><th>痛點</th><th class="text-right">次數</th><th>頻度</th></tr></thead>
+          <tbody>
+            <tr><td>亮度不足 / 比小夜燈還暗</td><td class="text-right num">56</td><td><span class="freq-high">高</span></td></tr>
+            <tr><td>充電 / 觸控失靈</td><td class="text-right num">26</td><td><span class="freq-high">高</span></td></tr>
+            <tr><td>故障 / 燒壞 / 開機即掛</td><td class="text-right num">22</td><td><span class="freq-high">高</span></td></tr>
+            <tr><td>續航差 / 電池容量灌水（4000mAh 灌水）</td><td class="text-right num">21</td><td><span class="freq-high">高</span></td></tr>
+            <tr><td>做工差 / 底座不穩 / 支臂下垂</td><td class="text-right num">21</td><td><span class="freq-high">高</span></td></tr>
+            <tr><td>色溫／顏色飄移 / 自動變黃</td><td class="text-right num">16</td><td><span class="freq-mid">中</span></td></tr>
+            <tr><td>太亮 / 刺眼</td><td class="text-right num">13</td><td><span class="freq-mid">中</span></td></tr>
+            <tr><td>頻閃 / 閃爍 / 邊充邊用閃</td><td class="text-right num">11</td><td><span class="freq-mid">中</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card p-5">
+        <h4 class="font-semibold text-stone-900 mb-3">2B. 商家服務痛點</h4>
+        <table class="clean text-sm">
+          <thead><tr><th>痛點</th><th class="text-right">次數</th><th>頻度</th></tr></thead>
+          <tbody>
+            <tr><td>瑕疵品 / 少件 / 漏寄</td><td class="text-right num">19</td><td><span class="freq-high">高</span></td></tr>
+            <tr><td>客服差 / 態度消極 / 被封鎖</td><td class="text-right num">18</td><td><span class="freq-high">高</span></td></tr>
+            <tr><td>退貨困難 / 要求自付運費</td><td class="text-right num">15</td><td><span class="freq-high">高</span></td></tr>
+            <tr><td>商品與描述不符 / 影片落差</td><td class="text-right num">13</td><td><span class="freq-mid">中</span></td></tr>
+            <tr><td>包裝差 / 商品髒污發霉</td><td class="text-right num">5</td><td><span class="freq-mid">中</span></td></tr>
+            <tr><td>出貨慢 / 斷貨不告知</td><td class="text-right num">3</td><td><span class="freq-low">低</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card p-5">
+      <div class="flex items-start justify-between gap-3 mb-3">
+        <h4 class="font-semibold text-stone-900">3. 正面評價關鍵詞（暢銷品 5 星段真實用詞）</h4>
+        <span class="chip chip-emerald">可直接沿用</span>
+      </div>
+      <p class="text-xs text-stone-500 mb-3">來自 10 款暢銷商品 5 星消費者的自發描述；由於平台真實評價即以 5 星為主流，這些用詞可直接用於廣告文案／UGC（User-Generated Content，使用者原生內容）引述。</p>
+      <div class="flex flex-wrap">
+        <span class="tag-kw tier-1">亮（150 則）</span>
+        <span class="tag-kw tier-1">快（66 則）</span>
+        <span class="tag-kw tier-1">充電 / 充電式（43）</span>
+        <span class="tag-kw tier-1">方便（30）</span>
+        <span class="tag-kw tier-1">三段調光（27）</span>
+        <span class="tag-kw tier-2">質感（23）</span>
+        <span class="tag-kw tier-2">便宜（20）</span>
+        <span class="tag-kw tier-2">好用（20）</span>
+        <span class="tag-kw tier-2">輕巧（20）</span>
+        <span class="tag-kw tier-2">喜歡（15）</span>
+        <span class="tag-kw tier-2">實用（12）</span>
+        <span class="tag-kw tier-2">滿意（11）</span>
+        <span class="tag-kw tier-2">夠亮（11）</span>
+        <span class="tag-kw tier-2">CP 值（10）</span>
+        <span class="tag-kw tier-3">柔和（7）</span>
+        <span class="tag-kw tier-3">護眼（7）</span>
+        <span class="tag-kw tier-3">床頭（7）</span>
+        <span class="tag-kw tier-3">物美價廉（4）</span>
+        <span class="tag-kw tier-3">舒服（4）</span>
+      </div>
+    </div>
+
+    <div class="card p-5 bg-stone-50">
+      <h4 class="font-semibold text-stone-900 mb-3">⭐ 採樣商品清單（皆為各品類銷售前段暢銷品）</h4>
+      <p class="text-xs text-stone-500 mb-3">本次從 10 款暢銷且留言充足的商品中抓取 383 則評論；每款商品評論數 30–50 則，採樣時<b>刻意多取 1–3 星</b>以便挖掘痛點。</p>
+      <table class="clean text-sm">
+        <thead><tr><th>平台</th><th>商品（縮）</th><th>價格區間</th><th class="text-right">評論數</th></tr></thead>
+        <tbody>
+          <tr><td>蝦皮</td><td>【電子發票】可折疊 LED 學生檯燈</td><td>$169–179</td><td class="text-right num">50</td></tr>
+          <tr><td>蝦皮</td><td>LED 護眼夾燈 · 觸控三檔調光</td><td>$93</td><td class="text-right num">50</td></tr>
+          <tr><td>蝦皮</td><td>55CM 磁吸酷斃燈 · 可遙控</td><td>$210–265</td><td class="text-right num">50</td></tr>
+          <tr><td>蝦皮</td><td>LED 護眼夾燈 4000mAh</td><td>$99–119</td><td class="text-right num">50</td></tr>
+          <tr><td>蝦皮</td><td>LED 夾式檯燈 USB 充電</td><td>$65</td><td class="text-right num">33</td></tr>
+          <tr><td>momo</td><td>MAGIC 大視界 LED 護眼檯燈 MA328</td><td>$2,421</td><td class="text-right num">30</td></tr>
+          <tr><td>momo</td><td>喜光 TIONE 全光譜 LED 護眼檯燈</td><td>$2,772</td><td class="text-right num">30</td></tr>
+          <tr><td>momo</td><td>Philips 66239 品昊 全光譜</td><td>$1,899</td><td class="text-right num">30</td></tr>
+          <tr><td>momo</td><td>Philips 酷雅 66140 全光譜</td><td>$1,349</td><td class="text-right num">30</td></tr>
+          <tr><td>momo</td><td>太星電工 好視力 8W UTA538W</td><td>$539</td><td class="text-right num">30</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</section>
+
+<div class="max-w-6xl mx-auto px-6"><div class="divider my-4"></div></div>
+
+<!-- 三、跨來源綜合痛點排行 -->
+<section id="top10" class="max-w-6xl mx-auto px-6 py-10">
+  <div class="flex items-center gap-3 mb-6">
+    <span class="section-num">三</span>
+    <h2 class="h-title text-2xl md:text-3xl text-stone-900">跨來源綜合痛點 Top 10</h2>
+  </div>
+  <p class="text-stone-600 mb-5 max-w-3xl">將 PTT／Dcard／Google、YouTube 新舊留言、蝦皮／momo 評論三來源痛點提及次數合併並正規化後排序。分數 = 提及次數 × 來源權重（蝦皮／momo × 0.85（因低星加重採樣，下修以校正），YouTube × 1.2，PTT × 1.8 以反映文字深度）。</p>
+  <div class="mb-6 max-w-3xl p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-900 leading-relaxed">
+    <b>方法論校正：</b>由於蝦皮／momo 低星評論為刻意加重採樣（非真實市場比例），為避免 EC 痛點被放大扭曲排序，將其來源權重由 1.0 下修至 <b>0.85</b>；但此來源痛點仍是真實購買者在<b>熱銷品</b>上的具體抱怨，排名具高廣告參考價值。</div>
+
+  <div class="grid md:grid-cols-5 gap-6">
+    <div class="card p-5 md:col-span-3">
+      <h4 class="font-semibold text-stone-900 mb-3">🔥 Top 10 痛點（合併分數）</h4>
+      <div class="h-[520px]"><canvas id="chartTop10"></canvas></div>
+    </div>
+    <div class="card p-5 md:col-span-2">
+      <h4 class="font-semibold text-stone-900 mb-3">📋 排行明細</h4>
+      <table class="clean text-sm">
+        <thead><tr><th>#</th><th>痛點</th><th>類型</th><th>主要來源</th></tr></thead>
+        <tbody>
+          <tr><td><span class="rank r1">1</span></td><td><b>價格太貴 / 智商稅</b>（4,000 元門檻）</td><td><span class="chip chip-amber">心理</span></td><td class="text-xs">PTT + YT 兩代</td></tr>
+          <tr><td><span class="rank r2">2</span></td><td><b>亮度不足 / 比小夜燈還暗</b></td><td><span class="chip chip-rose">商品</span></td><td class="text-xs">EC + PTT 消基會</td></tr>
+          <tr><td><span class="rank r3">3</span></td><td><b>故障 / 燒壞 / 壽命短</b></td><td><span class="chip chip-rose">商品</span></td><td class="text-xs">全來源</td></tr>
+          <tr><td><span class="rank r4">4</span></td><td><b>反光到螢幕 / 鍵盤</b>（含曲面螢幕）</td><td><span class="chip chip-rose">商品</span></td><td class="text-xs">YT 持續 5 年</td></tr>
+          <tr><td><span class="rank r5">5</span></td><td><b>充電 / 觸控失靈 · 續航灌水</b></td><td><span class="chip chip-rose">商品</span></td><td class="text-xs">EC 主</td></tr>
+          <tr><td><span class="rank">6</span></td><td><b>刺眼 / 眩光</b>（LED 本質）</td><td><span class="chip chip-rose">商品</span></td><td class="text-xs">三來源平均</td></tr>
+          <tr><td><span class="rank">7</span></td><td><b>做工差 / 燈頭晃動 / 底座不穩</b></td><td><span class="chip chip-rose">商品</span></td><td class="text-xs">EC + PTT</td></tr>
+          <tr><td><span class="rank">8</span></td><td><b>客服差 / 退貨困難 / 被封鎖</b></td><td><span class="chip chip-violet">服務</span></td><td class="text-xs">EC 主</td></tr>
+          <tr><td><span class="rank">9</span></td><td><b>瑕疵品 / 少件 / 與描述不符</b></td><td><span class="chip chip-violet">服務</span></td><td class="text-xs">EC 主</td></tr>
+          <tr><td><span class="rank">10</span></td><td><b>頻閃 / 閃爍</b>（邊充邊用更明顯）</td><td><span class="chip chip-rose">商品</span></td><td class="text-xs">EC + PTT 規格</td></tr>
+        </tbody>
+      </table>
+      <div class="mt-3 p-3 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-900 leading-relaxed">
+        <b>廣告避雷：</b>Top 10 中 <b>7 項為商品本身痛點、2 項為商家服務痛點、1 項屬心理價格焦慮</b>。廣告素材需強勢露出<b>產品展示 + 真實口碑 + 認證數據</b>回應商品痛點；服務痛點（客服、退貨、瑕疵）是 EC 平台的「Deal breaker」，必須在落地頁直接破解（7 天鑑賞期、免費換貨、Line 客服即回）；價格焦慮則用<b>「不是智商稅」的一年長測證明</b>回應。
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="max-w-6xl mx-auto px-6"><div class="divider my-4"></div></div>
+
+<!-- 四、AB 測試廣告訴求方向 -->
+<section id="angles" class="max-w-6xl mx-auto px-6 py-10">
+  <div class="flex items-center gap-3 mb-3">
+    <span class="section-num">四</span>
+    <h2 class="h-title text-2xl md:text-3xl text-stone-900">AB 測試廣告訴求方向 · 6 個切角</h2>
+  </div>
+  <p class="text-stone-600 mb-8 max-w-3xl">每個切角對應一個鮮明受眾、一組核心痛點、一種情境氛圍與情緒目標。建議首輪 A/B 先跑 ①② 兩版（家長 vs 上班族），找出低 CPA（Cost Per Acquisition，單次獲客成本）主力客群後，再以主客群為核心，第二輪再透過 ③④⑤⑥ 放大影響力。</p>
+
+  <div class="space-y-6">
+
+    <!-- ANGLE 1 -->
+    <div class="card p-7 angle-card" style="background:linear-gradient(135deg,#fff 0%,#fff7ed 100%)">
+      <div class="ribbon bg-amber-500 text-white">ANGLE · 01</div>
+      <div class="grid md:grid-cols-5 gap-6">
+        <div class="md:col-span-2">
+          <div class="flex items-center gap-2 mb-2"><span class="chip chip-amber">家長心意</span><span class="chip chip-stone">A/B 首輪建議版本</span></div>
+          <h3 class="h-title text-2xl text-stone-900 mb-3 leading-snug">「陪他長大的第一盞光，值得挑得用心。」</h3>
+          <p class="text-stone-700 leading-relaxed text-sm">以<b>「入座自動開燈 · 離座自動關燈 + Ra &gt; 95 全光譜柔光」</b>為主鏡頭，把家長對孩子的關心，轉化為「每一次寫作業、每一次翻繪本，都有一盞對的光陪他」的具體行動。搭配眼科醫師推薦與無頻閃認證，給選擇正在為孩子打造學習空間的父母一個理性又溫暖的下手理由。</p>
+        </div>
+        <div class="md:col-span-3 grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
+          <div><div class="text-xs text-stone-500 mb-1">🎯 目標受眾</div><div class="text-stone-800">6–12 歲學齡兒童父母 · 正在為孩子佈置／升級書桌的家庭</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">🧩 核心功能</div><div class="text-stone-800">紅外線入座感應 · 智能環境光調節 · Ra&gt;95 全光譜 · 無頻閃認證</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">⚠️ 對應痛點</div><div class="text-stone-800">孩子忘了關燈 / 低頭太久不休息 / 擔心近視、3 成護眼燈不合格</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">🪑 情境氛圍</div><div class="text-stone-800">夜晚 21:00 的兒童書桌、媽媽在廚房洗碗，餘光望向書房裡那束柔光，孩子正認真地寫功課</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">💛 情緒目標</div><div class="text-stone-800">愛、陪伴、為孩子準備未來的成就感 —「這盞燈會陪著他從注音一路走到畢業」</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">🎨 視覺方向</div><div class="text-stone-800">暖色調 3000K · 木質書桌 · 童書 · 溫黃光暈包覆 · 親子互動鏡頭（靠近但不打擾）</div></div>
+          <div class="col-span-2"><div class="text-xs text-stone-500 mb-1">🫂 身體感受關鍵字</div>
+            <div class="flex flex-wrap gap-1.5 mt-1">
+              <span class="tag-kw tier-1">像陽光般自然</span><span class="tag-kw tier-1">不刺眼</span><span class="tag-kw tier-1">眼睛不痠</span><span class="tag-kw tier-2">看書更有耐心</span><span class="tag-kw tier-2">肩膀放鬆</span><span class="tag-kw tier-3">陪讀時光更專注</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANGLE 2 -->
+    <div class="card p-7 angle-card" style="background:linear-gradient(135deg,#fff 0%,#f0f9ff 100%)">
+      <div class="ribbon bg-sky-600 text-white">ANGLE · 02</div>
+      <div class="grid md:grid-cols-5 gap-6">
+        <div class="md:col-span-2">
+          <div class="flex items-center gap-2 mb-2"><span class="chip chip-sky">上班族 / WFH（Work From Home，居家辦公）</span><span class="chip chip-stone">A/B 首輪建議版本</span></div>
+          <h3 class="h-title text-2xl text-stone-900 mb-3 leading-snug">「八小時專注後，眼睛還是不澀。」</h3>
+          <p class="text-stone-700 leading-relaxed text-sm">以<b>非對稱光學掛燈</b>對位「下班後眼睛乾澀」的 WFH 上班族，強調「不反光到螢幕 + 省桌面」的兩大效率承諾。</p>
+        </div>
+        <div class="md:col-span-3 grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
+          <div><div class="text-xs text-stone-500 mb-1">🎯 目標受眾</div><div class="text-stone-800">25–40 歲 WFH / 雙螢幕工程師 / 設計師 / 剪輯師</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">🧩 核心功能</div><div class="text-stone-800">螢幕掛燈 · 非對稱光學不反光 · 環境光自動調節 · 支援曲面螢幕</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">⚠️ 對應痛點</div><div class="text-stone-800">反光到螢幕 / 桌面太擠 / 深夜工作眼睛乾澀 / 一般檯燈醜</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">🪑 情境氛圍</div><div class="text-stone-800">深夜 23:30 的個人辦公桌、雙螢幕、咖啡杯、窗外城市燈火</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">💛 情緒目標</div><div class="text-stone-800">掌控感、專業感 —「這是我桌面裝備裡最值得的一筆」</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">🎨 視覺方向</div><div class="text-stone-800">冷冽科技感 · 黑白灰金屬質地 · 4000–5500K 中性光 · 特寫鍵盤與光線</div></div>
+          <div class="col-span-2"><div class="text-xs text-stone-500 mb-1">🫂 身體感受關鍵字</div>
+            <div class="flex flex-wrap gap-1.5 mt-1">
+              <span class="tag-kw tier-1">眼睛不乾澀</span><span class="tag-kw tier-1">螢幕零反光</span><span class="tag-kw tier-1">專注</span><span class="tag-kw tier-2">肩頸不緊</span><span class="tag-kw tier-2">頭不昏</span><span class="tag-kw tier-3">下班還有力氣</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANGLE 3 -->
+    <div class="card p-7 angle-card" style="background:linear-gradient(135deg,#fff 0%,#fff1f2 100%)">
+      <div class="ribbon bg-rose-600 text-white">ANGLE · 03</div>
+      <div class="grid md:grid-cols-5 gap-6">
+        <div class="md:col-span-2">
+          <div class="flex items-center gap-2 mb-2"><span class="chip chip-rose">專業挑剔型</span><span class="chip chip-stone">理性教育角度</span></div>
+          <h3 class="h-title text-2xl text-stone-900 mb-3 leading-snug">「3 成叫護眼燈的，根本不護眼。」</h3>
+          <p class="text-stone-700 leading-relaxed text-sm">以消基會調查為切入點，<b>教育型廣告</b>直接比拼規格表與第三方認證，攻下已讀完 PTT 比較文的理性消費者。</p>
+        </div>
+        <div class="md:col-span-3 grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
+          <div><div class="text-xs text-stone-500 mb-1">🎯 目標受眾</div><div class="text-stone-800">30–50 重度比價型 · 3C 達人 · 家裡已有一盞想升級</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">🧩 核心功能</div><div class="text-stone-800">德國萊茵 RG0 無藍光 · Ra &gt; 95 · AA 級照度 · DC 直流無頻閃 · 全光譜</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">⚠️ 對應痛點</div><div class="text-stone-800">廣告不實 / 買過不好用 / 怕再次買到規格造假的「偽護眼燈」</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">🪑 情境氛圍</div><div class="text-stone-800">實驗室檢測報告 · 照度計實測畫面 · 認證標章一字排開</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">💛 情緒目標</div><div class="text-stone-800">信服、「這次終於找對了」 —「能被實驗數據證明的護眼」</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">🎨 視覺方向</div><div class="text-stone-800">資訊圖表風 · 對比柱狀圖 · 數字動畫 · 白底 + 酒紅/深藍輔色</div></div>
+          <div class="col-span-2"><div class="text-xs text-stone-500 mb-1">🫂 身體感受關鍵字</div>
+            <div class="flex flex-wrap gap-1.5 mt-1">
+              <span class="tag-kw tier-1">可驗證的舒適</span><span class="tag-kw tier-1">長時間用眼也穩定</span><span class="tag-kw tier-2">無頻閃</span><span class="tag-kw tier-2">無眩光</span><span class="tag-kw tier-3">放心</span><span class="tag-kw tier-3">這盞是對的</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANGLE 4 -->
+    <div class="card p-7 angle-card" style="background:linear-gradient(135deg,#fff 0%,#ecfdf5 100%)">
+      <div class="ribbon bg-emerald-600 text-white">ANGLE · 04</div>
+      <div class="grid md:grid-cols-5 gap-6">
+        <div class="md:col-span-2">
+          <div class="flex items-center gap-2 mb-2"><span class="chip chip-emerald">預算導向</span><span class="chip chip-stone">學生 / 考生</span></div>
+          <h3 class="h-title text-2xl text-stone-900 mb-3 leading-snug">「預算有限，但眼睛不能將就。」</h3>
+          <p class="text-stone-700 leading-relaxed text-sm">以 <b>充電式無線 + 宿舍 + 熬夜陪讀</b>為場景，用「同學買的很快壞」作為對比痛點，切入大學生／高中考生族群。</p>
+        </div>
+        <div class="md:col-span-3 grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
+          <div><div class="text-xs text-stone-500 mb-1">🎯 目標受眾</div><div class="text-stone-800">高中生 / 大學生 / 考生 / 宿舍住戶（15–24 歲），用於低風險放大影響力。</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">🧩 核心功能</div><div class="text-stone-800">充電 4000mAh 真續航 · 三段調光 · 可折疊攜帶 · 不占桌面</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">⚠️ 對應痛點</div><div class="text-stone-800">便宜燈壞得快 · 宿舍沒插座 · 半夜怕吵室友 · 續航灌水</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">🪑 情境氛圍</div><div class="text-stone-800">凌晨 2:00 宿舍上鋪、翻頁的教科書、窗外校園夜景、筆記咖啡杯</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">💛 情緒目標</div><div class="text-stone-800">陪伴感、拚勁 —「這盞燈陪我到榜單公布那一天」</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">🎨 視覺方向</div><div class="text-stone-800">青春感 · 手寫字卡 · 便利貼 · 夜讀 vlog 風 · 淺色木桌 + 亮黃點光</div></div>
+          <div class="col-span-2"><div class="text-xs text-stone-500 mb-1">🫂 身體感受關鍵字</div>
+            <div class="flex flex-wrap gap-1.5 mt-1">
+              <span class="tag-kw tier-1">撐得住熬夜</span><span class="tag-kw tier-1">眼睛不痠</span><span class="tag-kw tier-1">清醒</span><span class="tag-kw tier-2">不怕吵室友</span><span class="tag-kw tier-2">隨身帶著走</span><span class="tag-kw tier-3">安靜陪讀</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANGLE 5 -->
+    <div class="card p-7 angle-card" style="background:linear-gradient(135deg,#fff 0%,#faf5ff 100%)">
+      <div class="ribbon bg-violet-600 text-white">ANGLE · 05</div>
+      <div class="grid md:grid-cols-5 gap-6">
+        <div class="md:col-span-2">
+          <div class="flex items-center gap-2 mb-2"><span class="chip chip-violet">生活質感派</span><span class="chip chip-stone">IG / 小紅書風</span></div>
+          <h3 class="h-title text-2xl text-stone-900 mb-3 leading-snug">「工作桌的小升級，下班後也捨不得關。」</h3>
+          <p class="text-stone-700 leading-relaxed text-sm">把護眼燈定位成<b>生活風格單品</b>，對齊 Dcard 熱門貼文「飛利浦工作桌的小升級」、「桌面 setup」搜尋熱潮，切入北歐風質感族群。</p>
+        </div>
+        <div class="md:col-span-3 grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
+          <div><div class="text-xs text-stone-500 mb-1">🎯 目標受眾</div><div class="text-stone-800">25–35 歲都會工作族群 / 租屋族 / 自由接案 · 重視桌面美學</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">🧩 核心功能</div><div class="text-stone-800">極簡設計 · 金屬質感 · 螢幕掛燈不佔空間 · 柔和 3000K 暖光切換</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">⚠️ 對應痛點</div><div class="text-stone-800">桌面空間小 / 傳統檯燈醜 / 想要 IG 風 / 送禮也體面</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">🪑 情境氛圍</div><div class="text-stone-800">極簡白色桌面、小花瓶、香氛蠟燭、開放式 MacBook、窗外夜景</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">💛 情緒目標</div><div class="text-stone-800">小確幸、精緻 —「這盞燈讓我每晚都想回到書桌」</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">🎨 視覺方向</div><div class="text-stone-800">莫蘭迪色調 · 低飽和 · 手沖咖啡 · 綠植 · 慢節奏 Vlog 剪輯</div></div>
+          <div class="col-span-2"><div class="text-xs text-stone-500 mb-1">🫂 身體感受關鍵字</div>
+            <div class="flex flex-wrap gap-1.5 mt-1">
+              <span class="tag-kw tier-1">療癒</span><span class="tag-kw tier-1">放鬆肩膀</span><span class="tag-kw tier-1">像泡澡般鬆弛</span><span class="tag-kw tier-2">被光包住</span><span class="tag-kw tier-2">心靜下來</span><span class="tag-kw tier-3">儀式感</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANGLE 6 -->
+    <div class="card p-7 angle-card" style="background:linear-gradient(135deg,#fff 0%,#fdf2f8 100%)">
+      <div class="ribbon bg-pink-600 text-white">ANGLE · 06</div>
+      <div class="grid md:grid-cols-5 gap-6">
+        <div class="md:col-span-2">
+          <div class="flex items-center gap-2 mb-2"><span class="chip chip-pink">送禮訴求</span><span class="chip chip-stone">中高齡 / 銀髮</span></div>
+          <h3 class="h-title text-2xl text-stone-900 mb-3 leading-snug">「爸媽看報紙不再瞇眼。」</h3>
+          <p class="text-stone-700 leading-relaxed text-sm">切入<b>子女送禮給父母</b>場景，把全光譜 Ra &gt; 95 的「還原真實色彩」包裝為「看清楚每一個字」的孝心承諾，破除「護眼燈只是學生用」的認知。</p>
+        </div>
+        <div class="md:col-span-3 grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
+          <div><div class="text-xs text-stone-500 mb-1">🎯 目標受眾</div><div class="text-stone-800">下單者：30–45 歲子女；使用者：55+ 歲父母 / 老花族</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">🧩 核心功能</div><div class="text-stone-800">大面積均勻照明 · 高演色全光譜 · 無眩光 · 一鍵大按鍵操作（友善銀髮）</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">⚠️ 對應痛點</div><div class="text-stone-800">老花看不清 · 家裡燈太暗或太黃 · 報紙色彩失真 · 操作太複雜</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">🪑 情境氛圍</div><div class="text-stone-800">客廳實木茶几、報紙、保溫杯、老花眼鏡、傍晚斜陽進窗</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">💛 情緒目標</div><div class="text-stone-800">溫暖、感恩 —「爸媽的一個微笑，比什麼都值得」</div></div>
+          <div><div class="text-xs text-stone-500 mb-1">🎨 視覺方向</div><div class="text-stone-800">木質調 · 暖金色 · 代際畫面（子女送禮 → 父母開箱）· 緩慢運鏡</div></div>
+          <div class="col-span-2"><div class="text-xs text-stone-500 mb-1">🫂 身體感受關鍵字</div>
+            <div class="flex flex-wrap gap-1.5 mt-1">
+              <span class="tag-kw tier-1">看得清</span><span class="tag-kw tier-1">色彩真實</span><span class="tag-kw tier-1">不吃力</span><span class="tag-kw tier-2">被照顧</span><span class="tag-kw tier-2">溫柔</span><span class="tag-kw tier-3">孝心</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="mt-8 card p-5 bg-stone-50">
+    <h4 class="font-semibold text-stone-900 mb-3">📐 AB 測試投放建議矩陣</h4>
+    <table class="clean text-sm">
+      <thead><tr><th>切角</th><th>主戰場平台</th><th>影片長度</th><th>CTA<br>(Call To Action，行動呼籲)</th><th>主要 KPI</th></tr></thead>
+      <tbody>
+        <tr><td>01 家長心意</td><td>FB / YT / Line Today</td><td>30s · 60s</td><td>領取親子共讀手冊 / 立即選購</td><td>ROAS（Return On Ad Spend，廣告投資報酬率） &gt; 2.0</td></tr>
+        <tr><td>02 上班族</td><td>IG Reels / YT Shorts / LinkedIn</td><td>15s · 30s</td><td>加入追蹤清單 · 立即升級桌面</td><td>CTR（Click-Through Rate，點擊率） &gt; 1.8%</td></tr>
+        <tr><td>03 專業挑剔</td><td>YT 長影片 · 痞客邦 · PTT 心得文</td><td>60s · 3min 長</td><td>下載規格對比表 PDF</td><td>到站時間 &gt; 2min</td></tr>
+        <tr><td>04 預算派</td><td>Dcard · TikTok · IG Reels</td><td>15s Vlog</td><td>某身份專屬 9 折</td><td>CPA &lt; $150</td></tr>
+        <tr><td>05 質感派</td><td>IG 貼文 / IG Reels / 小紅書</td><td>20s 慢節奏</td><td>加入願望清單</td><td>收藏率 &gt; 5%</td></tr>
+        <tr><td>06 送禮</td><td>FB / Line / Yahoo</td><td>45s 家庭劇</td><td>送禮包裝免費加購</td><td>客單價 +20%</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 排序邏輯註解 -->
+    <aside class="mt-5 border-l-4 border-stone-400 bg-white/70 rounded-r-md px-4 py-3 text-xs text-stone-600 leading-relaxed">
+      <div class="flex items-center gap-2 mb-1.5">
+        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-stone-700 text-white text-[10px] font-semibold">i</span>
+        <span class="font-semibold text-stone-800 text-sm">註｜本表排序依據：廣告投放執行優先級（非資料熱度）</span>
+      </div>
+      <ul class="space-y-1 pl-1">
+        <li>① ② <b>主戰場</b>：家長 + 上班族受眾規模最大、資料密度最高，優先驗證基本轉換。</li>
+        <li>③ <b>信任守門員</b>：理性族群會回頭查規格，教育型內容支撐 ①② 落地頁可信度。</li>
+        <li>④ <b>低風險放大</b>：受眾明確、CPA 可控，快速擴量的首選。</li>
+        <li>⑤ <b>品牌資產</b>：IG 收藏為主要 KPI，轉換鏈路較長但能累積風格感。</li>
+        <li>⑥ <b>檔期放大</b>：節慶驅動、拉高客單價。</li>
+      </ul>
+      <div class="mt-2 pt-2 border-t border-stone-200 text-stone-500">
+        ⚠️ <b>坦承限制</b>：若改以<b>市場聲量</b>排序，蝦皮／momo 「外觀／質感／配色」共 94 則 &gt; 「CP 值」44 則，⑤ 質感派應排在 ④ 學生之前；若改以<b>預算效率</b>（CPA 低優先），順序為 ④ → ① → ② → ③ → ⑥ → ⑤。排序依據會因策略目標不同而調整。
+      </div>
+    </aside>
+  </div>
+</section>
+
+<div class="max-w-6xl mx-auto px-6"><div class="divider my-4"></div></div>
+
+<!-- 五、關鍵字清單 -->
+<section id="keywords" class="max-w-6xl mx-auto px-6 py-10">
+  <div class="flex items-center gap-3 mb-6">
+    <span class="section-num">五</span>
+    <h2 class="h-title text-2xl md:text-3xl text-stone-900">關鍵字清單 · 廣告標題／文案直接使用</h2>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-6">
+    <div class="card p-5">
+      <h4 class="font-semibold text-stone-900 mb-2">🔥 超高頻（Tier 1 · 主標直用）</h4>
+      <p class="text-xs text-stone-500 mb-3">三來源皆出現、廣告點擊承諾力最強</p>
+      <div class="flex flex-wrap">
+        <span class="tag-kw tier-1">不刺眼</span>
+        <span class="tag-kw tier-1">護眼</span>
+        <span class="tag-kw tier-1">眼睛不累</span>
+        <span class="tag-kw tier-1">柔和</span>
+        <span class="tag-kw tier-1">無頻閃</span>
+        <span class="tag-kw tier-1">Ra &gt; 95</span>
+        <span class="tag-kw tier-1">全光譜</span>
+        <span class="tag-kw tier-1">不反光</span>
+        <span class="tag-kw tier-1">自動調光</span>
+        <span class="tag-kw tier-1">螢幕掛燈</span>
+        <span class="tag-kw tier-1">省桌面</span>
+        <span class="tag-kw tier-1">充電式</span>
+        <span class="tag-kw tier-1">眼科醫師推薦</span>
+        <span class="tag-kw tier-1">CP 值</span>
+      </div>
+    </div>
+
+    <div class="card p-5">
+      <h4 class="font-semibold text-stone-900 mb-2">✨ 中高頻（Tier 2 · 副標 / 描述）</h4>
+      <p class="text-xs text-stone-500 mb-3">情境強 / 族群導向 / 規格細節</p>
+      <div class="flex flex-wrap">
+        <span class="tag-kw tier-2">入座自動開燈</span>
+        <span class="tag-kw tier-2">非對稱光學</span>
+        <span class="tag-kw tier-2">無藍光危害</span>
+        <span class="tag-kw tier-2">AA 級照度</span>
+        <span class="tag-kw tier-2">德國萊茵認證</span>
+        <span class="tag-kw tier-2">色溫可調</span>
+        <span class="tag-kw tier-2">三段調光</span>
+        <span class="tag-kw tier-2">大面積均勻</span>
+        <span class="tag-kw tier-2">照射範圍廣</span>
+        <span class="tag-kw tier-2">親子共讀</span>
+        <span class="tag-kw tier-2">長時間用眼</span>
+        <span class="tag-kw tier-2">顏色真實自然</span>
+        <span class="tag-kw tier-2">不占桌面</span>
+        <span class="tag-kw tier-2">質感 · 精緻</span>
+        <span class="tag-kw tier-2">夜讀陪伴</span>
+        <span class="tag-kw tier-2">有感升級</span>
+        <span class="tag-kw tier-2">後悔沒早買</span>
+      </div>
+    </div>
+
+    <div class="card p-5">
+      <h4 class="font-semibold text-stone-900 mb-2">🎯 反向破解（Tier 3 · 直接回應痛點）</h4>
+      <p class="text-xs text-stone-500 mb-3">把消費者懷疑「先說給它聽」</p>
+      <div class="flex flex-wrap">
+        <span class="tag-kw tier-3">不是智商稅</span>
+        <span class="tag-kw tier-3">可驗證規格</span>
+        <span class="tag-kw tier-3">不會很快壞</span>
+        <span class="tag-kw tier-3">真的 4000mAh</span>
+        <span class="tag-kw tier-3">曲面螢幕適用</span>
+        <span class="tag-kw tier-3">底座穩 · 不晃</span>
+        <span class="tag-kw tier-3">觸控不失靈</span>
+        <span class="tag-kw tier-3">7 天鑑賞退換</span>
+        <span class="tag-kw tier-3">Line 客服即回</span>
+        <span class="tag-kw tier-3">1 年保固</span>
+        <span class="tag-kw tier-3">規格實測報告</span>
+        <span class="tag-kw tier-3">不是偽護眼</span>
+        <span class="tag-kw tier-3">不閃爍</span>
+        <span class="tag-kw tier-3">不眩光</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-6 mt-6">
+    <div class="card p-5">
+      <h4 class="font-semibold text-stone-900 mb-3">📝 高轉換標題公式（直接可上稿）</h4>
+      <ul class="space-y-3 text-sm text-stone-700 leading-relaxed">
+        <li class="border-l-2 border-amber-400 pl-3">「<b>3 成護眼燈根本不護眼。</b>這 1 盞，把消基會公開點名的 7 個規格全數通過。」</li>
+        <li class="border-l-2 border-sky-400 pl-3">「<b>螢幕掛燈</b>裝上那一刻，你才知道 — 原來眼睛乾澀，是光害造成的。」</li>
+        <li class="border-l-2 border-rose-400 pl-3">「孩子坐下就亮、離開就關。<b>一盞幫爸媽省心 8 年</b>的護眼燈。」</li>
+        <li class="border-l-2 border-emerald-400 pl-3">「同學買的 200 元小夜燈，陪不了你到榜單公布。<b>撐得住熬夜的光</b>在這裡。」</li>
+        <li class="border-l-2 border-violet-400 pl-3">「不是多添了一盞燈，是讓工作桌長出<b>北歐風的質感</b>。」</li>
+        <li class="border-l-2 border-pink-400 pl-3">「爸，報紙不用再瞇眼。」<b>送給父母</b>的第一盞全光譜護眼燈。</li>
+      </ul>
+    </div>
+    <div class="card p-5">
+      <h4 class="font-semibold text-stone-900 mb-3">🚫 素材避雷清單</h4>
+      <ul class="space-y-2 text-sm text-stone-700">
+        <li class="gap-2"><span class="text-rose-600 font-bold">✗</span> 不宣稱「<b>預防近視 / 治療眼疾</b>」（違反廣告法，且已被專業文章拆穿）</li>
+        <li class="gap-2"><span class="text-rose-600 font-bold shrink-0">✗</span><span>不用「<b class="whitespace-nowrap">完全過濾藍光</b>」表述（留言區遇專家易被打臉：420–460nm 目前技術無法完全過濾）</span></li>
+        <li class="gap-2"><span class="text-rose-600 font-bold">✗</span> 不灌水「<b>4000mAh 超長續航</b>」（最常見的 1 星抱怨）</li>
+        <li class="gap-2"><span class="text-rose-600 font-bold">✗</span> 避免「<b>業配感太強</b>」的 YouTuber 單純唸稿（2025 年留言對業配更敏感）</li>
+        <li class="gap-2"><span class="text-rose-600 font-bold">✗</span> 圖片 / 影片中不呈現<b>插電使用卻暗示「無線使用」</b>（蝦皮 1 星的核心怒點）</li>
+        <li class="gap-2"><span class="text-rose-600 font-bold">✗</span> 落地頁一定要有<b>退換貨政策 + Line 客服</b>（「客服封鎖」是成交前最大障礙）</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="max-w-6xl mx-auto px-6 py-10 mt-6 border-t border-stone-200">
+  <div class="grid md:grid-cols-3 gap-6 text-sm text-stone-600">
+    <div>
+      <div class="font-semibold text-stone-900 mb-2">資料範圍</div>
+      <p>PTT / Dcard / Google 討論 51 則、YouTube 開箱留言 744 則（2021–2025）、蝦皮 / momo 商品評論 383 則，共 1,178 則有效樣本。蝦皮／momo 10 款皆為<b>各品類銷售前段、評論數充足</b>的暢銷品，真實評論以 5 星為主流。</p>
+    </div>
+    <div>
+      <div class="font-semibold text-stone-900 mb-2">分析方法與採樣偏差校正</div>
+      <p>關鍵字頻度計算 × 來源權重正規化（蝦皮/momo × 0.85、YouTube × 1.2、PTT × 1.8）× 質性主題編碼（商品本身痛點 vs 商家服務痛點）× 跨年度比對。<b>蝦皮／momo 低星評論為刻意加重採樣</b>以挖掘痛點，絕對比例不外推至全平台；痛點「相對頻度」與「內容細節」仍屬有效訊號。</p>
+    </div>
+    <div>
+      <div class="font-semibold text-stone-900 mb-2">建議後續</div>
+      <p>① 首輪 A/B 先跑 Angle 01 + 02 兩版，CPA 與 ROAS 達標後再放大；② Angle 03 / 06 適合做 Long-form 教育型與送禮檔期；③ 建議每 2 週回收素材表現，更新高頻關鍵字。</p>
+    </div>
+  </div>
+  <div class="mt-6 text-xs text-stone-400">© 2026 護眼燈市場調查 · 基於原始市調資料分析於2026年4月23日產出</div>
+</footer>
+
+<script src="../../shared/assets/js/tailwind.js"></script>
+<script src="../../shared/assets/js/chart.umd.min.js"></script>
+<script src="./assets/js/app.js" defer></script>
+
+</body>
+</html>
