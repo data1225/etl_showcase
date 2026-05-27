@@ -85,6 +85,20 @@ body {
   letter-spacing: -0.02em;
   text-align: center;
 }
+.space-y-6 > :not([hidden]) ~ :not([hidden]).section-subtitle{
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.space-y-6 > :not([hidden]) ~ :not([hidden]).section-subtitle a{
+  color: hsl(var(--muted-foreground));
+  font-size: .95rem;
+}
+.space-y-6 > :not([hidden]) ~ :not([hidden]).section-subtitle a:hover {
+  color: hsl(var(--primary));
+  background-color: hsl(var(--muted));
+  transform: translateY(-2px);
+}
 .nav-floating {
   position: fixed;
   right: 1.5rem;
